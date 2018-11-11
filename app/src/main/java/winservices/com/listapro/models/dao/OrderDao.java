@@ -34,6 +34,6 @@ public interface OrderDao {
             " AND sk.lastLogged = " + ShopKeeper.LAST_LOGGED +
             " AND sk.isLoggedIn = " + ShopKeeper.LOGGED_IN +
             " AND s.serverShopId = :serverShopId" +
-            " AND o.statusId = 1")
+            " AND o.statusId IN (1, 2, 6)")
     LiveData<Integer> getSentOrdersNum(int serverShopId);
 }
