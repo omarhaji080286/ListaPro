@@ -1,11 +1,6 @@
 package winservices.com.listapro.views.activities;
 
 import android.os.Bundle;
-import android.util.Log;
-
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.List;
 
@@ -17,7 +12,7 @@ import androidx.lifecycle.ViewModelProviders;
 import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
-import winservices.com.listapro.utils.SharedPrefManager;
+import winservices.com.listapro.viewmodels.OrderVM;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
 import winservices.com.listapro.viewmodels.ShopVM;
 import winservices.com.listapro.views.fragments.AddShopFragment;
@@ -27,9 +22,9 @@ import winservices.com.listapro.views.fragments.WelcomeFragment;
 public class LauncherActivity extends AppCompatActivity {
 
     private final String TAG = LauncherActivity.class.getSimpleName();
-    private ShopKeeper currentSk;
     private ShopKeeperVM shopKeeperVM;
     private ShopVM shopVM;
+    private OrderVM orderVM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,17 +32,10 @@ public class LauncherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
         setTitle(R.string.welcome_to_listapro);
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this,new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String newToken = instanceIdResult.getToken();
-                SharedPrefManager.getInstance(getApplicationContext()).storeToken(newToken);
-                Log.d(TAG, "Token: " + newToken);
-            }
-        });
 
         shopKeeperVM = ViewModelProviders.of(this).get(ShopKeeperVM.class);
         shopVM = ViewModelProviders.of(this).get(ShopVM.class);
+        orderVM = ViewModelProviders.of(this).get(OrderVM.class);
 
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
@@ -55,6 +43,7 @@ public class LauncherActivity extends AppCompatActivity {
                 loadShops(shopKeeper);
             }
         });
+
 
     }
 
@@ -66,6 +55,7 @@ public class LauncherActivity extends AppCompatActivity {
                 public void onChanged(List<Shop> shops) {
                     shopKeeper.setShops(shops);
                     routeUser(shopKeeper);
+                    orderVM.loadOrders(shops.get(0).getServerShopId());
                 }
             });
         } else {

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
@@ -21,6 +22,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -99,7 +102,6 @@ public class SignUpFragment extends Fragment {
                     shopKeeperVM.getShopKeeperByPhone(completePhone).observe(getViewLifecycleOwner(), new Observer<ShopKeeper>() {
                         @Override
                         public void onChanged(final ShopKeeper shopKeeper) {
-
                             if (shopKeeper == null) {
                                 //TODO : diable comments for release
                                 //sendVerifCode(completePhone);
@@ -131,6 +133,14 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (UtilsFunctions.checkNetworkConnection(Objects.requireNonNull(getContext()))) {
+                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(Objects.requireNonNull(getActivity()),new OnSuccessListener<InstanceIdResult>() {
+                        @Override
+                        public void onSuccess(InstanceIdResult instanceIdResult) {
+                            String newToken = instanceIdResult.getToken();
+                            SharedPrefManager.getInstance(getContext()).storeToken(newToken);
+                            Log.d(LOG_TAG, "Token: " + newToken);
+                        }
+                    });
                     verifySignUpCode();
                 } else {
                     Toast.makeText(getContext(), getString(R.string.error_network), Toast.LENGTH_SHORT).show();
@@ -232,6 +242,7 @@ public class SignUpFragment extends Fragment {
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
             public void onChanged(ShopKeeper shopKeeper) {
+                if (shopKeeper==null) return;
                 Toast.makeText(getContext(), R.string.welcome_to_listapro, Toast.LENGTH_SHORT).show();
                 goTo(new AddShopFragment());
             }
@@ -239,7 +250,7 @@ public class SignUpFragment extends Fragment {
 
     }
 
-    private void goTo(Fragment fragment){
+    private void goTo(Fragment fragment) {
         dialog.dismiss();
         LauncherActivity launcherActivity = (LauncherActivity) getActivity();
         Objects.requireNonNull(launcherActivity).displayFragment(fragment);

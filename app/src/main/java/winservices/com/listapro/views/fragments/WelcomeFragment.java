@@ -34,12 +34,13 @@ import winservices.com.listapro.views.activities.MyShopActivity;
 public class WelcomeFragment extends Fragment {
 
     private ShopKeeperVM shopKeeperVM;
-    private ShopVM shopVM;
     private OrderVM orderVM;
+    private ShopVM shopVM;
     private ImageView imgLogOut;
     private LinearLayout linlayMyShop;
     private ConstraintLayout consLayMyOrders;
     private TextView txtOrdersSentNum;
+    private int serverShopId;
 
     public WelcomeFragment() {
     }
@@ -56,65 +57,39 @@ public class WelcomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         shopKeeperVM = ViewModelProviders.of(this).get(ShopKeeperVM.class);
-        shopVM = ViewModelProviders.of(this).get(ShopVM.class);
         orderVM = ViewModelProviders.of(this).get(OrderVM.class);
+        shopVM = ViewModelProviders.of(this).get(ShopVM.class);
 
         imgLogOut = view.findViewById(R.id.imgLogOut);
         consLayMyOrders = view.findViewById(R.id.consLayMyOrders);
         linlayMyShop = view.findViewById(R.id.linlayMyShop);
         txtOrdersSentNum = view.findViewById(R.id.txtOrdersSentNum);
 
-        initData();
+        initLogOutAndOrdersNum();
         initMyShopItem();
         initMyOrdersItem();
-
     }
 
-    private void initData() {
+    private void initLogOutAndOrdersNum() {
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
             public void onChanged(final ShopKeeper shopKeeper) {
-
-                loadSentOrdersNum(shopKeeper);
-                initLogOutImg(shopKeeper);
-            }
-        });
-    }
-
-    private void loadSentOrdersNum(ShopKeeper shopKeeper) {
-        shopVM.getShopsByShopKeeperId(shopKeeper.getServerShopKeeperId()).observe(this, new Observer<List<Shop>>() {
-            @Override
-            public void onChanged(List<Shop> shops) {
-                updateSentOrdersNum(shops.get(0));
-            }
-        });
-
-    }
-
-    private void updateSentOrdersNum(Shop shop) {
-        orderVM.getSentOrdersNum(shop.getServerShopId()).observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer sentOrdersNum) {
-                txtOrdersSentNum.setText(String.valueOf(sentOrdersNum));
-            }
-        });
-    }
-
-
-    private void initLogOutImg(final ShopKeeper shopKeeper){
-        imgLogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                shopKeeper.setIsLoggedIn(ShopKeeper.LOGGED_OUT);
-                shopKeeperVM.update(shopKeeper);
-                LauncherActivity launcherActivity = (LauncherActivity) getActivity();
-                Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment());
+                if (shopKeeper == null) return;
+                imgLogOut.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        shopKeeper.setIsLoggedIn(ShopKeeper.LOGGED_OUT);
+                        shopKeeperVM.update(shopKeeper);
+                        LauncherActivity launcherActivity = (LauncherActivity) getActivity();
+                        Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment());
+                    }
+                });
+                loadOrdersNum(shopKeeper);
             }
         });
     }
 
     private void initMyShopItem() {
-
         linlayMyShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,12 +97,9 @@ public class WelcomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
     }
 
     private void initMyOrdersItem() {
-
-
         consLayMyOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,11 +109,42 @@ public class WelcomeFragment extends Fragment {
                 } else {
                     Toast.makeText(getContext(), R.string.error_network, Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+    }
 
+    private void loadOrdersNum(ShopKeeper shopKeeper) {
+        shopVM.getShopsByShopKeeperId(shopKeeper.getServerShopKeeperId()).observe(this, new Observer<List<Shop>>() {
+            @Override
+            public void onChanged(List<Shop> shops) {
+                if (shops == null || shops.size() == 0) return;
+                updateOrdersNum(shops.get(0));
             }
         });
 
     }
 
+    private void updateOrdersNum(final Shop shop) {
+        orderVM.getSentOrdersNum(shop.getServerShopId()).observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer ordersNum) {
+                if (ordersNum == null) return;
+                if (ordersNum > 0) {
+                    serverShopId = shop.getServerShopId();
+                    txtOrdersSentNum.setVisibility(View.VISIBLE);
+                    txtOrdersSentNum.setText(String.valueOf(ordersNum));
+                }
+            }
+        });
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (serverShopId!=0){
+            orderVM.loadOrders(serverShopId);
+        }
+
+    }
 }

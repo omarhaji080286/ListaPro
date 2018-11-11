@@ -10,6 +10,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 import winservices.com.listapro.models.entities.Order;
+import winservices.com.listapro.models.entities.ShopKeeper;
 
 @Dao
 public interface OrderDao {
@@ -26,8 +27,13 @@ public interface OrderDao {
     @Query("SELECT * FROM orders WHERE serverShopIdFk = :serverShopId")
     LiveData<List<Order>> getOrdersByServerShopId(int serverShopId);
 
-    @Query("SELECT COUNT(*) FROM orders" +
-            " WHERE serverShopIdFk = :serverShopId" +
-            " AND statusId = 1")
+    @Query("SELECT COUNT(*)" +
+            " FROM orders as o, shops as s, shopkeepers as sk" +
+            " WHERE o.serverShopIdFk = s.serverShopId " +
+            " AND s.serverShopKeeperIdFk = sk.serverShopKeeperId" +
+            " AND sk.lastLogged = " + ShopKeeper.LAST_LOGGED +
+            " AND sk.isLoggedIn = " + ShopKeeper.LOGGED_IN +
+            " AND s.serverShopId = :serverShopId" +
+            " AND o.statusId = 1")
     LiveData<Integer> getSentOrdersNum(int serverShopId);
 }

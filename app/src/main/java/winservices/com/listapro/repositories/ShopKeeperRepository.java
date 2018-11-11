@@ -72,6 +72,7 @@ public class ShopKeeperRepository {
         String jsonRequest = gson.toJson(shopKeeper);
         hashMap.put("jsonRequest", jsonRequest);
         Call<WebServiceResponse> call = ws.addShopKeeper(hashMap);
+        Log.d(TAG, "jsonRequest: " + jsonRequest);
 
         call.enqueue(new Callback<WebServiceResponse>() {
             @Override

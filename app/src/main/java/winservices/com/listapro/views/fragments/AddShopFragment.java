@@ -89,6 +89,7 @@ public class AddShopFragment extends Fragment {
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
             public void onChanged(ShopKeeper shopKeeper) {
+                if (shopKeeper==null) return;
                 currentSK = shopKeeper;
                 btnAddShop.setEnabled(true);
                 initBtnAddShop();

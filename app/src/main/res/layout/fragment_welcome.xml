@@ -56,15 +56,18 @@
 
                 <TextView
                     android:id="@+id/txtOrdersSentNum"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="10"
+                    app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toTopOf="@+id/imgMyOrders"
-                    android:background="@color/red"
+                    android:background="@drawable/oval_red_background"
                     android:textColor="@color/white"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:padding="1dp"
+                    android:gravity="center"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/txtMyOrders"
