@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".views.fragments.AddShopFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtAddShopDesc"
+            style="@style/SimpleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_shop_desc" />
+
+        <Spinner
+            android:id="@+id/spinnerCity"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/spinnerShopType"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/linlayDCategoriesToSelect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/text_content_margin_large"
+            android:layout_marginEnd="@dimen/text_content_margin_large"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/SimpleText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nature_of_items_for_shop_type" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDCategoriesToSelect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/editShopName"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/your_shop_name"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/btnAddShop"
+            style="@style/Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_my_shop" />
+
+    </LinearLayout>
+
+</ScrollView>

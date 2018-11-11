@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.fragments.SignUpFragment"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+
+    <LinearLayout
+        android:id="@+id/logo"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_content_margin_large">
+
+        <ImageView
+            style="@style/LogoImg"
+            android:src="@drawable/logo"
+            android:layout_gravity="center_horizontal"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/appName"
+            style="@style/Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/form"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo"
+        android:layout_marginEnd="@dimen/text_content_margin_large"
+        android:layout_marginStart="@dimen/text_content_margin_large">
+
+        <TextView
+            android:id="@+id/txtDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/SimpleText"
+            android:text="@string/input_phone_description"/>
+
+        <LinearLayout
+            android:id="@+id/linLayPhoneContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="@dimen/text_content_margin_large">
+
+            <ImageView
+                style="@style/flagCountry"
+                android:src="@drawable/morocco"
+                android:contentDescription="@string/country_flag" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+212"
+                style="@style/SimpleText"/>
+
+            <EditText
+                android:id="@+id/editPhone"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:maxLength="9"
+                android:text="@string/hint_phone_number"
+                android:visibility="visible"/>
+
+        </LinearLayout>
+
+
+
+        <Button
+            android:id="@+id/btnContinue"
+            style="@style/Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/next"
+            android:visibility="visible"/>
+
+        <EditText
+            android:id="@+id/editVerifCode"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:text="@string/hint_verification_code"
+            android:maxLength="6"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnNext"
+            style="@style/Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_up"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

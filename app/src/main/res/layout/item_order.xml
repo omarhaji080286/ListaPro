@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/recycler_margin">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/consLayOrderContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:id="@+id/imgClientPic"
+            android:layout_width="@dimen/user_img_height"
+            android:layout_height="@dimen/user_img_width"
+            android:src="@drawable/logo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/labelClient"
+            style="@style/TextInOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/client"
+            app:layout_constraintStart_toEndOf="@+id/imgClientPic"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txtClientName"
+            style="@style/TextInOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/client_name"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/labelClient"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/labelReference"
+            style="@style/TextInOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reference"
+            app:layout_constraintStart_toEndOf="@+id/imgClientPic"
+            app:layout_constraintTop_toBottomOf="@+id/labelClient" />
+
+        <TextView
+            android:id="@+id/txtReference"
+            style="@style/TextInOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/order_reference"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/labelReference"
+            app:layout_constraintTop_toBottomOf="@+id/txtClientName" />
+
+        <TextView
+            android:id="@+id/labelDate"
+            style="@style/TextInOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/date"
+            app:layout_constraintStart_toEndOf="@+id/imgClientPic"
+            app:layout_constraintTop_toBottomOf="@+id/labelReference" />
+
+        <TextView
+            android:id="@+id/txtDate"
+            style="@style/TextInOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/order_date"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/labelDate"
+            app:layout_constraintTop_toBottomOf="@+id/txtReference" />
+
+        <TextView
+            android:id="@+id/txtStatus"
+            style="@style/TextInOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="25dp"
+            android:text="STATUS"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/imgArrowRight"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imgArrowRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_arrow_right_black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

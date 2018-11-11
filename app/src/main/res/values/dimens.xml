@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_size_h1">22dp</dimen>
+    <dimen name="text_size_h2">20dp</dimen>
+    <dimen name="text_size_h3">18dp</dimen>
+    <dimen name="text_content_size_large">16dp</dimen>
+    <dimen name="text_content_size_average">14dp</dimen>
+    <dimen name="text_content_size_small">12dp</dimen>
+    <dimen name="text_content_padding">2dp</dimen>
+    <dimen name="text_content_margin_large">16dp</dimen>
+    <dimen name="margin_average">12dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="button_margin">16dp</dimen>
+    <dimen name="logo_size_height">64dp</dimen>
+    <dimen name="logo_size_width">64dp</dimen>
+    <dimen name="linear_border_padding">10dp</dimen>
+    <dimen name="welcome_img_item_height">64dp</dimen>
+    <dimen name="welcome_img_item_width">64dp</dimen>
+    <dimen name="flag_country_size_width">32dp</dimen>
+    <dimen name="flag_country_size_height">32dp</dimen>
+    <dimen name="shoptype_spinner_width">32dp</dimen>
+    <dimen name="shoptype_spinner_height">32dp</dimen>
+    <dimen name="item_height_in_select_list">40dp</dimen>
+    <dimen name="user_img_height">60dp</dimen>
+    <dimen name="user_img_width">60dp</dimen>
+    <dimen name="recycler_margin">5dp</dimen>
+    <dimen name="ordered_good_pic_size_width">50dp</dimen>
+    <dimen name="ordered_good_pic_size_height">50dp</dimen>
+    <dimen name="margin_very_small">4dp</dimen>
+    <dimen name="size_height_check">20dp</dimen>
+    <dimen name="size_width_check">20dp</dimen>
+    <dimen name="check_margin">5dp</dimen>
+</resources>

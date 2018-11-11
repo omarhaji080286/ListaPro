@@ -1,0 +1,126 @@
+package winservices.com.listapro.repositories;
+
+import android.app.Application;
+import android.os.AsyncTask;
+import android.util.Log;
+
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import winservices.com.listapro.models.dao.AssocShopDCategoryDao;
+import winservices.com.listapro.models.dao.ShopDao;
+import winservices.com.listapro.models.dao.ShopKeeperDao;
+import winservices.com.listapro.models.database.ListaProDataBase;
+import winservices.com.listapro.models.entities.AssocShopDCategory;
+import winservices.com.listapro.models.entities.DefaultCategory;
+import winservices.com.listapro.models.entities.Shop;
+import winservices.com.listapro.webservices.ListaProWebServices;
+import winservices.com.listapro.webservices.RetrofitHelper;
+import winservices.com.listapro.webservices.WebServiceResponse;
+
+public class ShopRepository {
+
+    private final static String TAG = ShopRepository.class.getSimpleName();
+
+    private ShopDao shopDao;
+    private AssocShopDCategoryDao assocDao;
+    private ShopKeeperDao shopKeeperDao;
+
+    public ShopRepository(Application application) {
+        ListaProDataBase db = ListaProDataBase.getInstance(application);
+        this.shopDao = db.shopDao();
+        this.assocDao = db.assocShopDCategoryDao();
+    }
+
+    public LiveData<List<Shop>> getShopsByShopKeeperId(int skId) {
+        return shopDao.getShopsByShopKeeperId(skId);
+    }
+
+    public void insert(Shop shop) {
+        new InsertShopAsyncTask(shopDao, assocDao).execute(shop);
+    }
+
+    public void insertShopOnServer(final Shop shop) {
+        RetrofitHelper rh = new RetrofitHelper();
+        ListaProWebServices ws = rh.initWebServices();
+
+        Gson gson = new Gson();
+        Map<String, String> hashMap = new HashMap<>();
+        String jsonRequest = gson.toJson(shop);
+        Log.d(TAG, "jsonRequest: " + jsonRequest);
+        hashMap.put("jsonRequest", jsonRequest);
+        Call<WebServiceResponse> call = ws.addShop(hashMap);
+
+        call.enqueue(new Callback<WebServiceResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<WebServiceResponse> call, @NonNull Response<WebServiceResponse> response) {
+                if (!response.isSuccessful()) {
+                    Log.d(TAG, "Error : " + response.code());
+                } else {
+                    WebServiceResponse wsResponse = response.body();
+                    Log.d(TAG, "response body: " + response.body());
+                    if (wsResponse != null) {
+                        if (!wsResponse.isError()) {
+                            shop.setServerShopId(wsResponse.getServerShopId());
+                            insert(shop);
+                        } else {
+                            Log.d(TAG, "Error on server : " + wsResponse.getMessage());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<WebServiceResponse> call, @NonNull Throwable t) {
+                Log.d(TAG, "Failure : " + t.getMessage());
+            }
+        });
+    }
+
+    public List<DefaultCategory> getShopDCategoriesByShopId(final int serverShopId)
+                                        throws ExecutionException, InterruptedException{
+            Callable<List<DefaultCategory>> callable = new Callable<List<DefaultCategory>>() {
+                @Override
+                public List<DefaultCategory> call() throws Exception {
+                    return shopDao.getShopDCategoriesByShopId(serverShopId);
+                }
+            };
+            Future<List<DefaultCategory>> future = Executors.newSingleThreadExecutor().submit(callable);
+            return future.get();
+    }
+
+    private static class InsertShopAsyncTask extends AsyncTask<Shop, Void, Void> {
+
+        private ShopDao shopDao;
+        private AssocShopDCategoryDao assocDao;
+
+        private InsertShopAsyncTask(ShopDao shopDao, AssocShopDCategoryDao assocDao) {
+            this.shopDao = shopDao;
+            this.assocDao = assocDao;
+        }
+
+        @Override
+        protected Void doInBackground(Shop... shops) {
+            shopDao.insert(shops[0]);
+            for (DefaultCategory dCategory : shops[0].getdCategories()) {
+                AssocShopDCategory assoc = new AssocShopDCategory(shops[0].getServerShopId(), dCategory.getDCategoryId());
+                assocDao.insert(assoc);
+            }
+            return null;
+        }
+    }
+
+
+}

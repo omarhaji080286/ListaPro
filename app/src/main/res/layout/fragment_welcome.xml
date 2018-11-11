@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:weightSum="100"
+    tools:context=".views.fragments.WelcomeFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="20"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/logo" />
+
+        <ImageView
+            android:id="@+id/imgLogOut"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/margin_small"
+            android:src="@drawable/ic_exit_white"
+            android:background="?attr/selectableItemBackgroundBorderless"/>
+
+    </RelativeLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="80">
+
+        <TableRow>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/consLayMyOrders"
+                style="@style/WelcomeItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1">
+
+                <ImageView
+                    android:id="@+id/imgMyOrders"
+                    style="@style/WelcomeImgItem"
+                    android:contentDescription="@string/represents_the_shop_s_orders"
+                    android:src="@drawable/ic_list_black" />
+
+                <TextView
+                    android:id="@+id/txtOrdersSentNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/imgMyOrders"
+                    android:background="@color/red"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/txtMyOrders"
+                    style="@style/WelcomeTextItem"
+                    android:text="@string/my_orders"
+                    android:layout_marginTop="@dimen/margin_small"
+                    app:layout_constraintTop_toBottomOf="@+id/imgMyOrders"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <LinearLayout
+                android:id="@+id/linlayMyShop"
+                style="@style/WelcomeItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="2">
+
+                <ImageView
+                    android:id="@+id/imgMyShop"
+                    style="@style/WelcomeImgItem"
+                    android:contentDescription="@string/represents_the_shop_s_orders"
+                    android:src="@drawable/ic_store_black" />
+
+                <TextView
+                    android:id="@+id/txtMyShop"
+                    style="@style/WelcomeTextItem"
+                    android:text="@string/my_shop"/>
+
+            </LinearLayout>
+
+
+        </TableRow>
+
+
+    </TableLayout>
+
+</LinearLayout>
