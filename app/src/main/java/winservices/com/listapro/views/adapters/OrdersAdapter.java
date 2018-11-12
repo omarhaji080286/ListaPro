@@ -15,14 +15,20 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.Order;
+import winservices.com.listapro.models.entities.OrderStatusValue;
 import winservices.com.listapro.utils.UtilsFunctions;
+import winservices.com.listapro.viewmodels.OrderVM;
 import winservices.com.listapro.views.activities.MyOrdersActivity;
 import winservices.com.listapro.views.fragments.OrderDetailsFragment;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
 
     private List<Order> orders = new ArrayList<>();
+    private OrderVM orderVM;
 
+    public OrdersAdapter(OrderVM orderVM) {
+        this.orderVM = orderVM;
+    }
 
     @NonNull
     @Override
@@ -47,10 +53,15 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
             public void onClick(View view) {
                 OrderDetailsFragment fragment = new OrderDetailsFragment();
                 Bundle bundle = new Bundle();
-                bundle.putInt(Order.SERVER_ORDER_ID,order.getServerOrderId());
+                bundle.putInt(Order.SERVER_ORDER_ID, order.getServerOrderId());
                 fragment.setArguments(bundle);
                 MyOrdersActivity myOrdersActivity = (MyOrdersActivity) view.getContext();
                 myOrdersActivity.displayFragment(fragment, OrderDetailsFragment.TAG);
+                if (order.getStatus().getStatusId() == Order.SENT) {
+                    OrderStatusValue status = new OrderStatusValue(Order.READ, "READ");
+                    order.setStatus(status);
+                    orderVM.updateOrderOnServer(order);
+                }
             }
         });
     }
@@ -66,7 +77,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
         notifyDataSetChanged();
     }
 
-    class OrderVH extends RecyclerView.ViewHolder{
+    class OrderVH extends RecyclerView.ViewHolder {
 
         private TextView txtClientName, txtReference, txtDate, txtStatus;
         private ImageView imgClientPic;

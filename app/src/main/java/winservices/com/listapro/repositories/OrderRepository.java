@@ -4,6 +4,8 @@ import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +86,42 @@ public class OrderRepository {
                                 }
                             }
                             Log.d(TAG, "onResponse: " + orders.size() + " orders inserted or updated");
+                        } else {
+                            Log.d(TAG, "Error on server : " + wsResponse.getMessage());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<WebServiceResponse> call, @NonNull Throwable t) {
+                Log.d(TAG, "Failure : " + t.getMessage());
+            }
+        });
+    }
+
+    public void updateOrderOnServer(final Order order) {
+        RetrofitHelper rh = new RetrofitHelper();
+        ListaProWebServices ws = rh.initWebServices();
+
+        Gson gson = new Gson();
+        Map<String, String> hashMap = new HashMap<>();
+        String jsonRequest = gson.toJson(order);
+        Log.d(TAG, "jsonRequest: " + jsonRequest);
+        hashMap.put("jsonRequest", jsonRequest);
+        Call<WebServiceResponse> call = ws.updateOrder(hashMap);
+
+        call.enqueue(new Callback<WebServiceResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<WebServiceResponse> call, @NonNull Response<WebServiceResponse> response) {
+                if (!response.isSuccessful()) {
+                    Log.d(TAG, "Error : " + response.code());
+                } else {
+                    WebServiceResponse wsResponse = response.body();
+                    Log.d(TAG, "response body: " + response.body());
+                    if (wsResponse != null) {
+                        if (!wsResponse.isError()) {
+                            update(order);
                         } else {
                             Log.d(TAG, "Error on server : " + wsResponse.getMessage());
                         }

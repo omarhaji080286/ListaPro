@@ -44,4 +44,8 @@ public class OrderVM extends AndroidViewModel {
         return repository.getSentOrdersNum(serverShopId);
     }
 
+    public void updateOrderOnServer(Order order){
+        repository.updateOrderOnServer(order);
+    }
+
 }

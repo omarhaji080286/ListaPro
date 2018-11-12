@@ -52,7 +52,7 @@ public class OrdersFragment extends Fragment {
         shopVM = ViewModelProviders.of(this).get(ShopVM.class);
         rvOrders = view.findViewById(R.id.rvOrders);
 
-        ordersAdapter = new OrdersAdapter();
+        ordersAdapter = new OrdersAdapter(orderVM);
         rvOrders.setLayoutManager(new LinearLayoutManager(getContext()));
         rvOrders.setAdapter(ordersAdapter);
 

@@ -27,4 +27,8 @@ public interface ListaProWebServices {
     @FormUrlEncoded
     @POST("getShopOrders.php")
     Call<WebServiceResponse> getShopOrders(@FieldMap Map<String, String> body);
+
+    @FormUrlEncoded
+    @POST("updateOrder.php")
+    Call<WebServiceResponse> updateOrder(@FieldMap Map<String, String> body);
 }
