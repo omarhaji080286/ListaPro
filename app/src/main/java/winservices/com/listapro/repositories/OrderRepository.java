@@ -140,6 +140,10 @@ public class OrderRepository {
         return orderDao.getSentOrdersNum(serverShopId);
     }
 
+    public LiveData<Order> getOrderByServerOrderId(int serverOrderId) {
+        return orderDao.getOrderByServerOrderId(serverOrderId);
+    }
+
     private static class InsertOrderedGoodAsyncTask extends AsyncTask<OrderedGood, Void, Void> {
         private OrderedGoodDao orderedGoodDao;
 

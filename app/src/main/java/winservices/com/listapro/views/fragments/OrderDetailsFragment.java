@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.Order;
+import winservices.com.listapro.models.entities.OrderStatusValue;
 import winservices.com.listapro.models.entities.OrderedGood;
 import winservices.com.listapro.viewmodels.OrderVM;
 import winservices.com.listapro.views.adapters.OrderedGoodsAdapter;
@@ -76,6 +77,7 @@ public class OrderDetailsFragment extends Fragment {
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 Toast.makeText(getContext(), "confirm order n° " + serverOrderId, Toast.LENGTH_SHORT).show();
+                setOrderStatuToAvailable(serverOrderId);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -89,6 +91,19 @@ public class OrderDetailsFragment extends Fragment {
             public void onClick(View view) {
                 AlertDialog dialog = builder.create();
                 dialog.show();
+            }
+        });
+    }
+
+    private void setOrderStatuToAvailable(int serverOrderId) {
+
+        orderVM.getOrderByServerOrderId(serverOrderId).observe(this, new Observer<Order>() {
+            @Override
+            public void onChanged(Order order) {
+                OrderStatusValue status = new OrderStatusValue(Order.AVAILABLE, "AVAILABLE");
+                order.setStatus(status);
+                orderVM.updateOrderOnServer(order);
+
             }
         });
     }

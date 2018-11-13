@@ -36,4 +36,7 @@ public interface OrderDao {
             " AND s.serverShopId = :serverShopId" +
             " AND o.statusId IN (1, 2, 6)")
     LiveData<Integer> getSentOrdersNum(int serverShopId);
+
+    @Query("SELECT * FROM orders WHERE serverOrderId = :serverOrderId")
+    LiveData<Order> getOrderByServerOrderId(int serverOrderId);
 }
