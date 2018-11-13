@@ -44,5 +44,9 @@
     <string name="ordered_good_name">Ordered good name</string>
     <string name="ordered_good_description">Ordered good description</string>
     <string name="item_icon">Item icon</string>
-
+    <string name="finish">Finish</string>
+    <string name="confirm_order_ready">Your client will be notified that the order is ready. Do you confirm ?</string>
+    <string name="order_ready">Order ready confirmation</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
 </resources>
