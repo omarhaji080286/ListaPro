@@ -31,4 +31,8 @@ public interface ListaProWebServices {
     @FormUrlEncoded
     @POST("updateOrder.php")
     Call<WebServiceResponse> updateOrder(@FieldMap Map<String, String> body);
+
+    @FormUrlEncoded
+    @POST("updateOrderedGoods.php")
+    Call<WebServiceResponse> updateOrderedGoods(@FieldMap Map<String,String> hashMap);
 }

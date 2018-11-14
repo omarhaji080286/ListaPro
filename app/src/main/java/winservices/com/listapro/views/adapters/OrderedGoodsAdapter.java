@@ -19,6 +19,7 @@ import winservices.com.listapro.viewmodels.OrderVM;
 public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapter.OrderedGoodVH> {
 
     private List<OrderedGood> oGoods = new ArrayList<>();
+    private List<OrderedGood> updatedOGoods = new ArrayList<>();
     private OrderVM orderVM;
 
     public OrderedGoodsAdapter(OrderVM orderVM) {
@@ -27,6 +28,7 @@ public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapte
 
     public void setOGoods(List<OrderedGood> oGoods) {
         this.oGoods = oGoods;
+        this.updatedOGoods = oGoods;
         notifyDataSetChanged();
     }
 
@@ -39,7 +41,7 @@ public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final OrderedGoodVH holder, int position) {
+    public void onBindViewHolder(@NonNull final OrderedGoodVH holder, final int position) {
 
         final OrderedGood oGood = oGoods.get(position);
 
@@ -57,6 +59,7 @@ public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapte
         holder.consLayOGoodContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                updatedOGoods.remove(oGood);
                 switch (oGood.getStatus()) {
                     case OrderedGood.UNPROCESSED:
                         oGood.setStatus(OrderedGood.PROCESSED);
@@ -73,6 +76,7 @@ public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapte
                         holder.imgCheck.setVisibility(View.GONE);
                 }
                 orderVM.update(oGood);
+                updatedOGoods.add(oGood);
             }
         });
 
@@ -113,5 +117,7 @@ public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapte
         }
     }
 
-
+    public List<OrderedGood> getUpdatedOGoods() {
+        return updatedOGoods;
+    }
 }

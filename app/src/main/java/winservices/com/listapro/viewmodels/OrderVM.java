@@ -48,6 +48,10 @@ public class OrderVM extends AndroidViewModel {
         repository.updateOrderOnServer(order);
     }
 
+    public void updateOrderedGoodsOnServer(List<OrderedGood> oGoods){
+        repository.updateOrderedGoodsOnServer(oGoods);
+    }
+
     public LiveData<Order> getOrderByServerOrderId(int serverOrderId) {
         return repository.getOrderByServerOrderId(serverOrderId);
     }

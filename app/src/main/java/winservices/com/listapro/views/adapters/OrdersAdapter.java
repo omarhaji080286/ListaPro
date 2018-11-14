@@ -57,7 +57,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
                 fragment.setArguments(bundle);
                 MyOrdersActivity myOrdersActivity = (MyOrdersActivity) view.getContext();
                 myOrdersActivity.displayFragment(fragment, OrderDetailsFragment.TAG);
-                if (order.getStatus().getStatusId() == Order.SENT) {
+                if (order.getStatus().getStatusId() == Order.REGISTERED) {
                     OrderStatusValue status = new OrderStatusValue(Order.READ, "READ");
                     order.setStatus(status);
                     orderVM.updateOrderOnServer(order);

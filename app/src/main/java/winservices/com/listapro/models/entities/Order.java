@@ -22,12 +22,12 @@ import static androidx.room.ForeignKey.CASCADE;
 public class Order {
 
     public final static String SERVER_ORDER_ID = "serverOrderId";
-    public final static int SENT = 1;
-    public final static int READ = 6;
-    public final static int IN_PREPARATION = 2;
-    public final static int NOT_SUPPORTED = 3;
+    public final static int REGISTERED = 1;
+    public final static int READ = 2;
+    public final static int IN_PREPARATION = 3;
     public final static int AVAILABLE = 4;
     public final static int COMPLETED = 5;
+    public final static int NOT_SUPPORTED = 6;
 
 
     @PrimaryKey
@@ -104,4 +104,5 @@ public class Order {
     public void setStatus(OrderStatusValue status) {
         this.status = status;
     }
+
 }

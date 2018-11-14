@@ -144,6 +144,42 @@ public class OrderRepository {
         return orderDao.getOrderByServerOrderId(serverOrderId);
     }
 
+    public void updateOrderedGoodsOnServer(List<OrderedGood> oGoods) {
+        RetrofitHelper rh = new RetrofitHelper();
+        ListaProWebServices ws = rh.initWebServices();
+
+        Gson gson = new Gson();
+        Map<String, String> hashMap = new HashMap<>();
+        String jsonRequest = gson.toJson(oGoods);
+        Log.d(TAG, "jsonRequest: " + jsonRequest);
+        hashMap.put("jsonRequest", jsonRequest);
+        Call<WebServiceResponse> call = ws.updateOrderedGoods(hashMap);
+
+        call.enqueue(new Callback<WebServiceResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<WebServiceResponse> call, @NonNull Response<WebServiceResponse> response) {
+                if (!response.isSuccessful()) {
+                    Log.d(TAG, "Error : " + response.code());
+                } else {
+                    WebServiceResponse wsResponse = response.body();
+                    Log.d(TAG, "response body: " + response.body());
+                    if (wsResponse != null) {
+                        if (!wsResponse.isError()) {
+                            Log.d(TAG, "WS Success : " + wsResponse.getMessage());
+                        } else {
+                            Log.d(TAG, "WS Error : " + wsResponse.getMessage());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<WebServiceResponse> call, @NonNull Throwable t) {
+                Log.d(TAG, " WS Failure : " + t.getMessage());
+            }
+        });
+    }
+
     private static class InsertOrderedGoodAsyncTask extends AsyncTask<OrderedGood, Void, Void> {
         private OrderedGoodDao orderedGoodDao;
 

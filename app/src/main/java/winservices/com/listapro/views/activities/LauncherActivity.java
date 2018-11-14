@@ -40,27 +40,28 @@ public class LauncherActivity extends AppCompatActivity {
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
             public void onChanged(ShopKeeper shopKeeper) {
+                if (shopKeeper == null) {
+                    displayFragment(new SignUpFragment());
+                    return;
+                }
                 loadShops(shopKeeper);
             }
         });
-
-
     }
 
-
     private void loadShops(final ShopKeeper shopKeeper) {
-        if (shopKeeper != null) {
-            shopVM.getShopsByShopKeeperId(shopKeeper.getServerShopKeeperId()).observe(this, new Observer<List<Shop>>() {
-                @Override
-                public void onChanged(List<Shop> shops) {
-                    shopKeeper.setShops(shops);
-                    routeUser(shopKeeper);
-                    orderVM.loadOrders(shops.get(0).getServerShopId());
+        shopVM.getShopsByShopKeeperId(shopKeeper.getServerShopKeeperId()).observe(this, new Observer<List<Shop>>() {
+            @Override
+            public void onChanged(List<Shop> shops) {
+                if (shops == null || shops.size()==0){
+                    displayFragment(new AddShopFragment());
+                    return;
                 }
-            });
-        } else {
-            displayFragment(new SignUpFragment());
-        }
+                shopKeeper.setShops(shops);
+                routeUser(shopKeeper);
+                orderVM.loadOrders(shops.get(0).getServerShopId());
+            }
+        });
     }
 
     private void routeUser(ShopKeeper shopKeeper) {

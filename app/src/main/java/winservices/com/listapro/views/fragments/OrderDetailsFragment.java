@@ -36,9 +36,9 @@ public class OrderDetailsFragment extends Fragment {
     private OrderedGoodsAdapter oGoodsAdapter;
     private OrderVM orderVM;
     private Button btnFinishOrder;
-    private int serverOrderId;
 
-    public OrderDetailsFragment() {  }
+    public OrderDetailsFragment() {
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -55,29 +55,38 @@ public class OrderDetailsFragment extends Fragment {
         btnFinishOrder = view.findViewById(R.id.btnFinishOrder);
 
         oGoodsAdapter = new OrderedGoodsAdapter(orderVM);
-        GridLayoutManager glm = new GridLayoutManager(getContext(), GRID_COLUMN_NUMBER );
+        GridLayoutManager glm = new GridLayoutManager(getContext(), GRID_COLUMN_NUMBER);
         rvOGoods.setLayoutManager(glm);
         rvOGoods.setAdapter(oGoodsAdapter);
 
         if (getArguments() != null) {
-            serverOrderId = getArguments().getInt(Order.SERVER_ORDER_ID);
-            loadOrderedGoods(serverOrderId);
-            initFinishButton(serverOrderId);
+            int serverOrderId = getArguments().getInt(Order.SERVER_ORDER_ID);
+            orderVM.getOrderByServerOrderId(serverOrderId).observe(this, new Observer<Order>() {
+                @Override
+                public void onChanged(Order order) {
+                    loadOrderedGoods(order);
+                    int statusId = order.getStatus().getStatusId();
+                    if (statusId==Order.AVAILABLE || statusId == Order.NOT_SUPPORTED || statusId == Order.COMPLETED){
+                        btnFinishOrder.setVisibility(View.GONE);
+                    } else {
+                        initFinishButton(order);
+                    }
+                }
+            });
         }
-
 
 
     }
 
-    private void initFinishButton(final int serverOrderId) {
-
+    private void initFinishButton(final Order order) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         builder.setMessage(R.string.confirm_order_ready);
         builder.setTitle(R.string.order_ready);
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                Toast.makeText(getContext(), "confirm order n° " + serverOrderId, Toast.LENGTH_SHORT).show();
-                setOrderStatuToAvailable(serverOrderId);
+                setOrderStatusToAvailable(order);
+                List<OrderedGood> oGoods = oGoodsAdapter.getUpdatedOGoods();
+                orderVM.updateOrderedGoodsOnServer(oGoods);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -95,21 +104,17 @@ public class OrderDetailsFragment extends Fragment {
         });
     }
 
-    private void setOrderStatuToAvailable(int serverOrderId) {
-
-        orderVM.getOrderByServerOrderId(serverOrderId).observe(this, new Observer<Order>() {
-            @Override
-            public void onChanged(Order order) {
-                OrderStatusValue status = new OrderStatusValue(Order.AVAILABLE, "AVAILABLE");
-                order.setStatus(status);
-                orderVM.updateOrderOnServer(order);
-
-            }
-        });
+    private void setOrderStatusToAvailable(Order order) {
+        if (order.getStatus().getStatusId() != Order.AVAILABLE) {
+            OrderStatusValue status = new OrderStatusValue(Order.AVAILABLE, "AVAILABLE");
+            order.setStatus(status);
+            orderVM.updateOrderOnServer(order);
+            Toast.makeText(getContext(), getString(R.string.notification_sent_to_client), Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void loadOrderedGoods(int serverOrderId) {
-        orderVM.getOrderedGoodsByOrderId(serverOrderId).observe(this, new Observer<List<OrderedGood>>() {
+    private void loadOrderedGoods(Order order) {
+        orderVM.getOrderedGoodsByOrderId(order.getServerOrderId()).observe(this, new Observer<List<OrderedGood>>() {
             @Override
             public void onChanged(List<OrderedGood> orderedGoods) {
                 oGoodsAdapter.setOGoods(orderedGoods);
