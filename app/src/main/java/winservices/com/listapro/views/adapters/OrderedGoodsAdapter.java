@@ -99,6 +99,8 @@ public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapte
         return oGoods.size();
     }
 
+
+
     class OrderedGoodVH extends RecyclerView.ViewHolder {
 
         private TextView txtOGoodName, txtOGoodDesc;

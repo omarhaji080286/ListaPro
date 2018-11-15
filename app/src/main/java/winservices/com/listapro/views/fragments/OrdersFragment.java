@@ -69,7 +69,7 @@ public class OrdersFragment extends Fragment {
         shopVM.getShopsByShopKeeperId(serverShopKeeperId).observe(this, new Observer<List<Shop>>() {
             @Override
             public void onChanged(List<Shop> shops) {
-                orderVM.loadOrders(shops.get(0).getServerShopId());
+                //orderVM.loadOrders(shops.get(0).getServerShopId());
                 setOrdersToAdapter(shops.get(0).getServerShopId());
             }
         });

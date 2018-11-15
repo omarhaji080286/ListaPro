@@ -3,24 +3,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".views.fragments.OrderDetailsFragment"
     android:orientation="vertical"
-    android:weightSum="100">
+    android:weightSum="100"
+    tools:context=".views.fragments.OrderDetailsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ImageView
+            style="@style/SimpleText"
+            android:layout_width="@dimen/size_height_check"
+            android:layout_height="@dimen/size_width_check"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/margin_very_small"
+            android:src="@drawable/check"
+            android:contentDescription="@string/available" />
+
+        <TextView
+            style="@style/SimpleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/margin_average"
+            android:text="@string/available" />
+
+        <ImageView
+            style="@style/SimpleText"
+            android:layout_width="@dimen/size_height_check"
+            android:layout_height="@dimen/size_width_check"
+            android:layout_gravity="center"
+            android:src="@drawable/cross"
+            android:contentDescription="@string/not_available"/>
+
+        <TextView
+            style="@style/SimpleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/not_available" />
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvOGoods"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_very_small"
-        android:layout_weight="98"/>
+        android:layout_weight="98" />
 
     <Button
         android:id="@+id/btnFinishOrder"
         style="@style/Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/finish"
-        android:layout_weight="2"/>
+        android:layout_weight="1"
+        android:text="@string/finish" />
 
 </LinearLayout>

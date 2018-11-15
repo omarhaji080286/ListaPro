@@ -3,9 +3,12 @@ package winservices.com.listapro.views.fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -36,6 +39,7 @@ public class OrderDetailsFragment extends Fragment {
     private OrderedGoodsAdapter oGoodsAdapter;
     private OrderVM orderVM;
     private Button btnFinishOrder;
+    private GridLayoutManager glm;
 
     public OrderDetailsFragment() {
     }
@@ -55,7 +59,7 @@ public class OrderDetailsFragment extends Fragment {
         btnFinishOrder = view.findViewById(R.id.btnFinishOrder);
 
         oGoodsAdapter = new OrderedGoodsAdapter(orderVM);
-        GridLayoutManager glm = new GridLayoutManager(getContext(), GRID_COLUMN_NUMBER);
+        glm = new GridLayoutManager(getContext(), GRID_COLUMN_NUMBER);
         rvOGoods.setLayoutManager(glm);
         rvOGoods.setAdapter(oGoodsAdapter);
 
@@ -66,7 +70,7 @@ public class OrderDetailsFragment extends Fragment {
                 public void onChanged(Order order) {
                     loadOrderedGoods(order);
                     int statusId = order.getStatus().getStatusId();
-                    if (statusId==Order.AVAILABLE || statusId == Order.NOT_SUPPORTED || statusId == Order.COMPLETED){
+                    if (statusId == Order.AVAILABLE || statusId == Order.NOT_SUPPORTED || statusId == Order.COMPLETED) {
                         btnFinishOrder.setVisibility(View.GONE);
                     } else {
                         initFinishButton(order);
@@ -98,10 +102,42 @@ public class OrderDetailsFragment extends Fragment {
         btnFinishOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                if (verifyOGoodsStatus()) {
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                } else {
+                    Toast.makeText(getContext(), "Please, modify the articles status.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+    }
+
+    private void animateItem(final int position) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                View v = glm.findViewByPosition(position);
+                Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.blink);
+                if (v != null) {
+                    v.startAnimation(anim);
+                }
+
+            }
+        }, 50);
+    }
+
+    private boolean verifyOGoodsStatus() {
+        boolean allGoodsUpdated = true;
+        List<OrderedGood> oGoods = oGoodsAdapter.getUpdatedOGoods();
+        for (int i = 0; i < oGoods.size(); i++) {
+            OrderedGood oGood = oGoods.get(i);
+            if (oGood.getStatus() == OrderedGood.UNPROCESSED) {
+                allGoodsUpdated = false;
+                animateItem(i);
+            }
+        }
+        return allGoodsUpdated;
     }
 
     private void setOrderStatusToAvailable(Order order) {

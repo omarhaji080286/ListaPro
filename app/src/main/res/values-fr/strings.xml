@@ -50,4 +50,6 @@
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="notification_sent_to_client">A notification has been sent to your client</string>
+    <string name="available">Available</string>
+    <string name="not_available">Not Available</string>
 </resources>
