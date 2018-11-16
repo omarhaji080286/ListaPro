@@ -24,7 +24,11 @@ public interface OrderDao {
     @Delete
     void delete(Order order);
 
-    @Query("SELECT * FROM orders WHERE serverShopIdFk = :serverShopId")
+
+    @Query("SELECT * FROM `orders`" +
+            " WHERE `serverShopIdFk`=:serverShopId" +
+            " AND `statusId` NOT IN (" + Order.COMPLETED + "," + Order.NOT_SUPPORTED + ")" +
+            " ORDER BY `statusId` ASC, `creationDate` DESC")
     LiveData<List<Order>> getOrdersByServerShopId(int serverShopId);
 
     @Query("SELECT COUNT(*)" +
@@ -34,7 +38,7 @@ public interface OrderDao {
             " AND sk.lastLogged = " + ShopKeeper.LAST_LOGGED +
             " AND sk.isLoggedIn = " + ShopKeeper.LOGGED_IN +
             " AND s.serverShopId = :serverShopId" +
-            " AND o.statusId IN (1, 2, 6)")
+            " AND o.statusId IN (" + Order.REGISTERED + "," + Order.READ + "," + Order.IN_PREPARATION + ")")
     LiveData<Integer> getSentOrdersNum(int serverShopId);
 
     @Query("SELECT * FROM orders WHERE serverOrderId = :serverOrderId")
