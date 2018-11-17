@@ -52,4 +52,5 @@
     <string name="notification_sent_to_client">A notification has been sent to your client</string>
     <string name="available">Available</string>
     <string name="not_available">Not Available</string>
+    <string name="allow_location_permission_in_settings">Please allow location permission in your app settings</string>
 </resources>

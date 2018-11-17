@@ -1,7 +1,11 @@
 package winservices.com.listapro.views.fragments;
 
-
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +15,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +40,7 @@ import winservices.com.listapro.models.entities.DefaultCategory;
 import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
 import winservices.com.listapro.models.entities.ShopType;
+import winservices.com.listapro.utils.PermissionUtil;
 import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
 import winservices.com.listapro.viewmodels.ShopTypeVM;
@@ -40,9 +50,11 @@ import winservices.com.listapro.views.adapters.CitySpinnerAdapter;
 import winservices.com.listapro.views.adapters.DCategoriesToSelectAdapter;
 import winservices.com.listapro.views.adapters.ShopTypeSpinnerAdapter;
 
+import static winservices.com.listapro.utils.PermissionUtil.TXT_FINE_LOCATION;
 
 public class AddShopFragment extends Fragment {
 
+    private final String TAG = AddShopFragment.class.getSimpleName();
     boolean isExpanded = false;
     private ShopKeeperVM shopKeeperVM;
     private ShopTypeVM shopTypeVM;
@@ -55,10 +67,11 @@ public class AddShopFragment extends Fragment {
     private RecyclerView rvDCategoryToSelect;
     private LinearLayout linlayDCategorieToSelect;
     private DCategoriesToSelectAdapter dCategoriesToSelectAdapter;
+    private Location lastLocation;
+
 
     public AddShopFragment() {
     }
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -82,46 +95,30 @@ public class AddShopFragment extends Fragment {
         rvDCategoryToSelect = view.findViewById(R.id.rvDCategoriesToSelect);
         linlayDCategorieToSelect = view.findViewById(R.id.linlayDCategoriesToSelect);
 
-
         btnAddShop.setEnabled(false);
         initSpinners();
+        requestPermissionInFragment();
 
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
             public void onChanged(ShopKeeper shopKeeper) {
-                if (shopKeeper==null) return;
+                if (shopKeeper == null) return;
                 currentSK = shopKeeper;
                 btnAddShop.setEnabled(true);
                 initBtnAddShop();
             }
         });
 
-
     }
 
-    private void initBtnAddShop(){
+    private void initBtnAddShop() {
         btnAddShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (UtilsFunctions.checkNetworkConnection(getContext())) {
-                    //TODO get the geolocalisation of the shop
-                    double longitude = -6.902916;
-                    double latitude = 33.967371;
+                if (UtilsFunctions.checkNetworkConnection(Objects.requireNonNull(getContext()))) {
 
-                    String shopName = editShopName.getText().toString();
-                    int serverShopId = (new Random()).nextInt();
-                    ShopType shopType = (ShopType) spinnerShopType.getSelectedItem();
-                    City city = (City) spinnerCity.getSelectedItem();
-                    List<DefaultCategory> selectedCategories = dCategoriesToSelectAdapter.getSelectedDCategories();
+                    getLocation();
 
-                    if (inputsOk(shopName, shopType.getServerShopTypeId(), city.getServerCityId(), selectedCategories.size())) {
-                        Shop shop = new Shop(serverShopId, shopName, currentSK.getPhone(),
-                                longitude, latitude, currentSK.getServerShopKeeperId());
-                        shop.setShopType(shopType);
-                        shop.setCity(city);
-                        shop.setDCategories(selectedCategories);
-                        addNewShop(shop);
-                    }
                 } else {
                     Toast.makeText(getContext(), R.string.error_network, Toast.LENGTH_SHORT).show();
                 }
@@ -129,13 +126,77 @@ public class AddShopFragment extends Fragment {
         });
     }
 
-    private void addNewShop(Shop shop) {
+    @SuppressLint("MissingPermission")
+    private void getLocation() {
 
-        shopVM.insert(shop);
-        Toast.makeText(getContext(), getString(R.string.shop_added), Toast.LENGTH_SHORT).show();
+        FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getContext()));
 
-        LauncherActivity launcherActivity = (LauncherActivity) getActivity();
-        Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment());
+        mFusedLocationClient.getLastLocation().addOnCompleteListener(Objects.requireNonNull(getActivity()), new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+
+                if (task.isSuccessful() && task.getResult() != null) {
+                    lastLocation = task.getResult();
+                    Log.d(TAG, "onComplete:success  " + lastLocation.toString());
+                } else {
+                    Log.d(TAG, "onComplete:exception  " + task.getException());
+                }
+
+                addNewShop();
+            }
+        });
+
+
+    }
+
+    private void requestPermissionInFragment() {
+        //requestPermissions(new String[]{ACCESS_FINE_LOCATION}, 1);
+
+        PermissionUtil permissionUtil = new PermissionUtil(Objects.requireNonNull(getContext()));
+
+        if (permissionUtil.checkPermission(TXT_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                permissionUtil.showPermissionExplanation(TXT_FINE_LOCATION, getActivity());
+            } else if (!permissionUtil.checkPermissionPreference(TXT_FINE_LOCATION)) {
+                permissionUtil.requestPermission(TXT_FINE_LOCATION, getActivity());
+                permissionUtil.updatePermissionPreference(TXT_FINE_LOCATION);
+            } else {
+                permissionUtil.goToAppSettings();
+            }
+        }
+
+
+    }
+
+    private void addNewShop() {
+
+        double longitude = -6.902916;
+        double latitude = 33.967371;
+        String shopName = editShopName.getText().toString();
+        int serverShopId = (new Random()).nextInt();
+        ShopType shopType = (ShopType) spinnerShopType.getSelectedItem();
+        City city = (City) spinnerCity.getSelectedItem();
+        List<DefaultCategory> selectedCategories = dCategoriesToSelectAdapter.getSelectedDCategories();
+
+        if (inputsOk(shopName, shopType.getServerShopTypeId(), city.getServerCityId(), selectedCategories.size())) {
+            Shop shop = new Shop(serverShopId, shopName, currentSK.getPhone(),
+                    longitude, latitude, currentSK.getServerShopKeeperId());
+            shop.setShopType(shopType);
+            shop.setCity(city);
+            shop.setDCategories(selectedCategories);
+
+            if (lastLocation != null) {
+                shop.setLatitude(lastLocation.getLatitude());
+                shop.setLongitude(lastLocation.getLongitude());
+            }
+
+            shopVM.insert(shop);
+            Toast.makeText(getContext(), getString(R.string.shop_added), Toast.LENGTH_SHORT).show();
+
+            LauncherActivity launcherActivity = (LauncherActivity) getActivity();
+            Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment());
+        }
+
     }
 
     private boolean inputsOk(String shopName, int serverShopTypeId, int serverCityId, int selectedCategoriesSize) {

@@ -79,6 +79,8 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
 
+
+
     public void displayFragment(Fragment fragment) {
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction()
