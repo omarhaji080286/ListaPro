@@ -15,6 +15,8 @@ import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.City;
 
 public class CitySpinnerAdapter extends ArrayAdapter<City> {
+
+
     public CitySpinnerAdapter(@NonNull Context context, @NonNull List<City> cities) {
         super(context, 0, cities);
     }
@@ -37,7 +39,7 @@ public class CitySpinnerAdapter extends ArrayAdapter<City> {
 
         TextView spinnerText = convertView.findViewById(R.id.spinnerText);
 
-        City currentCity= getItem(position);
+        City currentCity = getItem(position);
         if (currentCity != null) {
             spinnerText.setText(currentCity.getCityName());
         }

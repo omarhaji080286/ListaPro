@@ -11,6 +11,7 @@ import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import winservices.com.listapro.models.dao.AssocShopDCategoryDao;
 import winservices.com.listapro.models.dao.AssocShopTypeDCategoryDao;
+import winservices.com.listapro.models.dao.CityDao;
 import winservices.com.listapro.models.dao.DefaultCategoryDao;
 import winservices.com.listapro.models.dao.OrderDao;
 import winservices.com.listapro.models.dao.OrderedGoodDao;
@@ -19,6 +20,7 @@ import winservices.com.listapro.models.dao.ShopKeeperDao;
 import winservices.com.listapro.models.dao.ShopTypeDao;
 import winservices.com.listapro.models.entities.AssocShopDCategory;
 import winservices.com.listapro.models.entities.AssocShopTypeDCategory;
+import winservices.com.listapro.models.entities.City;
 import winservices.com.listapro.models.entities.DefaultCategory;
 import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.OrderedGood;
@@ -28,7 +30,8 @@ import winservices.com.listapro.models.entities.ShopType;
 import winservices.com.listapro.repositories.ShopTypeRepository;
 
 @Database(  entities = {ShopKeeper.class, Shop.class, ShopType.class, AssocShopTypeDCategory.class,
-                        DefaultCategory.class, AssocShopDCategory.class, Order.class, OrderedGood.class},
+                        DefaultCategory.class, AssocShopDCategory.class, Order.class, OrderedGood.class,
+                        City.class},
             version = 1,
             exportSchema = false)
 @TypeConverters({Converters.class})
@@ -52,6 +55,7 @@ public abstract class ListaProDataBase extends RoomDatabase {
     public abstract AssocShopDCategoryDao assocShopDCategoryDao();
     public abstract OrderDao orderDao();
     public abstract OrderedGoodDao orderedGoodDao();
+    public abstract CityDao cityDao();
 
     private static RoomDatabase.Callback roomCallBack = new RoomDatabase.Callback(){
         @Override

@@ -41,6 +41,7 @@ public class WelcomeFragment extends Fragment {
     private ConstraintLayout consLayMyOrders;
     private TextView txtOrdersSentNum;
     private int serverShopId;
+    public final static String TAG = WelcomeFragment.class.getSimpleName();
 
     public WelcomeFragment() {
     }
@@ -81,7 +82,7 @@ public class WelcomeFragment extends Fragment {
                         shopKeeper.setIsLoggedIn(ShopKeeper.LOGGED_OUT);
                         shopKeeperVM.update(shopKeeper);
                         LauncherActivity launcherActivity = (LauncherActivity) getActivity();
-                        Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment());
+                        Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment(), WelcomeFragment.TAG);
                     }
                 });
                 loadOrdersNum(shopKeeper);

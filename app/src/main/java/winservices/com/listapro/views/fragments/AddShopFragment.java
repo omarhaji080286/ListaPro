@@ -24,7 +24,6 @@ import com.google.android.gms.tasks.Task;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,7 +34,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.City;
-import winservices.com.listapro.models.entities.Country;
 import winservices.com.listapro.models.entities.DefaultCategory;
 import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
@@ -54,7 +52,7 @@ import static winservices.com.listapro.utils.PermissionUtil.TXT_FINE_LOCATION;
 
 public class AddShopFragment extends Fragment {
 
-    private final String TAG = AddShopFragment.class.getSimpleName();
+    public final static String TAG = AddShopFragment.class.getSimpleName();
     boolean isExpanded = false;
     private ShopKeeperVM shopKeeperVM;
     private ShopTypeVM shopTypeVM;
@@ -150,7 +148,6 @@ public class AddShopFragment extends Fragment {
     }
 
     private void requestPermissionInFragment() {
-        //requestPermissions(new String[]{ACCESS_FINE_LOCATION}, 1);
 
         PermissionUtil permissionUtil = new PermissionUtil(Objects.requireNonNull(getContext()));
 
@@ -170,16 +167,17 @@ public class AddShopFragment extends Fragment {
 
     private void addNewShop() {
 
-        double longitude = -6.902916;
-        double latitude = 33.967371;
+
         String shopName = editShopName.getText().toString();
-        int serverShopId = (new Random()).nextInt();
         ShopType shopType = (ShopType) spinnerShopType.getSelectedItem();
         City city = (City) spinnerCity.getSelectedItem();
+        double longitude = city.getCityLongitude();
+        double latitude = city.getCityLatitude();
+
         List<DefaultCategory> selectedCategories = dCategoriesToSelectAdapter.getSelectedDCategories();
 
         if (inputsOk(shopName, shopType.getServerShopTypeId(), city.getServerCityId(), selectedCategories.size())) {
-            Shop shop = new Shop(serverShopId, shopName, currentSK.getPhone(),
+            Shop shop = new Shop(shopName, currentSK.getPhone(),
                     longitude, latitude, currentSK.getServerShopKeeperId());
             shop.setShopType(shopType);
             shop.setCity(city);
@@ -194,7 +192,7 @@ public class AddShopFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.shop_added), Toast.LENGTH_SHORT).show();
 
             LauncherActivity launcherActivity = (LauncherActivity) getActivity();
-            Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment());
+            Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment(), WelcomeFragment.TAG);
         }
 
     }
@@ -231,16 +229,20 @@ public class AddShopFragment extends Fragment {
 
     private void loadCitiesSpinner() {
 
-        List<City> cities = new ArrayList<>();
-        Country country = new Country(1, "morocco");
-        cities.add(new City(0, "Choose your City", country));
-        cities.add(new City(1, "Rabat", country));
-        cities.add(new City(2, "Casablanca", country));
-        cities.add(new City(3, "Tanger", country));
-        cities.add(new City(4, "Marrakech", country));
+        shopTypeVM.loadCitiesFromServer();
 
-        CitySpinnerAdapter citySpinnerAdapter = new CitySpinnerAdapter(Objects.requireNonNull(getContext()), cities);
+        List<City> cities = new ArrayList<>();
+        final CitySpinnerAdapter citySpinnerAdapter = new CitySpinnerAdapter(Objects.requireNonNull(getContext()), cities);
         spinnerCity.setAdapter(citySpinnerAdapter);
+
+        shopTypeVM.getAllCities().observe(this, new Observer<List<City>>() {
+            @Override
+            public void onChanged(List<City> cities) {
+                citySpinnerAdapter.clear();
+                citySpinnerAdapter.addAll(cities);
+            }
+        });
+
 
     }
 

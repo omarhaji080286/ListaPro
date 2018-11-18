@@ -2,6 +2,7 @@ package winservices.com.listapro.webservices;
 
 import java.util.List;
 
+import winservices.com.listapro.models.entities.City;
 import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.ShopKeeper;
 import winservices.com.listapro.models.entities.ShopType;
@@ -14,6 +15,15 @@ public class WebServiceResponse {
     private List<ShopType> shopTypesWithCategories;
     private int serverShopId;
     private List<Order> orders;
+    private List<City> cities;
+
+    public List<City> getCities() {
+        return cities;
+    }
+
+    public void setCities(List<City> cities) {
+        this.cities = cities;
+    }
 
     public List<Order> getOrders() {
         return orders;

@@ -10,9 +10,6 @@ import retrofit2.http.POST;
 
 public interface ListaProWebServices {
 
-    //@GET("getShopKeeper.php")
-    //Call<List<ShopKeeper>> getShopKeeper();
-
     @GET("getShopTypesWithCategories.php")
     Call<WebServiceResponse> getShopTypes();
 
@@ -35,4 +32,9 @@ public interface ListaProWebServices {
     @FormUrlEncoded
     @POST("updateOrderedGoods.php")
     Call<WebServiceResponse> updateOrderedGoods(@FieldMap Map<String,String> hashMap);
+
+    @GET("getCitiesLP.php")
+    Call<WebServiceResponse> getCities();
+
+
 }

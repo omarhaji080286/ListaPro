@@ -25,6 +25,7 @@ public class LauncherActivity extends AppCompatActivity {
     private ShopKeeperVM shopKeeperVM;
     private ShopVM shopVM;
     private OrderVM orderVM;
+    private String currentFragTag = "none";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class LauncherActivity extends AppCompatActivity {
             @Override
             public void onChanged(ShopKeeper shopKeeper) {
                 if (shopKeeper == null) {
-                    displayFragment(new SignUpFragment());
+                    displayFragment(new SignUpFragment(), SignUpFragment.TAG);
                     return;
                 }
                 loadShops(shopKeeper);
@@ -54,7 +55,7 @@ public class LauncherActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Shop> shops) {
                 if (shops == null || shops.size()==0){
-                    displayFragment(new AddShopFragment());
+                    displayFragment(new AddShopFragment(), AddShopFragment.TAG);
                     return;
                 }
                 shopKeeper.setShops(shops);
@@ -66,25 +67,31 @@ public class LauncherActivity extends AppCompatActivity {
 
     private void routeUser(ShopKeeper shopKeeper) {
         Fragment fragment;
+        String tag;
         if (shopKeeper.getIsLoggedIn() == ShopKeeper.LOGGED_IN) {
             if (shopKeeper.getShops().size() > 0) {
                 fragment = new WelcomeFragment();
+                tag = WelcomeFragment.TAG;
             } else {
                 fragment = new AddShopFragment();
+                tag = AddShopFragment.TAG;
             }
         } else {
             fragment = new SignUpFragment();
+            tag = SignUpFragment.TAG;
         }
-        displayFragment(fragment);
+        displayFragment(fragment, tag);
     }
 
 
 
 
-    public void displayFragment(Fragment fragment) {
+    public void displayFragment(Fragment fragment, String tag) {
+        if (currentFragTag.equals(tag)) return;
+        currentFragTag = tag;
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction()
-                .replace(R.id.frameLauncherActivity, fragment, fragment.getTag())
+                .replace(R.id.frameLauncherActivity, fragment, tag)
                 .commit();
     }
 

@@ -42,7 +42,7 @@ import winservices.com.listapro.views.activities.LauncherActivity;
 
 public class SignUpFragment extends Fragment {
 
-    private final String LOG_TAG = SignUpFragment.class.getSimpleName();
+    public final static String TAG = SignUpFragment.class.getSimpleName();
     private Dialog dialog;
     private FirebaseAuth firebaseAuth;
     private String codeSent;
@@ -121,7 +121,7 @@ public class SignUpFragment extends Fragment {
                                 shopKeeper.setLastLogged(ShopKeeper.LAST_LOGGED);
                                 shopKeeperVM.logIn(shopKeeper);
                                 LauncherActivity launcherActivity = (LauncherActivity) getActivity();
-                                Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment());
+                                Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment(), WelcomeFragment.TAG);
                             }
                         }
                     });
@@ -138,7 +138,7 @@ public class SignUpFragment extends Fragment {
                         public void onSuccess(InstanceIdResult instanceIdResult) {
                             String newToken = instanceIdResult.getToken();
                             SharedPrefManager.getInstance(getContext()).storeToken(newToken);
-                            Log.d(LOG_TAG, "Token: " + newToken);
+                            Log.d(TAG, "Token: " + newToken);
                         }
                     });
                     verifySignUpCode();
@@ -203,7 +203,7 @@ public class SignUpFragment extends Fragment {
                 Objects.requireNonNull(getActivity()),               // Activity (for callback binding)
                 mCallbacks);        // OnVerificationStateChangedCallbacks
 
-        Log.d(LOG_TAG, "request code verification for : " + phone);
+        Log.d(TAG, "request code verification for : " + phone);
     }
 
     private void signInWithPhoneAuthCredential(final PhoneAuthCredential credential) {
@@ -212,16 +212,16 @@ public class SignUpFragment extends Fragment {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    Log.d(LOG_TAG, "signIn : success - credential " + credential);
+                                    Log.d(TAG, "signIn : success - credential " + credential);
                                     //FirebaseUser user = task.getResult().getUser();
                                     registerShopKeeper();
 
                                 } else {
-                                    Log.d(LOG_TAG, "signIn : failure");
+                                    Log.d(TAG, "signIn : failure");
                                     editVerifCode.setError(getString(R.string.not_valid_code));
                                     editVerifCode.requestFocus();
                                     if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                        Log.w(LOG_TAG, "signInWithCredential:failure", task.getException());
+                                        Log.w(TAG, "signInWithCredential:failure", task.getException());
                                     }
                                 }
 
@@ -244,17 +244,12 @@ public class SignUpFragment extends Fragment {
             public void onChanged(ShopKeeper shopKeeper) {
                 if (shopKeeper==null) return;
                 Toast.makeText(getContext(), R.string.welcome_to_listapro, Toast.LENGTH_SHORT).show();
-                goTo(new AddShopFragment());
+                dialog.dismiss();
+                LauncherActivity launcherActivity = (LauncherActivity) getActivity();
+                Objects.requireNonNull(launcherActivity).displayFragment(new AddShopFragment(), AddShopFragment.TAG);
             }
         });
 
     }
-
-    private void goTo(Fragment fragment) {
-        dialog.dismiss();
-        LauncherActivity launcherActivity = (LauncherActivity) getActivity();
-        Objects.requireNonNull(launcherActivity).displayFragment(fragment);
-    }
-
 
 }

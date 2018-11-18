@@ -16,10 +16,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import winservices.com.listapro.models.dao.AssocShopTypeDCategoryDao;
+import winservices.com.listapro.models.dao.CityDao;
 import winservices.com.listapro.models.dao.DefaultCategoryDao;
 import winservices.com.listapro.models.dao.ShopTypeDao;
 import winservices.com.listapro.models.database.ListaProDataBase;
 import winservices.com.listapro.models.entities.AssocShopTypeDCategory;
+import winservices.com.listapro.models.entities.City;
 import winservices.com.listapro.models.entities.DefaultCategory;
 import winservices.com.listapro.models.entities.ShopType;
 import winservices.com.listapro.webservices.ListaProWebServices;
@@ -33,12 +35,14 @@ public class ShopTypeRepository {
     private ShopTypeDao shopTypeDao;
     private DefaultCategoryDao defaultCategoryDao;
     private AssocShopTypeDCategoryDao assocShopTypeDCategoryDao;
+    private CityDao cityDao;
 
     public ShopTypeRepository(Application application) {
         ListaProDataBase db = ListaProDataBase.getInstance(application);
         this.shopTypeDao = db.shopTypeDao();
         this.defaultCategoryDao = db.defaultCategoryDao();
         this.assocShopTypeDCategoryDao = db.assocShopTypeDCategoryDao();
+        this.cityDao = db.cityDao();
     }
 
     public LiveData<List<ShopType>> getAllShopTypes(){
@@ -70,8 +74,29 @@ public class ShopTypeRepository {
         new InsertAssocAsyncTask(assocShopTypeDCategoryDao).execute(assoc);
     }
 
+    public void insert(City city) {
+        new InsertCityAsyncTask(cityDao).execute(city);
+    }
 
-    private static class GetShopTypeDCategoriesAsyncTask extends AsyncTask<Integer, Void, List<DefaultCategory>> {
+    private static class InsertCityAsyncTask extends AsyncTask<City, Void, Void> {
+
+        private CityDao cityDao;
+
+        private InsertCityAsyncTask(CityDao cityDao) {
+            this.cityDao = cityDao;
+        }
+
+        @Override
+        protected Void doInBackground(City... cities) {
+            for (City city : cities) {
+                cityDao.insert(city);
+            }
+            return null;
+        }
+    }
+
+
+    /*private static class GetShopTypeDCategoriesAsyncTask extends AsyncTask<Integer, Void, List<DefaultCategory>> {
         private DefaultCategoryDao defaultCategoryDao;
         private GetShopTypeDCategoriesAsyncTask(DefaultCategoryDao defaultCategoryDao) {
             this.defaultCategoryDao = defaultCategoryDao;
@@ -80,7 +105,7 @@ public class ShopTypeRepository {
         protected List<DefaultCategory> doInBackground(Integer... integers) {
             return defaultCategoryDao.getShopTypeDCategories(integers[0]);
         }
-    }
+    }*/
 
     private static class InsertShopTypeAsyncTask extends AsyncTask<ShopType, Void, Void> {
 
@@ -170,6 +195,47 @@ public class ShopTypeRepository {
         });
 
     }
+
+    public void loadCitiesFromServer() {
+        RetrofitHelper rh = new RetrofitHelper();
+        ListaProWebServices ws = rh.initWebServices();
+
+        Call<WebServiceResponse> call = ws.getCities();
+
+        call.enqueue(new Callback<WebServiceResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<WebServiceResponse> call, @NonNull Response<WebServiceResponse> response) {
+                if (!response.isSuccessful()) {
+                    Log.d(TAG, "Error : " + response.code());
+                } else {
+                    WebServiceResponse wsResponse = response.body();
+                    if (wsResponse != null) {
+                        if (!wsResponse.isError()) {
+                            List<City> cities = wsResponse.getCities();
+                            for(City city : cities){
+                                insert(city);
+                            }
+                            Log.d(TAG, "Success : " + cities.size() + " cities inserted");
+
+                        } else {
+                            Log.d(TAG, "Error on server : " + wsResponse.getMessage());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<WebServiceResponse> call, @NonNull Throwable t) {
+                Log.d(TAG, "Failure : " + t.getMessage());
+            }
+        });
+
+    }
+
+    public LiveData<List<City>> getAllCities(){
+        return cityDao.getAllCities() ;
+    }
+
 
 
 }

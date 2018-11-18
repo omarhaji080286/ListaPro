@@ -11,6 +11,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import winservices.com.listapro.models.entities.AssocShopTypeDCategory;
+import winservices.com.listapro.models.entities.City;
 import winservices.com.listapro.models.entities.DefaultCategory;
 import winservices.com.listapro.models.entities.ShopType;
 import winservices.com.listapro.repositories.ShopTypeRepository;
@@ -57,6 +58,14 @@ public class ShopTypeVM extends AndroidViewModel {
 
     public void loadShopTypes(){
         repository.loadShopTypesFromServer();
+    }
+
+    public void loadCitiesFromServer(){
+        repository.loadCitiesFromServer();
+    }
+
+    public LiveData<List<City>> getAllCities(){
+        return repository.getAllCities();
     }
 
 }

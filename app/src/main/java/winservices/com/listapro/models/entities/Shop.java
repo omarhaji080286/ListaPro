@@ -51,9 +51,8 @@ public class Shop {
     @Ignore
     private List<DefaultCategory> dCategories;
 
-    public Shop(int serverShopId, String shopName, String shopPhone, double longitude, double latitude, int serverShopKeeperIdFk) {
+    public Shop(String shopName, String shopPhone, double longitude, double latitude, int serverShopKeeperIdFk) {
 
-        this.serverShopId = serverShopId;
         this.shopName = shopName;
         this.shopPhone = shopPhone;
         this.longitude = longitude;
