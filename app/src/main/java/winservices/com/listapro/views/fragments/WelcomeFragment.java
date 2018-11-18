@@ -134,6 +134,8 @@ public class WelcomeFragment extends Fragment {
                     serverShopId = shop.getServerShopId();
                     txtOrdersSentNum.setVisibility(View.VISIBLE);
                     txtOrdersSentNum.setText(String.valueOf(ordersNum));
+                } else {
+                    txtOrdersSentNum.setVisibility(View.GONE);
                 }
             }
         });
