@@ -53,4 +53,6 @@
     <string name="available">Available</string>
     <string name="not_available">Not Available</string>
     <string name="allow_location_permission_in_settings">Please allow location permission in your app settings</string>
+    <string name="shop_picture">Shop picture</string>
+    <string name="change_picture">Change picture</string>
 </resources>

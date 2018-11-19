@@ -15,7 +15,7 @@
             android:id="@+id/imgClientPic"
             android:layout_width="@dimen/user_img_height"
             android:layout_height="@dimen/user_img_width"
-            android:src="@drawable/logo"
+            android:src="@drawable/user"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -8,6 +8,7 @@
     android:background="@color/white">
 
 
+
     <TextView
         android:id="@+id/txtShopName"
         android:layout_width="wrap_content"
@@ -16,12 +17,29 @@
         style="@style/Title"
         android:layout_centerHorizontal="true"/>
 
+    <ImageView
+        android:id="@+id/imgShopPic"
+        android:layout_width="@dimen/logo_size_width"
+        android:layout_height="@dimen/logo_size_height"
+        android:contentDescription="@string/shop_picture"
+        android:src="@drawable/ic_store_black"
+        android:layout_below="@+id/txtShopName"
+        />
+
+    <Button
+        android:id="@+id/btnChangePic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/imgShopPic"
+        android:layout_below="@+id/txtShopName"
+        android:text="@string/change_picture"/>
+
     <TextView
         android:id="@+id/txtPhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/SimpleText"
-        android:layout_below="@id/txtShopName"
+        android:layout_below="@id/imgShopPic"
         android:text="Phone"/>
 
     <TextView
@@ -39,6 +57,8 @@
         style="@style/SimpleText"
         android:text="categories"
         android:layout_below="@+id/txtShopType"/>
+
+
 
 
 
