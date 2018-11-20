@@ -30,4 +30,7 @@
     <dimen name="size_height_check">20dp</dimen>
     <dimen name="size_width_check">20dp</dimen>
     <dimen name="check_margin">5dp</dimen>
+    <dimen name="size_height_shop_image">180dp</dimen>
+    <dimen name="size_width_shop_type">48dp</dimen>
+    <dimen name="size_height_shop_type">48dp</dimen>
 </resources>

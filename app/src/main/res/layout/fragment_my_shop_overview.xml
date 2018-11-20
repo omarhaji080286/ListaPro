@@ -1,58 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.fragments.MyShopOverviewFragment"
-    android:background="@color/white">
-
-
-
-    <TextView
-        android:id="@+id/txtShopName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Shop Name"
-        style="@style/Title"
-        android:layout_centerHorizontal="true"/>
+    android:background="@color/white"
+    tools:context=".views.fragments.MyShopOverviewFragment">
 
     <ImageView
         android:id="@+id/imgShopPic"
-        android:layout_width="@dimen/logo_size_width"
-        android:layout_height="@dimen/logo_size_height"
-        android:contentDescription="@string/shop_picture"
-        android:src="@drawable/ic_store_black"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_height_shop_image"
         android:layout_below="@+id/txtShopName"
-        />
+        android:contentDescription="@string/shop_picture"
+        android:background="@color/colorPrimaryDark" />
+
+    <ImageView
+        android:id="@+id/imgEditShopPic"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_edit_white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:id="@+id/txtShopName"
+        style="@style/Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/shop_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgShopPic" />
+
+    <TextView
+        android:id="@+id/labelPhone"
+        style="@style/TextValuesInShopOverview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_average"
+        android:text="@string/phone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtShopName" />
 
     <TextView
         android:id="@+id/txtPhone"
+        style="@style/TextValuesInShopOverview"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/SimpleText"
         android:layout_below="@id/imgShopPic"
-        android:text="Phone"/>
+        android:layout_marginStart="@dimen/margin_average"
+        android:text="@string/phone"
+        app:layout_constraintStart_toEndOf="@+id/labelPhone"
+        app:layout_constraintTop_toBottomOf="@+id/txtShopName" />
+
+    <TextView
+        android:id="@+id/labelShopType"
+        style="@style/TextValuesInShopOverview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_average"
+        android:text="@string/shop_type"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/labelPhone" />
 
     <TextView
         android:id="@+id/txtShopType"
+        style="@style/TextValuesInShopOverview"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/SimpleText"
         android:layout_below="@id/txtPhone"
-        android:text="Shop type"/>
+        android:text="@string/shop_type"
+        app:layout_constraintStart_toEndOf="@+id/labelShopType"
+        app:layout_constraintTop_toBottomOf="@+id/txtPhone" />
+
+    <ImageView
+        android:id="@+id/imgShopTypeImg"
+        android:layout_width="@dimen/size_width_shop_type"
+        android:layout_height="@dimen/size_height_shop_type"
+        android:src="@drawable/steak"
+        app:layout_constraintStart_toEndOf="@+id/txtShopType"
+        app:layout_constraintTop_toBottomOf="@+id/txtPhone"
+        android:layout_marginStart="@dimen/text_content_margin_large"/>
+
+    <TextView
+        android:id="@+id/labelCategories"
+        style="@style/TextValuesInShopOverview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_average"
+        android:text="@string/items_sold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/labelShopType" />
 
     <TextView
         android:id="@+id/txtShopDCategories"
+        style="@style/TextValuesInShopOverview"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/SimpleText"
-        android:text="categories"
-        android:layout_below="@+id/txtShopType"/>
+        android:layout_below="@+id/txtShopType"
+        android:layout_marginStart="@dimen/margin_average"
+        android:text="@string/category1_n_category2"
+        app:layout_constraintTop_toBottomOf="@+id/labelCategories"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-
-
-
-
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

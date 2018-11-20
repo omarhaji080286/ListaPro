@@ -125,5 +125,12 @@
 
     </style>
 
+    <style name="TextValuesInShopOverview">
+        <item name="android:textSize">@dimen/text_content_size_large</item>
+        <item name="android:padding">@dimen/text_content_padding</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_marginTop">@dimen/text_content_margin_large</item>
+    </style>
+
 
 </resources>

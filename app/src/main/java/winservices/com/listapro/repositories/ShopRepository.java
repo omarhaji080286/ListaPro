@@ -127,11 +127,10 @@ public class ShopRepository {
         }
     }
 
-
     public void uploadShopImage(Context context, int serverShopId) {
         String imagePath = SharedPrefManager.getInstance(context).getShopImagePath(serverShopId);
         Bitmap imageBitmap = BitmapFactory.decodeFile(imagePath);
-        String imageString = UtilsFunctions.imageToString(imageBitmap);
+        String imageString = UtilsFunctions.imageToString(imageBitmap, 30);
         String imageTitle = String.valueOf(serverShopId);
         Image shopImage = new Image(imageTitle, imageString);
 

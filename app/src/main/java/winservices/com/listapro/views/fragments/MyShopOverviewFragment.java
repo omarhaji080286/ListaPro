@@ -4,12 +4,12 @@ package winservices.com.listapro.views.fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +35,7 @@ import winservices.com.listapro.models.entities.DefaultCategory;
 import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
 import winservices.com.listapro.utils.SharedPrefManager;
+import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
 import winservices.com.listapro.viewmodels.ShopVM;
 
@@ -72,7 +73,7 @@ public class MyShopOverviewFragment extends Fragment {
         shopKeeperVM = ViewModelProviders.of(this).get(ShopKeeperVM.class);
         shopVM = ViewModelProviders.of(this).get(ShopVM.class);
 
-                txtShopName = view.findViewById(R.id.txtShopName);
+        txtShopName = view.findViewById(R.id.txtShopName);
         txtPhone = view.findViewById(R.id.txtPhone);
         txtShopType = view.findViewById(R.id.txtShopType);
         txtCategories = view.findViewById(R.id.txtShopDCategories);
@@ -98,11 +99,21 @@ public class MyShopOverviewFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bitmap imageBitmap = BitmapFactory.decodeFile(currentImagePath);
-            SharedPrefManager.getInstance(getContext()).storeShopImagePath(serverShopId, currentImagePath);
-            shopVM.uploadShopImage(getContext(), serverShopId);
+            //Bitmap imageBitmap = BitmapFactory.decodeFile(currentImagePath);
+            Bitmap imageBitmap = UtilsFunctions.getOrientedBitmap(currentImagePath);
             imgShopPic.setImageBitmap(imageBitmap);
+            storeAndUploadImage();
         }
+    }
+
+    private void storeAndUploadImage() {
+        Thread thread = new Thread() {
+            public void run() {
+                SharedPrefManager.getInstance(getContext()).storeShopImagePath(serverShopId, currentImagePath);
+                shopVM.uploadShopImage(getContext(), serverShopId);
+            }
+        };
+        thread.run();
     }
 
     private void captureImage() {
@@ -127,8 +138,10 @@ public class MyShopOverviewFragment extends Fragment {
 
     private File getImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd", Locale.FRANCE).format(new Date());
-        String imageName = "lista_pro_"+timeStamp + "_";
-        File storageDir = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        String imageName = "lista_pro_" + timeStamp + "_";
+        File storageDir = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES+"/ListaPro");
+        if (!storageDir.exists()) storageDir.mkdirs();
+        Log.d(TAG, "getImageFile: storageDir " + storageDir.toString());
         File imageFile = File.createTempFile(imageName, ".jpg", storageDir);
         currentImagePath = imageFile.getAbsolutePath();
         return imageFile;
@@ -143,9 +156,13 @@ public class MyShopOverviewFragment extends Fragment {
                 serverShopId = shop.getServerShopId();
 
                 String shopImgPath = SharedPrefManager.getInstance(getContext()).getShopImagePath(shop.getServerShopId());
-                if (shopImgPath!=null) {
-                    Bitmap imageBitmap = BitmapFactory.decodeFile(shopImgPath);
-                    imgShopPic.setImageBitmap(imageBitmap);
+                if (shopImgPath != null) {
+                    Bitmap imageBitmap = UtilsFunctions.getOrientedBitmap(shopImgPath);
+                    if (imageBitmap!=null){
+                        imgShopPic.setImageBitmap(imageBitmap);
+                    } else {
+                        imgShopPic.setImageResource(R.drawable.ic_store_black);
+                    }
                 } else {
                     imgShopPic.setImageResource(R.drawable.ic_store_black);
                 }

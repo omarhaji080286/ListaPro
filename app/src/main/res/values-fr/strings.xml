@@ -26,7 +26,7 @@
     <string name="add_shop_desc">the addition of your store will allow you to enjoy ListaPro</string>
     <string name="your_shop_name">Your shop name</string>
     <string name="add_my_shop">Add my Shop</string>
-    <string name="shop_type">shop type</string>
+    <string name="shop_type">shop type :</string>
     <string name="spinner_row_value">spinner row value</string>
     <string name="choose_shop_type">Choose your Shop Type</string>
     <string name="nature_of_items_for_shop_type">Choose the nature of items you\'re selling</string>
@@ -55,4 +55,8 @@
     <string name="allow_location_permission_in_settings">Please allow location permission in your app settings</string>
     <string name="shop_picture">Shop picture</string>
     <string name="change_picture">Change picture</string>
+    <string name="shop_name">Shop Name</string>
+    <string name="phone">Phone : </string>
+    <string name="items_sold">Items sold :</string>
+    <string name="category1_n_category2">- category1  - category2</string>
 </resources>
