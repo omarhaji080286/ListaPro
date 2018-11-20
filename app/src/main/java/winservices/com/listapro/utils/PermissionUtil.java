@@ -26,9 +26,11 @@ public class PermissionUtil {
 
     private final static int REQUEST_ACCESS_FINE_LOCATION = 101;
     private final static int REQUEST_ACCESS_COARSE_LOCATION = 102;
+    private final static int REQUEST_ACCESS_CAMERA = 103;
 
     public final static String TXT_FINE_LOCATION = "access_fine_location";
     public final static String TXT_COARSE_LOCATION = "access_coarse_location";
+    public final static String TXT_CAMERA = "access_camera";
 
     private final static String TAG = PermissionUtil.class.getSimpleName();
 
@@ -49,6 +51,11 @@ public class PermissionUtil {
                 editor.putBoolean(context.getString(R.string.permission_access_coarse_location), true);
                 editor.commit();
                 break;
+            case TXT_CAMERA :
+                editor.putBoolean(context.getString(R.string.permission_access_camera), true);
+                editor.commit();
+                break;
+
         }
 
     }
@@ -63,6 +70,9 @@ public class PermissionUtil {
             case TXT_COARSE_LOCATION :
                 isShown = sharedPreferences.getBoolean(context.getString(R.string.permission_access_coarse_location), false);
                 break;
+            case TXT_CAMERA :
+                isShown = sharedPreferences.getBoolean(context.getString(R.string.permission_access_camera), false);
+                break;
         }
         return isShown;
     }
@@ -76,6 +86,9 @@ public class PermissionUtil {
             case TXT_COARSE_LOCATION:
                 status = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION);
                 break;
+            case TXT_CAMERA:
+                status = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA);
+                break;
         }
         return status;
     }
@@ -88,6 +101,9 @@ public class PermissionUtil {
         } else if (permission.equals(TXT_COARSE_LOCATION)) {
             builder.setMessage("This app needs to access your location. Please allow.");
             builder.setTitle("Location permission needed..");
+        } else if (permission.equals(TXT_CAMERA)) {
+            builder.setMessage("This app needs to access your camera. Please allow.");
+            builder.setTitle("Camera permission needed..");
         }
 
         builder.setPositiveButton("Allow", new DialogInterface.OnClickListener() {
@@ -118,11 +134,14 @@ public class PermissionUtil {
             case TXT_COARSE_LOCATION:
                 requestPermissions(activity, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_ACCESS_COARSE_LOCATION);
                 break;
+            case TXT_CAMERA:
+                requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, REQUEST_ACCESS_CAMERA);
+                break;
         }
     }
 
     public void goToAppSettings() {
-        Toast.makeText(context, R.string.allow_location_permission_in_settings, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Please allow Camera/Location permissions in your app settings", Toast.LENGTH_LONG).show();
         Intent intent = new Intent();
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", context.getPackageName(), null);

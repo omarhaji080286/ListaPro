@@ -163,7 +163,6 @@ public class AddShopFragment extends Fragment {
             }
         }
 
-
     }
 
     private void addNewShop() {

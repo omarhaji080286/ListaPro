@@ -3,13 +3,11 @@ package winservices.com.listapro.views.fragments;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +16,7 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -34,13 +29,14 @@ import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.DefaultCategory;
 import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
+import winservices.com.listapro.utils.PermissionUtil;
 import winservices.com.listapro.utils.SharedPrefManager;
 import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
 import winservices.com.listapro.viewmodels.ShopVM;
 
 import static android.app.Activity.RESULT_OK;
-import static android.os.Environment.getExternalStoragePublicDirectory;
+import static winservices.com.listapro.utils.PermissionUtil.TXT_CAMERA;
 
 
 public class MyShopOverviewFragment extends Fragment {
@@ -51,7 +47,7 @@ public class MyShopOverviewFragment extends Fragment {
     private ShopKeeperVM shopKeeperVM;
     private ShopVM shopVM;
     private TextView txtShopName, txtPhone, txtShopType, txtCategories;
-    private ImageView imgShopPic;
+    private ImageView imgShopPic, imgShopTypeImg;
     private String currentImagePath;
     private int serverShopId;
 
@@ -78,11 +74,14 @@ public class MyShopOverviewFragment extends Fragment {
         txtShopType = view.findViewById(R.id.txtShopType);
         txtCategories = view.findViewById(R.id.txtShopDCategories);
         imgShopPic = view.findViewById(R.id.imgShopPic);
+        imgShopTypeImg = view.findViewById(R.id.imgShopTypeImg);
 
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
-        }
+        //if (Build.VERSION.SDK_INT >= 23) {
+          //  requestPermissions(new String[]{Manifest.permission.CAMERA/*, Manifest.permission.WRITE_EXTERNAL_STORAGE*/}, 2);
+        //}
+
+
 
         imgShopPic.setEnabled(false);
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
@@ -137,11 +136,10 @@ public class MyShopOverviewFragment extends Fragment {
     }
 
     private File getImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd", Locale.FRANCE).format(new Date());
-        String imageName = "lista_pro_" + timeStamp + "_";
-        File storageDir = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES+"/ListaPro");
+        String imageName = "lista_pro_shop_"+String.valueOf(serverShopId);
+        String file_path = Objects.requireNonNull(getContext()).getFilesDir().getPath() + "/jpg";
+        File storageDir = new File(file_path);
         if (!storageDir.exists()) storageDir.mkdirs();
-        Log.d(TAG, "getImageFile: storageDir " + storageDir.toString());
         File imageFile = File.createTempFile(imageName, ".jpg", storageDir);
         currentImagePath = imageFile.getAbsolutePath();
         return imageFile;
@@ -158,7 +156,7 @@ public class MyShopOverviewFragment extends Fragment {
                 String shopImgPath = SharedPrefManager.getInstance(getContext()).getShopImagePath(shop.getServerShopId());
                 if (shopImgPath != null) {
                     Bitmap imageBitmap = UtilsFunctions.getOrientedBitmap(shopImgPath);
-                    if (imageBitmap!=null){
+                    if (imageBitmap != null) {
                         imgShopPic.setImageBitmap(imageBitmap);
                     } else {
                         imgShopPic.setImageResource(R.drawable.ic_store_black);
@@ -178,6 +176,10 @@ public class MyShopOverviewFragment extends Fragment {
                     sb.append("\n");
                 }
                 txtCategories.setText(sb);
+
+                Bitmap bitmap = UtilsFunctions.getOrientedBitmap(shop.getShopType().getShopTypeImagePath());
+                imgShopTypeImg.setImageBitmap(bitmap);
+
                 initBtnChangePic();
 
             }
@@ -191,9 +193,33 @@ public class MyShopOverviewFragment extends Fragment {
         imgShopPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                captureImage();
+                PermissionUtil permissionUtil = new PermissionUtil(Objects.requireNonNull(getContext()));
+                if (permissionUtil.checkPermission(TXT_CAMERA) == PackageManager.PERMISSION_GRANTED){
+                    captureImage();
+                    return;
+                }
+                requestPermissionInFragment();
             }
         });
     }
+
+
+    private void requestPermissionInFragment() {
+
+        PermissionUtil permissionUtil = new PermissionUtil(Objects.requireNonNull(getContext()));
+
+        if (permissionUtil.checkPermission(TXT_CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                permissionUtil.showPermissionExplanation(TXT_CAMERA, getActivity());
+            } else if (!permissionUtil.checkPermissionPreference(TXT_CAMERA)) {
+                permissionUtil.requestPermission(TXT_CAMERA, getActivity());
+                permissionUtil.updatePermissionPreference(TXT_CAMERA);
+            } else {
+                permissionUtil.goToAppSettings();
+            }
+        }
+
+    }
+
 
 }

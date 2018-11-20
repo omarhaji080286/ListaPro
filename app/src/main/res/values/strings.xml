@@ -1,4 +1,11 @@
 <resources>
+
+    <string name="permission_preference" translatable="false">PERMISSION_PREFERENCE</string>
+    <string name="permission_access_fine_location" translatable="false">PERMISSION_ACCESS_FINE_LOCATION</string>
+    <string name="permission_access_coarse_location" translatable="false">PERMISSION_ACCESS_COARSE_LOCATION</string>
+    <string name="permission_access_camera" translatable="false">PERMISSION_ACCESS_CAMERA</string>
+    <string name="allow_location_permission_in_settings">Please allow location permission in your app settings</string>
+
     <string name="app_name">ListaPro</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sign_up">Sign up</string>
@@ -52,17 +59,16 @@
     <string name="notification_sent_to_client">A notification has been sent to your client</string>
     <string name="available">Available</string>
     <string name="not_available">Not Available</string>
-
-
-
-    <string name="permission_preference" translatable="false">PERMISSION_PREFERENCE</string>
-    <string name="permission_access_fine_location" translatable="false">PERMISSION_ACCESS_FINE_LOCATION</string>
-    <string name="permission_access_coarse_location" translatable="false">PERMISSION_ACCESS_COARSE_LOCATION</string>
-    <string name="allow_location_permission_in_settings">Please allow location permission in your app settings</string>
     <string name="shop_picture">Shop picture</string>
     <string name="change_picture">Change picture</string>
     <string name="shop_name">Shop Name</string>
     <string name="phone">Phone : </string>
     <string name="items_sold">Items sold :</string>
     <string name="category1_n_category2">- category1  - category2</string>
+
+
+
+
+
+
 </resources>

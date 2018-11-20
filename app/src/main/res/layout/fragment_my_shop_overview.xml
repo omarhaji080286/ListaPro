@@ -13,7 +13,8 @@
         android:layout_height="@dimen/size_height_shop_image"
         android:layout_below="@+id/txtShopName"
         android:contentDescription="@string/shop_picture"
-        android:background="@color/colorPrimaryDark" />
+        android:background="@color/colorPrimaryDark"
+        android:src="@drawable/ic_store_black"/>
 
     <ImageView
         android:id="@+id/imgEditShopPic"
@@ -32,29 +33,9 @@
         android:text="@string/shop_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgShopPic" />
+        app:layout_constraintTop_toBottomOf="@+id/imgShopPic"
+        android:layout_marginTop="@dimen/margin_average"/>
 
-    <TextView
-        android:id="@+id/labelPhone"
-        style="@style/TextValuesInShopOverview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_average"
-        android:text="@string/phone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtShopName" />
-
-    <TextView
-        android:id="@+id/txtPhone"
-        style="@style/TextValuesInShopOverview"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/imgShopPic"
-        android:layout_marginStart="@dimen/margin_average"
-        android:text="@string/phone"
-        app:layout_constraintStart_toEndOf="@+id/labelPhone"
-        app:layout_constraintTop_toBottomOf="@+id/txtShopName" />
 
     <TextView
         android:id="@+id/labelShopType"
@@ -64,7 +45,7 @@
         android:layout_marginStart="@dimen/margin_average"
         android:text="@string/shop_type"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/labelPhone" />
+        app:layout_constraintTop_toBottomOf="@+id/txtShopName" />
 
     <TextView
         android:id="@+id/txtShopType"
@@ -75,7 +56,7 @@
         android:layout_below="@id/txtPhone"
         android:text="@string/shop_type"
         app:layout_constraintStart_toEndOf="@+id/labelShopType"
-        app:layout_constraintTop_toBottomOf="@+id/txtPhone" />
+        app:layout_constraintTop_toBottomOf="@+id/txtShopName" />
 
     <ImageView
         android:id="@+id/imgShopTypeImg"
@@ -83,7 +64,8 @@
         android:layout_height="@dimen/size_height_shop_type"
         android:src="@drawable/steak"
         app:layout_constraintStart_toEndOf="@+id/txtShopType"
-        app:layout_constraintTop_toBottomOf="@+id/txtPhone"
+        app:layout_constraintTop_toBottomOf="@+id/txtShopName"
+        android:layout_marginTop="@dimen/margin_average"
         android:layout_marginStart="@dimen/text_content_margin_large"/>
 
     <TextView
@@ -107,5 +89,27 @@
         android:text="@string/category1_n_category2"
         app:layout_constraintTop_toBottomOf="@+id/labelCategories"
         app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/labelPhone"
+        style="@style/TextValuesInShopOverview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_average"
+        android:text="@string/phone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtShopDCategories" />
+
+    <TextView
+        android:id="@+id/txtPhone"
+        style="@style/TextValuesInShopOverview"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imgShopPic"
+        android:layout_marginStart="@dimen/margin_average"
+        android:text="@string/phone"
+        app:layout_constraintStart_toEndOf="@+id/labelPhone"
+        app:layout_constraintTop_toBottomOf="@+id/txtShopDCategories" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

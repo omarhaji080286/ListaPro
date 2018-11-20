@@ -96,35 +96,40 @@ public class SignUpFragment extends Fragment {
         btnContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String phone = editPhone.getText().toString();
-                final String completePhone = "+212" + phone;
-                if (isPhoneValid(phone)) {
-                    shopKeeperVM.getShopKeeperByPhone(completePhone).observe(getViewLifecycleOwner(), new Observer<ShopKeeper>() {
-                        @Override
-                        public void onChanged(final ShopKeeper shopKeeper) {
-                            if (shopKeeper == null) {
-                                //TODO : diable comments for release
-                                //sendVerifCode(completePhone);
-                                btnContinue.setVisibility(View.GONE);
-                                linlayPhoneCointaner.setVisibility(View.GONE);
-                                btnSignUp.setVisibility(View.VISIBLE);
-                                editVerifCode.setVisibility(View.VISIBLE);
+                if (UtilsFunctions.checkNetworkConnection(Objects.requireNonNull(getContext()))) {
 
-                                StringBuilder sb = new StringBuilder();
-                                sb.append(getString(R.string.sms_sent_to));
-                                sb.append(completePhone);
-                                sb.append(getString(R.string.with_code));
+                    final String phone = editPhone.getText().toString();
+                    final String completePhone = "+212" + phone;
+                    if (isPhoneValid(phone)) {
+                        shopKeeperVM.getShopKeeperByPhone(completePhone).observe(getViewLifecycleOwner(), new Observer<ShopKeeper>() {
+                            @Override
+                            public void onChanged(final ShopKeeper shopKeeper) {
+                                if (shopKeeper == null) {
+                                    //TODO : diable comments for release
+                                    //sendVerifCode(completePhone);
+                                    btnContinue.setVisibility(View.GONE);
+                                    linlayPhoneCointaner.setVisibility(View.GONE);
+                                    btnSignUp.setVisibility(View.VISIBLE);
+                                    editVerifCode.setVisibility(View.VISIBLE);
 
-                                txtDescription.setText(sb);
-                            } else {
-                                shopKeeper.setIsLoggedIn(ShopKeeper.LOGGED_IN);
-                                shopKeeper.setLastLogged(ShopKeeper.LAST_LOGGED);
-                                shopKeeperVM.logIn(shopKeeper);
-                                LauncherActivity launcherActivity = (LauncherActivity) getActivity();
-                                Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment(), WelcomeFragment.TAG);
+                                    StringBuilder sb = new StringBuilder();
+                                    sb.append(getString(R.string.sms_sent_to));
+                                    sb.append(completePhone);
+                                    sb.append(getString(R.string.with_code));
+
+                                    txtDescription.setText(sb);
+                                } else {
+                                    shopKeeper.setIsLoggedIn(ShopKeeper.LOGGED_IN);
+                                    shopKeeper.setLastLogged(ShopKeeper.LAST_LOGGED);
+                                    shopKeeperVM.logIn(shopKeeper);
+                                    LauncherActivity launcherActivity = (LauncherActivity) getActivity();
+                                    Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment(), WelcomeFragment.TAG);
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                 }
             }
         });
