@@ -242,9 +242,9 @@ public class SignUpFragment extends Fragment {
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
             public void onChanged(ShopKeeper shopKeeper) {
+                dialog.dismiss();
                 if (shopKeeper==null) return;
                 Toast.makeText(getContext(), R.string.welcome_to_listapro, Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
                 LauncherActivity launcherActivity = (LauncherActivity) getActivity();
                 Objects.requireNonNull(launcherActivity).displayFragment(new AddShopFragment(), AddShopFragment.TAG);
             }

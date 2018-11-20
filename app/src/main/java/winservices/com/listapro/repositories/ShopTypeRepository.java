@@ -1,9 +1,14 @@
 package winservices.com.listapro.repositories;
 
 import android.app.Application;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -24,6 +29,7 @@ import winservices.com.listapro.models.entities.AssocShopTypeDCategory;
 import winservices.com.listapro.models.entities.City;
 import winservices.com.listapro.models.entities.DefaultCategory;
 import winservices.com.listapro.models.entities.ShopType;
+import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.webservices.ListaProWebServices;
 import winservices.com.listapro.webservices.RetrofitHelper;
 import winservices.com.listapro.webservices.WebServiceResponse;
@@ -161,7 +167,7 @@ public class ShopTypeRepository {
         }
     }
 
-    public void loadShopTypesFromServer() {
+    public void loadShopTypesFromServer(final Context context) {
         RetrofitHelper rh = new RetrofitHelper();
         ListaProWebServices ws = rh.initWebServices();
 
@@ -179,6 +185,22 @@ public class ShopTypeRepository {
                             List<ShopType> shopTypes = wsResponse.getShopTypesWithCategories();
                             for(ShopType shopType : shopTypes){
                                 shopType.setDefaultIcon();
+
+                                String file_path = context.getFilesDir().getPath()+"/png";
+                                File dir = new File(file_path);
+                                if(!dir.exists()) dir.mkdirs();
+                                File file = new File(dir, shopType.getServerShopTypeId()+ ".png");
+                                FileOutputStream fOut;
+                                try {
+                                    fOut = new FileOutputStream(file);
+                                    Bitmap bitmap = UtilsFunctions.stringToBitmap(shopType.getShopTypeImage());
+                                    bitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+                                    fOut.flush();
+                                    fOut.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                shopType.setShopTypeImagePath(file.getAbsolutePath());
                                 insert(shopType);
                             }
                         } else {

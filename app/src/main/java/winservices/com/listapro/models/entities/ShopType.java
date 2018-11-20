@@ -26,7 +26,14 @@ public class ShopType {
     private int serverShopTypeId;
     @SerializedName("shop_type_name")
     private String shopTypeName;
+    @SerializedName("shop_type_image_path")
+    private String shopTypeImagePath;
     private int icon;
+
+    @Ignore
+    @SerializedName("shop_type_image")
+    private String shopTypeImage;
+
 
     @Ignore
     private List<DefaultCategory> dCategories;
@@ -36,7 +43,7 @@ public class ShopType {
         this.shopTypeName = shopTypeName;
         this.icon = getResourceId(serverShopTypeId);
     }
-
+    
     private int getResourceId(int serverShopTypeId) {
         switch (serverShopTypeId) {
             case GENERAL_SHOP:
@@ -58,6 +65,22 @@ public class ShopType {
             default:
                 return R.drawable.others;
         }
+    }
+
+    public String getShopTypeImagePath() {
+        return shopTypeImagePath;
+    }
+
+    public void setShopTypeImagePath(String shopTypeImagePath) {
+        this.shopTypeImagePath = shopTypeImagePath;
+    }
+
+    public String getShopTypeImage() {
+        return shopTypeImage;
+    }
+
+    public void setShopTypeImage(String shopTypeImage) {
+        this.shopTypeImage = shopTypeImage;
     }
 
     public List<DefaultCategory> getdCategories() {

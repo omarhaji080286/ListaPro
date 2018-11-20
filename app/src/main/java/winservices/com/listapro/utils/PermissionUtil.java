@@ -24,8 +24,8 @@ public class PermissionUtil {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
-    public final static int REQUEST_ACCESS_FINE_LOCATION = 101;
-    public final static int REQUEST_ACCESS_COARSE_LOCATION = 102;
+    private final static int REQUEST_ACCESS_FINE_LOCATION = 101;
+    private final static int REQUEST_ACCESS_COARSE_LOCATION = 102;
 
     public final static String TXT_FINE_LOCATION = "access_fine_location";
     public final static String TXT_COARSE_LOCATION = "access_coarse_location";

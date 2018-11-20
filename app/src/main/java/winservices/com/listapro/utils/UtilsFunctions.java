@@ -143,6 +143,13 @@ public class UtilsFunctions {
         return Base64.encodeToString(imgByte, Base64.DEFAULT);
     }
 
+    public static Bitmap stringToBitmap(String encodedImage) {
+
+        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+    }
+
     private static Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);

@@ -95,6 +95,7 @@ public class AddShopFragment extends Fragment {
 
         btnAddShop.setEnabled(false);
         initSpinners();
+
         requestPermissionInFragment();
 
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
@@ -248,7 +249,7 @@ public class AddShopFragment extends Fragment {
 
     private void loadShopTypesSpinner() {
 
-        shopTypeVM.loadShopTypes();
+        shopTypeVM.loadShopTypes(getContext());
 
         shopTypeVM.getAllShopTypes().observe(this, new Observer<List<ShopType>>() {
             @Override

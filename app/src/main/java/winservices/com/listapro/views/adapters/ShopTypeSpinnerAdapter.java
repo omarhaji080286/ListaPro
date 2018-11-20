@@ -1,6 +1,7 @@
 package winservices.com.listapro.views.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.ShopType;
+import winservices.com.listapro.utils.UtilsFunctions;
 
 public class ShopTypeSpinnerAdapter extends ArrayAdapter<ShopType> {
 
@@ -43,7 +45,12 @@ public class ShopTypeSpinnerAdapter extends ArrayAdapter<ShopType> {
 
         ShopType currentShopType = getItem(position);
         if (currentShopType != null) {
-            spinnerIcon.setImageResource(currentShopType.getIcon());
+            if (currentShopType.getServerShopTypeId()!=0){
+                Bitmap bitmap = UtilsFunctions.getOrientedBitmap(currentShopType.getShopTypeImagePath());
+                spinnerIcon.setImageBitmap(bitmap);
+            } else {
+                spinnerIcon.setImageResource(currentShopType.getIcon());
+            }
             spinnerText.setText(currentShopType.getShopTypeName());
         }
 
