@@ -26,14 +26,6 @@
         android:layout_below="@+id/txtShopName"
         />
 
-    <Button
-        android:id="@+id/btnChangePic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/imgShopPic"
-        android:layout_below="@+id/txtShopName"
-        android:text="@string/change_picture"/>
-
     <TextView
         android:id="@+id/txtPhone"
         android:layout_width="wrap_content"

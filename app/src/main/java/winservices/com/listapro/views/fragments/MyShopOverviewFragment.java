@@ -13,7 +13,6 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,7 +50,6 @@ public class MyShopOverviewFragment extends Fragment {
     private ShopKeeperVM shopKeeperVM;
     private ShopVM shopVM;
     private TextView txtShopName, txtPhone, txtShopType, txtCategories;
-    private Button btnChangePic;
     private ImageView imgShopPic;
     private String currentImagePath;
     private int serverShopId;
@@ -78,7 +76,6 @@ public class MyShopOverviewFragment extends Fragment {
         txtPhone = view.findViewById(R.id.txtPhone);
         txtShopType = view.findViewById(R.id.txtShopType);
         txtCategories = view.findViewById(R.id.txtShopDCategories);
-        btnChangePic = view.findViewById(R.id.btnChangePic);
         imgShopPic = view.findViewById(R.id.imgShopPic);
 
 
@@ -86,7 +83,7 @@ public class MyShopOverviewFragment extends Fragment {
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
         }
 
-        btnChangePic.setEnabled(false);
+        imgShopPic.setEnabled(false);
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
             public void onChanged(ShopKeeper shopKeeper) {
@@ -164,17 +161,17 @@ public class MyShopOverviewFragment extends Fragment {
                     sb.append("\n");
                 }
                 txtCategories.setText(sb);
-                initBtnChangePic(shop.getServerShopId());
+                initBtnChangePic();
 
             }
         });
 
     }
 
-    private void initBtnChangePic(final int serverShopId) {
+    private void initBtnChangePic() {
 
-        btnChangePic.setEnabled(true);
-        btnChangePic.setOnClickListener(new View.OnClickListener() {
+        imgShopPic.setEnabled(true);
+        imgShopPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 captureImage();
