@@ -76,13 +76,6 @@ public class MyShopOverviewFragment extends Fragment {
         imgShopPic = view.findViewById(R.id.imgShopPic);
         imgShopTypeImg = view.findViewById(R.id.imgShopTypeImg);
 
-
-        //if (Build.VERSION.SDK_INT >= 23) {
-          //  requestPermissions(new String[]{Manifest.permission.CAMERA/*, Manifest.permission.WRITE_EXTERNAL_STORAGE*/}, 2);
-        //}
-
-
-
         imgShopPic.setEnabled(false);
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
