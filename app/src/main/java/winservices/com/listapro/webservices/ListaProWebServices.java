@@ -36,5 +36,8 @@ public interface ListaProWebServices {
     @GET("getCitiesLP.php")
     Call<WebServiceResponse> getCities();
 
+    @FormUrlEncoded
+    @POST("uploadShopImage.php")
+    Call<WebServiceResponse> uploadShopImage(@FieldMap Map<String,String> hashMap);
 
 }

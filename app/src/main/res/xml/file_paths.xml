@@ -2,5 +2,5 @@
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
     <external-path
         name="listaPro_images"
-        path="Android/data/winservices.com.listapro/files/Pictures/" />
+        path="." />
 </paths>

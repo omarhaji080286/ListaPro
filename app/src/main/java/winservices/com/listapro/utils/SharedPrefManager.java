@@ -22,12 +22,11 @@ public class SharedPrefManager {
         return instance;
     }
 
-    public boolean storeToken(String token){
+    public void storeToken(String token){
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY_ACCESS_TOKEN, token);
         editor.apply();
-        return true;
     }
 
     public String getToken(){
@@ -35,6 +34,16 @@ public class SharedPrefManager {
         return sharedPreferences.getString(KEY_ACCESS_TOKEN, null);
     }
 
+    public void storeShopImagePath(int serverShopId, String path){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(String.valueOf(serverShopId), path);
+        editor.apply();
+    }
 
+    public String getShopImagePath(int serverShopId){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(String.valueOf(serverShopId), null);
+    }
 
 }

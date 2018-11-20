@@ -1,6 +1,7 @@
 package winservices.com.listapro.viewmodels;
 
 import android.app.Application;
+import android.content.Context;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -43,6 +44,10 @@ public class ShopVM extends AndroidViewModel {
 
     public void insert(Shop shop){
         repository.insertShopOnServer(shop);
+    }
+
+    public void uploadShopImage(Context context, int serverShopId){
+        repository.uploadShopImage(context, serverShopId);
     }
 
 }

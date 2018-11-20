@@ -1,6 +1,9 @@
 package winservices.com.listapro.repositories;
 
 import android.app.Application;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -21,11 +24,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import winservices.com.listapro.models.dao.AssocShopDCategoryDao;
 import winservices.com.listapro.models.dao.ShopDao;
-import winservices.com.listapro.models.dao.ShopKeeperDao;
 import winservices.com.listapro.models.database.ListaProDataBase;
 import winservices.com.listapro.models.entities.AssocShopDCategory;
 import winservices.com.listapro.models.entities.DefaultCategory;
+import winservices.com.listapro.models.entities.Image;
 import winservices.com.listapro.models.entities.Shop;
+import winservices.com.listapro.utils.SharedPrefManager;
+import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.webservices.ListaProWebServices;
 import winservices.com.listapro.webservices.RetrofitHelper;
 import winservices.com.listapro.webservices.WebServiceResponse;
@@ -36,7 +41,6 @@ public class ShopRepository {
 
     private ShopDao shopDao;
     private AssocShopDCategoryDao assocDao;
-    private ShopKeeperDao shopKeeperDao;
 
     public ShopRepository(Application application) {
         ListaProDataBase db = ListaProDataBase.getInstance(application);
@@ -101,6 +105,7 @@ public class ShopRepository {
             return future.get();
     }
 
+
     private static class InsertShopAsyncTask extends AsyncTask<Shop, Void, Void> {
 
         private ShopDao shopDao;
@@ -123,7 +128,47 @@ public class ShopRepository {
     }
 
 
+    public void uploadShopImage(Context context, int serverShopId) {
+        String imagePath = SharedPrefManager.getInstance(context).getShopImagePath(serverShopId);
+        Bitmap imageBitmap = BitmapFactory.decodeFile(imagePath);
+        String imageString = UtilsFunctions.imageToString(imageBitmap);
+        String imageTitle = String.valueOf(serverShopId);
+        Image shopImage = new Image(imageTitle, imageString);
 
+        RetrofitHelper rh = new RetrofitHelper();
+        ListaProWebServices ws = rh.initWebServices();
+        Gson gson = new Gson();
+        Map<String, String> hashMap = new HashMap<>();
+        String jsonRequest = gson.toJson(shopImage);
+        Log.d(TAG, "jsonRequest: " + jsonRequest);
+        hashMap.put("jsonRequest", jsonRequest);
+        Call<WebServiceResponse> call = ws.uploadShopImage(hashMap);
+
+        call.enqueue(new Callback<WebServiceResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<WebServiceResponse> call, @NonNull Response<WebServiceResponse> response) {
+                if (!response.isSuccessful()) {
+                    Log.d(TAG, "Error : " + response.code());
+                } else {
+                    WebServiceResponse wsResponse = response.body();
+                    Log.d(TAG, "response body: " + response.body());
+                    if (wsResponse != null) {
+                        if (!wsResponse.isError()) {
+                            Log.d(TAG, "Success : Image uploaded" + wsResponse.getMessage());
+                        } else {
+                            Log.d(TAG, "Error on server : " + wsResponse.getMessage());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<WebServiceResponse> call, @NonNull Throwable t) {
+                Log.d(TAG, "Failure : " + t.getMessage());
+            }
+        });
+
+    }
 
 
 }

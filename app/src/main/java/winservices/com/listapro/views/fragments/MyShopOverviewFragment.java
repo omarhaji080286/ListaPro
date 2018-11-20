@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,7 @@ import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.DefaultCategory;
 import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
+import winservices.com.listapro.utils.SharedPrefManager;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
 import winservices.com.listapro.viewmodels.ShopVM;
 
@@ -52,6 +54,7 @@ public class MyShopOverviewFragment extends Fragment {
     private Button btnChangePic;
     private ImageView imgShopPic;
     private String currentImagePath;
+    private int serverShopId;
 
 
     public MyShopOverviewFragment() {
@@ -71,7 +74,7 @@ public class MyShopOverviewFragment extends Fragment {
         shopKeeperVM = ViewModelProviders.of(this).get(ShopKeeperVM.class);
         shopVM = ViewModelProviders.of(this).get(ShopVM.class);
 
-        txtShopName = view.findViewById(R.id.txtShopName);
+                txtShopName = view.findViewById(R.id.txtShopName);
         txtPhone = view.findViewById(R.id.txtPhone);
         txtShopType = view.findViewById(R.id.txtShopType);
         txtCategories = view.findViewById(R.id.txtShopDCategories);
@@ -79,16 +82,11 @@ public class MyShopOverviewFragment extends Fragment {
         imgShopPic = view.findViewById(R.id.imgShopPic);
 
 
-        if (Build.VERSION.SDK_INT>=23){
+        if (Build.VERSION.SDK_INT >= 23) {
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
         }
-        btnChangePic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                captureImage();
-            }
-        });
 
+        btnChangePic.setEnabled(false);
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
             public void onChanged(ShopKeeper shopKeeper) {
@@ -103,25 +101,26 @@ public class MyShopOverviewFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bitmap imageBitmap = BitmapFactory.decodeFile(getActivity().getIntent().getStringExtra("listaPro_images"));
+            Bitmap imageBitmap = BitmapFactory.decodeFile(currentImagePath);
+            SharedPrefManager.getInstance(getContext()).storeShopImagePath(serverShopId, currentImagePath);
+            shopVM.uploadShopImage(getContext(), serverShopId);
             imgShopPic.setImageBitmap(imageBitmap);
         }
     }
 
-    private void captureImage(){
+    private void captureImage() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(Objects.requireNonNull(getContext()).getPackageManager()) != null) {
             File imageFile = null;
 
             try {
                 imageFile = getImageFile();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            if (imageFile!=null){
-                Uri photoURI = FileProvider.getUriForFile(Objects.requireNonNull(getContext()),"winservices.com.listapro", imageFile);
+            if (imageFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(Objects.requireNonNull(getContext()), "winservices.com.listapro", imageFile);
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -129,12 +128,12 @@ public class MyShopOverviewFragment extends Fragment {
 
     }
 
-    private File getImageFile() throws  IOException{
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageName = "jpg_"+timeStamp+"_";
+    private File getImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd", Locale.FRANCE).format(new Date());
+        String imageName = "lista_pro_"+timeStamp + "_";
         File storageDir = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File imageFile = File.createTempFile(imageName, ".jpg", storageDir);
-        currentImagePath =imageFile.getAbsolutePath();
+        currentImagePath = imageFile.getAbsolutePath();
         return imageFile;
     }
 
@@ -144,6 +143,16 @@ public class MyShopOverviewFragment extends Fragment {
             @Override
             public void onChanged(List<Shop> shops) {
                 Shop shop = shops.get(0);
+                serverShopId = shop.getServerShopId();
+
+                String shopImgPath = SharedPrefManager.getInstance(getContext()).getShopImagePath(shop.getServerShopId());
+                if (shopImgPath!=null) {
+                    Bitmap imageBitmap = BitmapFactory.decodeFile(shopImgPath);
+                    imgShopPic.setImageBitmap(imageBitmap);
+                } else {
+                    imgShopPic.setImageResource(R.drawable.ic_store_black);
+                }
+
                 txtShopName.setText(shop.getShopName());
                 txtPhone.setText(shop.getShopPhone());
                 txtShopType.setText(shop.getShopType().getShopTypeName());
@@ -155,9 +164,22 @@ public class MyShopOverviewFragment extends Fragment {
                     sb.append("\n");
                 }
                 txtCategories.setText(sb);
+                initBtnChangePic(shop.getServerShopId());
+
             }
         });
 
+    }
+
+    private void initBtnChangePic(final int serverShopId) {
+
+        btnChangePic.setEnabled(true);
+        btnChangePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                captureImage();
+            }
+        });
     }
 
 }

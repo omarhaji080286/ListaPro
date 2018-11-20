@@ -2,8 +2,10 @@ package winservices.com.listapro.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -11,6 +13,7 @@ import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -129,6 +132,13 @@ public class UtilsFunctions {
             e.printStackTrace();
         }
         return date;
+    }
+
+    public static String imageToString(Bitmap bitmap){
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        byte[] imgByte = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(imgByte, Base64.DEFAULT);
     }
 
 
