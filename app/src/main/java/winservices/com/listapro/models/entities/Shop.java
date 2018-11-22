@@ -49,6 +49,7 @@ public class Shop {
     private City city;
 
     @Ignore
+    @SerializedName("d_categories")
     private List<DefaultCategory> dCategories;
 
     public Shop(String shopName, String shopPhone, double longitude, double latitude, int serverShopKeeperIdFk) {
