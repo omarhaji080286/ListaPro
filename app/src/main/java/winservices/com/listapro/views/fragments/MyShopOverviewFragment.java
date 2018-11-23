@@ -143,6 +143,7 @@ public class MyShopOverviewFragment extends Fragment {
         shopVM.getShopsByShopKeeperId(shopKeeper.getServerShopKeeperId()).observe(this, new Observer<List<Shop>>() {
             @Override
             public void onChanged(List<Shop> shops) {
+                if (shops==null || shops.size()==0) return;
                 Shop shop = shops.get(0);
                 serverShopId = shop.getServerShopId();
 

@@ -167,7 +167,6 @@ public class AddShopFragment extends Fragment {
 
     private void addNewShop() {
 
-
         String shopName = editShopName.getText().toString();
         ShopType shopType = (ShopType) spinnerShopType.getSelectedItem();
         City city = (City) spinnerCity.getSelectedItem();
