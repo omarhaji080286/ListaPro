@@ -53,8 +53,10 @@ public class DCategoriesToSelectAdapter extends RecyclerView.Adapter<DCategories
     }
 
     public void setDCategories(List<DefaultCategory> dCategories) {
-        this.dCategories = dCategories;
-        this.selectedDCategories = dCategories;
+        this.dCategories.clear();
+        this.selectedDCategories.clear();
+        this.dCategories.addAll(dCategories);
+        this.selectedDCategories.addAll(dCategories);
         notifyDataSetChanged();
     }
 

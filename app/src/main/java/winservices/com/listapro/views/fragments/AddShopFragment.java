@@ -1,6 +1,5 @@
 package winservices.com.listapro.views.fragments;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -58,7 +57,7 @@ public class AddShopFragment extends Fragment {
     private ShopTypeVM shopTypeVM;
     private ShopVM shopVM;
     private ShopKeeper currentSK = null;
-    private EditText editShopName, editLongitude, editLatitude;
+    private EditText editShopName;
     private Button btnAddShop;
     private Spinner spinnerShopType;
     private Spinner spinnerCity;
@@ -153,14 +152,8 @@ public class AddShopFragment extends Fragment {
         PermissionUtil permissionUtil = new PermissionUtil(Objects.requireNonNull(getContext()));
 
         if (permissionUtil.checkPermission(TXT_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                permissionUtil.showPermissionExplanation(TXT_FINE_LOCATION, getActivity());
-            } else if (!permissionUtil.checkPermissionPreference(TXT_FINE_LOCATION)) {
-                permissionUtil.requestPermission(TXT_FINE_LOCATION, getActivity());
-                permissionUtil.updatePermissionPreference(TXT_FINE_LOCATION);
-            } else {
-                permissionUtil.goToAppSettings();
-            }
+            permissionUtil.requestPermission(TXT_FINE_LOCATION, getActivity());
+            Log.d(TAG, "permission requested");
         }
 
     }
@@ -276,6 +269,9 @@ public class AddShopFragment extends Fragment {
                         } else {
                             UtilsFunctions.collapse(linlayDCategorieToSelect);
                             isExpanded = false;
+                        }
+                        for (int i = 0; i < dCategoriesToSelectAdapter.getSelectedDCategories().size(); i++) {
+                            Log.d(TAG, "selected category : " + dCategoriesToSelectAdapter.getSelectedDCategories().get(i).getDCategoryName());
                         }
                     }
 
