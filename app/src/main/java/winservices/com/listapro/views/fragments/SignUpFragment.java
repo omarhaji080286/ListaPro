@@ -58,6 +58,7 @@ public class SignUpFragment extends Fragment {
 
         @Override
         public void onVerificationFailed(FirebaseException e) {
+            Toast.makeText(getContext(), "Phone Authentication failed", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -107,6 +108,7 @@ public class SignUpFragment extends Fragment {
                                 if (shopKeeper == null) {
                                     //TODO : diable comments for release
                                     //sendVerifCode(completePhone);
+
                                     btnContinue.setVisibility(View.GONE);
                                     linlayPhoneCointaner.setVisibility(View.GONE);
                                     btnSignUp.setVisibility(View.VISIBLE);
@@ -159,8 +161,13 @@ public class SignUpFragment extends Fragment {
         String codeEntered = editVerifCode.getText().toString();
         if (isCodeEnteredValid(codeEntered)) {
             //TODO : disable comments for release
-            //PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codeSent, codeEntered);
-            //signInWithPhoneAuthCredential(credential);
+            /*if (codeSent!=null){
+                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codeSent, codeEntered);
+                signInWithPhoneAuthCredential(credential);
+            } else {
+                editVerifCode.setError(getString(R.string.not_valid_code));
+                editVerifCode.requestFocus();
+            }*/
 
             //TODO : Test Code
             registerShopKeeper();
