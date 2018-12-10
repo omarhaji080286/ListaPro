@@ -33,4 +33,6 @@ public interface ShopKeeperDao {
 
     @Query("SELECT * FROM shopkeepers WHERE phone = :phone")
     LiveData<ShopKeeper> getShopKeeperByPhone(String phone);
+
+
 }

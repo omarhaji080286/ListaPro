@@ -30,7 +30,8 @@
             android:layout_alignParentTop="true"
             android:layout_margin="@dimen/margin_small"
             android:src="@drawable/ic_exit_white"
-            android:background="?attr/selectableItemBackgroundBorderless"/>
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

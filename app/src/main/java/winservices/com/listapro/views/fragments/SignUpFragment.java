@@ -102,7 +102,7 @@ public class SignUpFragment extends Fragment {
 
                     final String phone = editPhone.getText().toString();
                     String completePhone = "+212" + phone;
-                    if (UtilsFunctions.isEmulator()){
+                    if (UtilsFunctions.isEmulator()) {
                         completePhone = "+16505551111"; //whitelist number on Firebase, 123456 is the code to number
                     }
 
@@ -145,7 +145,7 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (UtilsFunctions.checkNetworkConnection(Objects.requireNonNull(getContext()))) {
-                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(Objects.requireNonNull(getActivity()),new OnSuccessListener<InstanceIdResult>() {
+                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(Objects.requireNonNull(getActivity()), new OnSuccessListener<InstanceIdResult>() {
                         @Override
                         public void onSuccess(InstanceIdResult instanceIdResult) {
                             String newToken = instanceIdResult.getToken();
@@ -164,11 +164,11 @@ public class SignUpFragment extends Fragment {
 
     private void verifySignUpCode() {
         String codeEntered = editVerifCode.getText().toString();
-        if (UtilsFunctions.isEmulator()){
+        if (UtilsFunctions.isEmulator()) {
             codeEntered = "123456"; // 123456 is the code to number
         }
         if (isCodeEnteredValid(codeEntered)) {
-            if (codeSent!=null){
+            if (codeSent != null) {
                 PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codeSent, codeEntered);
                 signInWithPhoneAuthCredential(credential);
             } else {
@@ -227,13 +227,13 @@ public class SignUpFragment extends Fragment {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    Log.d(TAG, "signIn : success - credential " + credential);
                                     FirebaseUser user = task.getResult().getUser();
-                                    if (user == null) {
-                                        registerShopKeeper();
-                                    } else {
-                                        Toast.makeText(getContext(), "User already registered " + user.getPhoneNumber(), Toast.LENGTH_SHORT).show();
-                                    }
+
+                                    Log.d(TAG, "signIn success - phone number : " + user.getPhoneNumber());
+                                    Log.d(TAG, "signIn success - display name : " + user.getDisplayName());
+
+                                    registerShopKeeper();
+
                                 } else {
                                     Log.d(TAG, "signIn : failure");
                                     editVerifCode.setError(getString(R.string.not_valid_code));
@@ -260,13 +260,12 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onChanged(ShopKeeper shopKeeper) {
                 dialog.dismiss();
-                if (shopKeeper==null) return;
+                if (shopKeeper == null) return;
                 Toast.makeText(getContext(), R.string.welcome_to_listapro, Toast.LENGTH_SHORT).show();
                 LauncherActivity launcherActivity = (LauncherActivity) getActivity();
                 Objects.requireNonNull(launcherActivity).displayFragment(new AddShopFragment(), AddShopFragment.TAG);
             }
         });
-
     }
 
 }
