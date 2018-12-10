@@ -36,6 +36,10 @@ public class ShopTypeVM extends AndroidViewModel {
         }
     }
 
+    public LiveData<ShopType> getShopType(int serverShopTypeId){
+        return repository.getShopType(serverShopTypeId);
+    }
+
     public LiveData<List<ShopType>> getAllShopTypes() {
         LiveData<List<ShopType>> shopTypes = repository.getAllShopTypes();
         shopTypes = Transformations.map(shopTypes, new Function<List<ShopType>, List<ShopType>>() {

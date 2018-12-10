@@ -17,6 +17,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import winservices.com.listapro.models.dao.ShopKeeperDao;
 import winservices.com.listapro.models.database.ListaProDataBase;
+import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
 import winservices.com.listapro.webservices.ListaProWebServices;
 import winservices.com.listapro.webservices.RetrofitHelper;
@@ -28,11 +29,15 @@ public class ShopKeeperRepository {
 
     private ShopKeeperDao shopKeeperDao;
     private LiveData<List<ShopKeeper>> allShopKeepers;
+    private ShopRepository shopRepository;
+    private ShopTypeRepository shopTypeRepository;
 
     public ShopKeeperRepository(Application application) {
         ListaProDataBase db = ListaProDataBase.getInstance(application);
         shopKeeperDao = db.shopKeeperDao();
         allShopKeepers = shopKeeperDao.getAllShopKeepers();
+        shopRepository = new ShopRepository(application);
+        shopTypeRepository = new ShopTypeRepository(application);
     }
 
     public LiveData<ShopKeeper> getLastLogged() {
@@ -65,7 +70,7 @@ public class ShopKeeperRepository {
 
     public void signUpShopKeeper(ShopKeeper shopKeeper) {
         RetrofitHelper rh = new RetrofitHelper();
-        ListaProWebServices ws = rh.initWebServices();
+        final ListaProWebServices ws = rh.initWebServices();
 
         Gson gson = new Gson();
         Map<String, String> hashMap = new HashMap<>();
@@ -87,6 +92,10 @@ public class ShopKeeperRepository {
                             shopKeeper.setLastLogged(ShopKeeper.LAST_LOGGED);
                             shopKeeper.setIsLoggedIn(ShopKeeper.LOGGED_IN);
                             insert(shopKeeper);
+
+                            Shop shop = wsResponse.getShop();
+                            shopRepository.insert(shop);
+
                         } else {
                             Log.d(TAG, "Error on server : " + wsResponse.getMessage());
                         }

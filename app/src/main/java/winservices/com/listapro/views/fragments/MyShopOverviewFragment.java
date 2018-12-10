@@ -29,10 +29,12 @@ import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.DefaultCategory;
 import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
+import winservices.com.listapro.models.entities.ShopType;
 import winservices.com.listapro.utils.PermissionUtil;
 import winservices.com.listapro.utils.SharedPrefManager;
 import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
+import winservices.com.listapro.viewmodels.ShopTypeVM;
 import winservices.com.listapro.viewmodels.ShopVM;
 
 import static android.app.Activity.RESULT_OK;
@@ -46,6 +48,7 @@ public class MyShopOverviewFragment extends Fragment {
 
     private ShopKeeperVM shopKeeperVM;
     private ShopVM shopVM;
+    private ShopTypeVM shopTypeVM;
     private TextView txtShopName, txtPhone, txtShopType, txtCategories;
     private ImageView imgShopPic, imgShopTypeImg;
     private String currentImagePath;
@@ -68,6 +71,7 @@ public class MyShopOverviewFragment extends Fragment {
 
         shopKeeperVM = ViewModelProviders.of(this).get(ShopKeeperVM.class);
         shopVM = ViewModelProviders.of(this).get(ShopVM.class);
+        shopTypeVM = ViewModelProviders.of(this).get(ShopTypeVM.class);
 
         txtShopName = view.findViewById(R.id.txtShopName);
         txtPhone = view.findViewById(R.id.txtPhone);
@@ -171,14 +175,23 @@ public class MyShopOverviewFragment extends Fragment {
                 }
                 txtCategories.setText(sb);
 
-                Bitmap bitmap = UtilsFunctions.getOrientedBitmap(shop.getShopType().getShopTypeImagePath());
-                imgShopTypeImg.setImageBitmap(bitmap);
+                setShoTypeImage(shop.getShopType().getServerShopTypeId());
 
                 initBtnChangePic();
 
             }
         });
 
+    }
+
+    private void setShoTypeImage(int serverShopTypeId) {
+        shopTypeVM.getShopType(serverShopTypeId).observe(this, new Observer<ShopType>() {
+            @Override
+            public void onChanged(ShopType shopType) {
+                Bitmap bitmap = UtilsFunctions.getOrientedBitmap(shopType.getShopTypeImagePath());
+                imgShopTypeImg.setImageBitmap(bitmap);
+            }
+        });
     }
 
     private void initBtnChangePic() {

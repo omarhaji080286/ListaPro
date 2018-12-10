@@ -84,6 +84,10 @@ public class ShopTypeRepository {
         new InsertCityAsyncTask(cityDao).execute(city);
     }
 
+    public LiveData<ShopType> getShopType(int serverShopTypeId) {
+        return shopTypeDao.getShopType(serverShopTypeId);
+    }
+
     private static class InsertCityAsyncTask extends AsyncTask<City, Void, Void> {
 
         private CityDao cityDao;
@@ -101,17 +105,6 @@ public class ShopTypeRepository {
         }
     }
 
-
-    /*private static class GetShopTypeDCategoriesAsyncTask extends AsyncTask<Integer, Void, List<DefaultCategory>> {
-        private DefaultCategoryDao defaultCategoryDao;
-        private GetShopTypeDCategoriesAsyncTask(DefaultCategoryDao defaultCategoryDao) {
-            this.defaultCategoryDao = defaultCategoryDao;
-        }
-        @Override
-        protected List<DefaultCategory> doInBackground(Integer... integers) {
-            return defaultCategoryDao.getShopTypeDCategories(integers[0]);
-        }
-    }*/
 
     private static class InsertShopTypeAsyncTask extends AsyncTask<ShopType, Void, Void> {
 

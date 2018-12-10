@@ -43,6 +43,7 @@ public class Shop {
     private int serverShopKeeperIdFk;
 
     @Embedded
+    @SerializedName("shop_type")
     private ShopType shopType;
 
     @Embedded
@@ -51,6 +52,10 @@ public class Shop {
     @Ignore
     @SerializedName("d_categories")
     private List<DefaultCategory> dCategories;
+
+    @Ignore
+    @SerializedName("shop_image")
+    private String shopImage;
 
     public Shop(String shopName, String shopPhone, double longitude, double latitude, int serverShopKeeperIdFk) {
 

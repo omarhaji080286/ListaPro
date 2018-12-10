@@ -25,4 +25,7 @@ public interface ShopTypeDao {
 
     @Query("SELECT * FROM shop_types")
     LiveData<List<ShopType>> getAllShopTypes();
+
+    @Query("SELECT * FROM shop_types WHERE serverShopTypeId = :serverShopTypeId")
+    LiveData<ShopType> getShopType(int serverShopTypeId);
 }

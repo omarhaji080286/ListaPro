@@ -34,7 +34,6 @@ public class ShopType {
     @SerializedName("shop_type_image")
     private String shopTypeImage;
 
-
     @Ignore
     private List<DefaultCategory> dCategories;
 
