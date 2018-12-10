@@ -20,6 +20,7 @@ import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -100,14 +101,18 @@ public class SignUpFragment extends Fragment {
                 if (UtilsFunctions.checkNetworkConnection(Objects.requireNonNull(getContext()))) {
 
                     final String phone = editPhone.getText().toString();
-                    final String completePhone = "+212" + phone;
+                    String completePhone = "+212" + phone;
+                    if (UtilsFunctions.isEmulator()){
+                        completePhone = "+16505551111"; //whitelist number on Firebase, 123456 is the code to number
+                    }
+
                     if (isPhoneValid(phone)) {
+                        final String finalCompletePhone = completePhone;
                         shopKeeperVM.getShopKeeperByPhone(completePhone).observe(getViewLifecycleOwner(), new Observer<ShopKeeper>() {
                             @Override
                             public void onChanged(final ShopKeeper shopKeeper) {
                                 if (shopKeeper == null) {
-                                    //TODO : diable comments for release
-                                    //sendVerifCode(completePhone);
+                                    sendVerifCode(finalCompletePhone);
 
                                     btnContinue.setVisibility(View.GONE);
                                     linlayPhoneCointaner.setVisibility(View.GONE);
@@ -116,7 +121,7 @@ public class SignUpFragment extends Fragment {
 
                                     StringBuilder sb = new StringBuilder();
                                     sb.append(getString(R.string.sms_sent_to));
-                                    sb.append(completePhone);
+                                    sb.append(finalCompletePhone);
                                     sb.append(getString(R.string.with_code));
 
                                     txtDescription.setText(sb);
@@ -159,19 +164,17 @@ public class SignUpFragment extends Fragment {
 
     private void verifySignUpCode() {
         String codeEntered = editVerifCode.getText().toString();
+        if (UtilsFunctions.isEmulator()){
+            codeEntered = "123456"; // 123456 is the code to number
+        }
         if (isCodeEnteredValid(codeEntered)) {
-            //TODO : disable comments for release
-            /*if (codeSent!=null){
+            if (codeSent!=null){
                 PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codeSent, codeEntered);
                 signInWithPhoneAuthCredential(credential);
             } else {
                 editVerifCode.setError(getString(R.string.not_valid_code));
                 editVerifCode.requestFocus();
-            }*/
-
-            //TODO : Test Code
-            registerShopKeeper();
-
+            }
         }
     }
 
@@ -225,9 +228,12 @@ public class SignUpFragment extends Fragment {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     Log.d(TAG, "signIn : success - credential " + credential);
-                                    //FirebaseUser user = task.getResult().getUser();
-                                    registerShopKeeper();
-
+                                    FirebaseUser user = task.getResult().getUser();
+                                    if (user == null) {
+                                        registerShopKeeper();
+                                    } else {
+                                        Toast.makeText(getContext(), "User already registered " + user.getPhoneNumber(), Toast.LENGTH_SHORT).show();
+                                    }
                                 } else {
                                     Log.d(TAG, "signIn : failure");
                                     editVerifCode.setError(getString(R.string.not_valid_code));
@@ -236,7 +242,6 @@ public class SignUpFragment extends Fragment {
                                         Log.w(TAG, "signInWithCredential:failure", task.getException());
                                     }
                                 }
-
                             }
                         }
                 );
