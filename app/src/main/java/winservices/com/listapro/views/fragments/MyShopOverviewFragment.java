@@ -129,11 +129,10 @@ public class MyShopOverviewFragment extends Fragment {
                 startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
-
     }
 
     private File getImageFile() throws IOException {
-        String imageName = "lista_pro_shop_"+String.valueOf(serverShopId);
+        String imageName = Shop.PREFIX_SHOP+String.valueOf(serverShopId);
         String file_path = Objects.requireNonNull(getContext()).getFilesDir().getPath() + "/jpg";
         File storageDir = new File(file_path);
         if (!storageDir.exists()) storageDir.mkdirs();
@@ -227,6 +226,10 @@ public class MyShopOverviewFragment extends Fragment {
         }
 
     }
+
+
+
+
 
 
 }

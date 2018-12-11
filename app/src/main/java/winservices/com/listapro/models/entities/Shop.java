@@ -22,6 +22,11 @@ import static androidx.room.ForeignKey.CASCADE;
 
 public class Shop {
 
+    @Ignore
+    public static final String DEFAULT_IMAGE = "defaultImage";
+    @Ignore
+    public static final String PREFIX_SHOP = "shop_";
+
     @PrimaryKey
     @SerializedName("server_shop_id")
     private int serverShopId;
@@ -64,6 +69,14 @@ public class Shop {
         this.longitude = longitude;
         this.latitude = latitude;
         this.serverShopKeeperIdFk = serverShopKeeperIdFk;
+    }
+
+    public String getShopImage() {
+        return shopImage;
+    }
+
+    public void setShopImage(String shopImage) {
+        this.shopImage = shopImage;
     }
 
     public List<DefaultCategory> getdCategories() {

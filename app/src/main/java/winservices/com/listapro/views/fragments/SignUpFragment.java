@@ -255,7 +255,7 @@ public class SignUpFragment extends Fragment {
         String uuid = UtilsFunctions.getUuid(getContext());
         String fcmToken = SharedPrefManager.getInstance(getContext()).getToken();
         final ShopKeeper shopKeeper = new ShopKeeper(phone, uuid, fcmToken);
-        shopKeeperVM.signUp(shopKeeper);
+        shopKeeperVM.signUp(shopKeeper, getContext());
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
             public void onChanged(ShopKeeper shopKeeper) {

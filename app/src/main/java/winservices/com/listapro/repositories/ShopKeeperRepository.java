@@ -1,6 +1,7 @@
 package winservices.com.listapro.repositories;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -19,6 +20,7 @@ import winservices.com.listapro.models.dao.ShopKeeperDao;
 import winservices.com.listapro.models.database.ListaProDataBase;
 import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
+import winservices.com.listapro.utils.SharedPrefManager;
 import winservices.com.listapro.webservices.ListaProWebServices;
 import winservices.com.listapro.webservices.RetrofitHelper;
 import winservices.com.listapro.webservices.WebServiceResponse;
@@ -68,7 +70,7 @@ public class ShopKeeperRepository {
         return shopKeeperDao.getShopKeeperByPhone(phone);
     }
 
-    public void signUpShopKeeper(ShopKeeper shopKeeper) {
+    public void signUpShopKeeper(ShopKeeper shopKeeper, final Context context) {
         RetrofitHelper rh = new RetrofitHelper();
         final ListaProWebServices ws = rh.initWebServices();
 
@@ -94,7 +96,10 @@ public class ShopKeeperRepository {
                             insert(shopKeeper);
 
                             Shop shop = wsResponse.getShop();
-                            shopRepository.insert(shop);
+                            if (shop!=null){
+                                shopRepository.insert(shop);
+                                SharedPrefManager.getInstance(context).storeImageToFile(shop.getShopImage(), "jpg", Shop.PREFIX_SHOP, shop.getServerShopId());
+                            }
 
                         } else {
                             Log.d(TAG, "Error on server : " + wsResponse.getMessage());

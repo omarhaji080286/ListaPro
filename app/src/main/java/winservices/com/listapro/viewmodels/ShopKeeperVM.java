@@ -1,6 +1,7 @@
 package winservices.com.listapro.viewmodels;
 
 import android.app.Application;
+import android.content.Context;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class ShopKeeperVM extends AndroidViewModel {
         return repository.getShopKeeperByPhone(phone);
     }
 
-    public void signUp(ShopKeeper shopKeeper){
-        repository.signUpShopKeeper(shopKeeper);
+    public void signUp(ShopKeeper shopKeeper, Context context){
+        repository.signUpShopKeeper(shopKeeper, context);
     }
 }

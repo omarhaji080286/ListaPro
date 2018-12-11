@@ -145,10 +145,8 @@ public class UtilsFunctions {
     }
 
     public static Bitmap stringToBitmap(String encodedImage) {
-
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-
     }
 
     private static Bitmap rotateImage(Bitmap source, float angle) {
