@@ -52,6 +52,7 @@ public class SignUpFragment extends Fragment {
     private TextView txtDescription;
     private LinearLayout linlayPhoneCointaner;
     private ShopKeeperVM shopKeeperVM;
+
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
