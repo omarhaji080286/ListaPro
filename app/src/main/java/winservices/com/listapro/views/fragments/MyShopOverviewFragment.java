@@ -150,7 +150,7 @@ public class MyShopOverviewFragment extends Fragment {
                 Shop shop = shops.get(0);
                 serverShopId = shop.getServerShopId();
 
-                String shopImgPath = SharedPrefManager.getInstance(getContext()).getShopImagePath(Shop.PREFIX_SHOP, shop.getServerShopId());
+                String shopImgPath = SharedPrefManager.getInstance(getContext()).getImagePath(Shop.PREFIX_SHOP + shop.getServerShopId());
                 if (shopImgPath != null) {
                     Bitmap imageBitmap = UtilsFunctions.getOrientedBitmap(shopImgPath);
                     if (imageBitmap != null) {

@@ -48,11 +48,6 @@ public class SharedPrefManager {
         editor.apply();
     }
 
-    public String getShopImagePath(String prefix, int serverShopId){
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(prefix + serverShopId, null);
-    }
-
     public void storeImageToFile(final String encodedImage, final String imageType, final String prefix, final int sharedPrefKey) {
         final String file_path = context.getFilesDir().getPath() + "/" + imageType;
         Thread thread = new Thread(){

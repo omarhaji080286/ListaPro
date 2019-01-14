@@ -49,8 +49,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
     public void onBindViewHolder(@NonNull OrderVH holder, int position) {
         final Order order = orders.get(position);
 
-        String imagePath = SharedPrefManager.getInstance(context).getShopImagePath(Client.PREFIX, order.getClient().getServerUserId());
-        if (imagePath!=null){
+        String imagePath = SharedPrefManager.getInstance(context).getImagePath(Client.PREFIX + order.getClient().getServerUserId());
+        if (imagePath != null) {
             Bitmap imageBitmap = BitmapFactory.decodeFile(imagePath);
             holder.imgClientPic.setImageBitmap(imageBitmap);
         } else {
