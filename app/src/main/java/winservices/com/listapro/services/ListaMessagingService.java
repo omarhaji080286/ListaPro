@@ -63,7 +63,7 @@ public class ListaMessagingService extends FirebaseMessagingService {
         try {
             int serverShopId = jsonData.getInt("serverShopId");
             OrderRepository orderRepository = new OrderRepository(getApplication());
-            orderRepository.loadOrdersFromServer(serverShopId);
+            orderRepository.loadOrdersFromServer(getApplicationContext(), serverShopId);
         } catch (JSONException e) {
             e.printStackTrace();
         }

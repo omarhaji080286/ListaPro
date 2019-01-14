@@ -24,7 +24,6 @@ public interface OrderDao {
     @Delete
     void delete(Order order);
 
-
     @Query("SELECT * FROM `orders`" +
             " WHERE `serverShopIdFk`=:serverShopId" +
             " AND `statusId` NOT IN (" + Order.COMPLETED + "," + Order.NOT_SUPPORTED + ")" +

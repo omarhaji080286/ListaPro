@@ -146,7 +146,7 @@ public class WelcomeFragment extends Fragment {
         super.onResume();
 
         if (serverShopId!=0){
-            orderVM.loadOrders(serverShopId);
+            orderVM.loadOrders(getContext(), serverShopId);
         }
 
     }

@@ -60,7 +60,7 @@ public class LauncherActivity extends AppCompatActivity {
                 }
                 shopKeeper.setShops(shops);
                 routeUser(shopKeeper);
-                orderVM.loadOrders(shops.get(0).getServerShopId());
+                orderVM.loadOrders( getApplicationContext(), shops.get(0).getServerShopId());
             }
         });
     }

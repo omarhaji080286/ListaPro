@@ -48,9 +48,9 @@ public class SharedPrefManager {
         editor.apply();
     }
 
-    public String getShopImagePath(int serverShopId){
+    public String getShopImagePath(String prefix, int serverShopId){
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(Shop.PREFIX_SHOP + serverShopId, null);
+        return sharedPreferences.getString(prefix + serverShopId, null);
     }
 
     public void storeImageToFile(final String encodedImage, final String imageType, final String prefix, final int sharedPrefKey) {

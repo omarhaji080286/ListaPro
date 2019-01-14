@@ -1,5 +1,8 @@
 package winservices.com.listapro.views.adapters;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import winservices.com.listapro.R;
+import winservices.com.listapro.models.entities.Client;
 import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.OrderStatusValue;
+import winservices.com.listapro.utils.SharedPrefManager;
 import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.viewmodels.OrderVM;
 import winservices.com.listapro.views.activities.MyOrdersActivity;
@@ -25,8 +30,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
 
     private List<Order> orders = new ArrayList<>();
     private OrderVM orderVM;
+    private Context context;
 
-    public OrdersAdapter(OrderVM orderVM) {
+    public OrdersAdapter(Context context, OrderVM orderVM) {
+        this.context = context;
         this.orderVM = orderVM;
     }
 
@@ -42,7 +49,14 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
     public void onBindViewHolder(@NonNull OrderVH holder, int position) {
         final Order order = orders.get(position);
 
-        holder.imgClientPic.setImageResource(R.drawable.logo);
+        String imagePath = SharedPrefManager.getInstance(context).getShopImagePath(Client.PREFIX, order.getClient().getServerUserId());
+        if (imagePath!=null){
+            Bitmap imageBitmap = BitmapFactory.decodeFile(imagePath);
+            holder.imgClientPic.setImageBitmap(imageBitmap);
+        } else {
+            holder.imgClientPic.setImageResource(R.drawable.user_default_image);
+        }
+
         holder.txtClientName.setText(order.getClient().getUserName());
         String stringDate = UtilsFunctions.dateToString(UtilsFunctions.stringToDate(order.getCreationDate()), "dd/MM/YYYY HH:mm:ss");
         holder.txtDate.setText(stringDate);

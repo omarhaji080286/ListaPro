@@ -1,6 +1,7 @@
 package winservices.com.listapro.repositories;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -18,8 +19,10 @@ import retrofit2.Response;
 import winservices.com.listapro.models.dao.OrderDao;
 import winservices.com.listapro.models.dao.OrderedGoodDao;
 import winservices.com.listapro.models.database.ListaProDataBase;
+import winservices.com.listapro.models.entities.Client;
 import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.OrderedGood;
+import winservices.com.listapro.utils.SharedPrefManager;
 import winservices.com.listapro.webservices.ListaProWebServices;
 import winservices.com.listapro.webservices.RetrofitHelper;
 import winservices.com.listapro.webservices.WebServiceResponse;
@@ -61,7 +64,7 @@ public class OrderRepository {
         new UpdateOrderedGoodAsyncTask(orderedGoodDao).execute(orderedGood);
     }
 
-    public void loadOrdersFromServer(int serverShopId) {
+    public void loadOrdersFromServer(final Context context, int serverShopId) {
         RetrofitHelper rh = new RetrofitHelper();
         ListaProWebServices ws = rh.initWebServices();
 
@@ -81,6 +84,10 @@ public class OrderRepository {
                             List<Order> orders = wsResponse.getOrders();
                             for (Order order : orders) {
                                 insert(order);
+                                String userImage = order.getClient().getUserImage();
+                                if (!userImage.equals("defaultImage")) {
+                                    SharedPrefManager.getInstance(context).storeImageToFile(userImage, "jpg", Client.PREFIX, order.getClient().getServerUserId());
+                                }
                                 for (OrderedGood orderedGood : order.getOrderedGoods()) {
                                     insert(orderedGood);
                                 }

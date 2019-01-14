@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "clients")
 public class Client {
 
+    public static final String PREFIX = "client_";
     @PrimaryKey
     @SerializedName("server_user_id")
     private int serverUserId;
@@ -18,10 +19,14 @@ public class Client {
     @SerializedName("email")
     private String userEmail;
 
-    public Client(int serverUserId, String userName, String userEmail) {
+    @SerializedName("user_image")
+    private String userImage;
+
+    public Client(int serverUserId, String userName, String userEmail, String userImage) {
         this.serverUserId = serverUserId;
         this.userName = userName;
         this.userEmail = userEmail;
+        this.userImage = userImage;
     }
 
     public int getServerUserId() {
@@ -46,5 +51,13 @@ public class Client {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
     }
 }

@@ -1,6 +1,7 @@
 package winservices.com.listapro.viewmodels;
 
 import android.app.Application;
+import android.content.Context;
 
 import java.util.List;
 
@@ -28,8 +29,8 @@ public class OrderVM extends AndroidViewModel {
         return repository.getOrdersByServerShopId(serverShopId);
     }
 
-    public void loadOrders(int serverShopId) {
-        repository.loadOrdersFromServer(serverShopId);
+    public void loadOrders(Context context, int serverShopId) {
+        repository.loadOrdersFromServer(context, serverShopId);
     }
 
     public LiveData<List<OrderedGood>> getOrderedGoodsByOrderId(int serverOrderId) {

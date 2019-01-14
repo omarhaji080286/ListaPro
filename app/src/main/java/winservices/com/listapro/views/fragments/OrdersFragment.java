@@ -52,7 +52,7 @@ public class OrdersFragment extends Fragment {
         shopVM = ViewModelProviders.of(this).get(ShopVM.class);
         rvOrders = view.findViewById(R.id.rvOrders);
 
-        ordersAdapter = new OrdersAdapter(orderVM);
+        ordersAdapter = new OrdersAdapter(getContext(), orderVM);
         rvOrders.setLayoutManager(new LinearLayoutManager(getContext()));
         rvOrders.setAdapter(ordersAdapter);
 
@@ -69,7 +69,7 @@ public class OrdersFragment extends Fragment {
         shopVM.getShopsByShopKeeperId(serverShopKeeperId).observe(this, new Observer<List<Shop>>() {
             @Override
             public void onChanged(List<Shop> shops) {
-                orderVM.loadOrders(shops.get(0).getServerShopId());
+                orderVM.loadOrders(getContext(), shops.get(0).getServerShopId());
                 setOrdersToAdapter(shops.get(0).getServerShopId());
             }
         });

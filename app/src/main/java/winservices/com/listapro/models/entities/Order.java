@@ -29,7 +29,6 @@ public class Order {
     public final static int COMPLETED = 5;
     public final static int NOT_SUPPORTED = 6;
 
-
     @PrimaryKey
     @SerializedName("server_order_id")
     private int serverOrderId;

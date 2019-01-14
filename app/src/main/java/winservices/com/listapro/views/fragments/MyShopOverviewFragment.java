@@ -132,7 +132,7 @@ public class MyShopOverviewFragment extends Fragment {
     }
 
     private File getImageFile() throws IOException {
-        String imageName = Shop.PREFIX_SHOP+String.valueOf(serverShopId);
+        String imageName = Shop.PREFIX_SHOP + String.valueOf(serverShopId);
         String file_path = Objects.requireNonNull(getContext()).getFilesDir().getPath() + "/jpg";
         File storageDir = new File(file_path);
         if (!storageDir.exists()) storageDir.mkdirs();
@@ -146,11 +146,11 @@ public class MyShopOverviewFragment extends Fragment {
         shopVM.getShopsByShopKeeperId(shopKeeper.getServerShopKeeperId()).observe(this, new Observer<List<Shop>>() {
             @Override
             public void onChanged(List<Shop> shops) {
-                if (shops==null || shops.size()==0) return;
+                if (shops == null || shops.size() == 0) return;
                 Shop shop = shops.get(0);
                 serverShopId = shop.getServerShopId();
 
-                String shopImgPath = SharedPrefManager.getInstance(getContext()).getShopImagePath(shop.getServerShopId());
+                String shopImgPath = SharedPrefManager.getInstance(getContext()).getShopImagePath(Shop.PREFIX_SHOP, shop.getServerShopId());
                 if (shopImgPath != null) {
                     Bitmap imageBitmap = UtilsFunctions.getOrientedBitmap(shopImgPath);
                     if (imageBitmap != null) {
@@ -200,7 +200,7 @@ public class MyShopOverviewFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 PermissionUtil permissionUtil = new PermissionUtil(Objects.requireNonNull(getContext()));
-                if (permissionUtil.checkPermission(TXT_CAMERA) == PackageManager.PERMISSION_GRANTED){
+                if (permissionUtil.checkPermission(TXT_CAMERA) == PackageManager.PERMISSION_GRANTED) {
                     captureImage();
                     return;
                 }
@@ -226,10 +226,6 @@ public class MyShopOverviewFragment extends Fragment {
         }
 
     }
-
-
-
-
 
 
 }
