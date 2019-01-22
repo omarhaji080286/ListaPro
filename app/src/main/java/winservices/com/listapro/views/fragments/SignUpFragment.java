@@ -104,7 +104,7 @@ public class SignUpFragment extends Fragment {
                     final String phone = editPhone.getText().toString();
                     String completePhone = "+212" + phone;
                     if (UtilsFunctions.isEmulator()) {
-                        completePhone = "+16505551111"; //whitelist number on Firebase, 123456 is the code to number
+                        completePhone = "+16" + phone; //whitelist number on Firebase, 123456 is the corresponding verification number
                     }
 
                     if (isPhoneValid(phone)) {
@@ -252,7 +252,12 @@ public class SignUpFragment extends Fragment {
         dialog = UtilsFunctions.getDialogBuilder(getLayoutInflater(), getContext(), getString(R.string.signing_up)).create();
         dialog.show();
 
+        //TODO - for test
+        //String phone = "+16" + editPhone.getText().toString();
+
+        //TODO - For release
         String phone = "+212" + editPhone.getText().toString();
+
         String uuid = UtilsFunctions.getUuid(getContext());
         String fcmToken = SharedPrefManager.getInstance(getContext()).getToken();
         final ShopKeeper shopKeeper = new ShopKeeper(phone, uuid, fcmToken);
