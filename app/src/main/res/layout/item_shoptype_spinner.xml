@@ -15,7 +15,6 @@
         style="@style/SpinnerText"
         android:layout_alignBottom="@+id/spinnerImg"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@id/spinnerImg"
-        android:text="@string/spinner_row_value" />
+        android:layout_toEndOf="@id/spinnerImg" />
 
 </RelativeLayout>

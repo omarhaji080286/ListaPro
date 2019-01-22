@@ -14,6 +14,5 @@
     <TextView
         android:id="@+id/txtDCategory"
         style="@style/TextInSelectList"
-        android:text="@string/default_category_name"
         android:layout_weight="90"/>
 </LinearLayout>
