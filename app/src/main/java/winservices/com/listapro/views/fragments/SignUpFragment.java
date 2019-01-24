@@ -56,10 +56,13 @@ public class SignUpFragment extends Fragment {
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+            Log.d(TAG, "onVerificationCompleted: " + phoneAuthCredential.getSignInMethod());
+            signInWithPhoneAuthCredential(phoneAuthCredential);
         }
 
         @Override
         public void onVerificationFailed(FirebaseException e) {
+            Log.d(TAG, "onVerificationFailed: " + e.toString());
             Toast.makeText(getContext(), "Phone Authentication failed", Toast.LENGTH_SHORT).show();
         }
 

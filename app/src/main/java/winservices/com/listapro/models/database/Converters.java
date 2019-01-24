@@ -8,15 +8,6 @@ import java.util.Locale;
 import androidx.room.TypeConverter;
 
 public class Converters {
-    /*@TypeConverter
-    public static Date fromTimestamp(Long value) {
-        return value == null ? null : new Date(value);
-    }
-
-    @TypeConverter
-    public static Long dateToTimestamp(Date date) {
-        return date == null ? null : date.getTime();
-    }*/
 
     @TypeConverter
     public static Date fromString(String dateString) {

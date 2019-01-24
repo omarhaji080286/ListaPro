@@ -96,9 +96,11 @@ public class ShopKeeperRepository {
                             insert(shopKeeper);
 
                             Shop shop = wsResponse.getShop();
-                            if (shop!=null){
+                            if (shop!=null) {
                                 shopRepository.insert(shop);
-                                SharedPrefManager.getInstance(context).storeImageToFile(shop.getShopImage(), "jpg", Shop.PREFIX_SHOP, shop.getServerShopId());
+                                if (!shop.getShopImage().equals("defaultImage")){
+                                    SharedPrefManager.getInstance(context).storeImageToFile(shop.getShopImage(), "jpg", Shop.PREFIX_SHOP, shop.getServerShopId());
+                                }
                             }
 
                         } else {

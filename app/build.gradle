@@ -21,7 +21,7 @@ android {
 
 dependencies {
     def lifecycle_version = "2.0.0"
-    def room_version = "2.1.0-alpha02"
+    def room_version = "2.1.0-alpha03"
 
     //default dependencies
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -42,8 +42,8 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     //FireBase - SMS
-    implementation 'com.google.firebase:firebase-core:16.0.5'
-    implementation 'com.google.firebase:firebase-auth:16.0.5'
+    implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-auth:16.1.0'
     //FireBAse - Cloud Messaging
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
     //Retrofit
