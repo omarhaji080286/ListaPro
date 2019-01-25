@@ -53,4 +53,5 @@
     <string name="phone">Phone : </string>
     <string name="items_sold">Items sold :</string>
     <string name="category1_n_category2">- category1  - category2</string>
+    <string name="no_order_registered">No order registered</string>
 </resources>

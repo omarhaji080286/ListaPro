@@ -5,6 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".views.fragments.OrdersFragment">
 
+    <TextView
+        android:id="@+id/txtNoOrderRegistered"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_order_registered"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvOrders"
         android:layout_width="match_parent"

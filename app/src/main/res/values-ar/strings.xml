@@ -53,4 +53,5 @@
     <string name="phone">رقم الهاتف:</string>
     <string name="items_sold">العناصر المباعة:</string>
     <string name="category1_n_category2">- الفئة 1 - الفئة 2</string>
+    <string name="no_order_registered">لم يتم تسجيل أي طلب</string>
 </resources>

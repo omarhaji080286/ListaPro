@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -34,8 +35,10 @@ public class OrdersFragment extends Fragment {
     private ShopVM shopVM;
     private RecyclerView rvOrders;
     private OrdersAdapter ordersAdapter;
+    private TextView txtNoOrderRegistered;
 
-    public OrdersFragment() { }
+    public OrdersFragment() {
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -51,6 +54,7 @@ public class OrdersFragment extends Fragment {
         orderVM = ViewModelProviders.of(this).get(OrderVM.class);
         shopVM = ViewModelProviders.of(this).get(ShopVM.class);
         rvOrders = view.findViewById(R.id.rvOrders);
+        txtNoOrderRegistered = view.findViewById(R.id.txtNoOrderRegistered);
 
         ordersAdapter = new OrdersAdapter(getContext(), orderVM);
         rvOrders.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -80,6 +84,11 @@ public class OrdersFragment extends Fragment {
         orderVM.getOrdersByServerShopId(serverShopId).observe(this, new Observer<List<Order>>() {
             @Override
             public void onChanged(List<Order> ordersInDb) {
+                if (ordersInDb.size() == 0){
+                    txtNoOrderRegistered.setVisibility(View.VISIBLE);
+                } else {
+                    txtNoOrderRegistered.setVisibility(View.GONE);
+                }
                 ordersAdapter.setOrders(ordersInDb);
             }
         });

@@ -69,6 +69,8 @@ public class SignUpFragment extends Fragment {
         @Override
         public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
+            editVerifCode.setEnabled(true);
+            btnSignUp.setEnabled(true);
             codeSent = s;
         }
     };
@@ -98,6 +100,9 @@ public class SignUpFragment extends Fragment {
         btnSignUp = view.findViewById(R.id.btnNext);
         txtDescription = view.findViewById(R.id.txtDescription);
         linlayPhoneCointaner = view.findViewById(R.id.linLayPhoneContainer);
+
+        editVerifCode.setEnabled(false);
+        btnSignUp.setEnabled(false);
 
         btnContinue.setOnClickListener(new View.OnClickListener() {
             @Override
