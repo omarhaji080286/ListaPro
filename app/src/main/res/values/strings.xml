@@ -16,7 +16,7 @@
     <string name="sms_sent_to">We just sent an SMS to&#160;</string>
     <string name="with_code">&#160;with a code for you to enter here</string>
     <string name="welcome_to_listapro">Welcome to Lista Pro</string>
-    <string name="my_orders">My Orders</string>
+    <string name="my_orders">Orders</string>
     <string name="represents_the_shop_s_orders">represents the shop\'s orders</string>
     <string name="next">Continue</string>
     <string name="hint_verification_code">123456</string>
@@ -63,5 +63,7 @@
     <string name="status">Status</string>
     <string name="items_number">items number :</string>
     <string name="update_items_status">Please, update the items status.</string>
+    <string name="ongoing_orders">Ongoing orders</string>
+    <string name="closed_orders">Closed orders</string>
 
 </resources>

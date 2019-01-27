@@ -24,6 +24,7 @@ import winservices.com.listapro.models.entities.Client;
 import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.OrderedGood;
 import winservices.com.listapro.utils.SharedPrefManager;
+import winservices.com.listapro.views.activities.MyOrdersActivity;
 import winservices.com.listapro.webservices.ListaProWebServices;
 import winservices.com.listapro.webservices.RetrofitHelper;
 import winservices.com.listapro.webservices.WebServiceResponse;
@@ -41,7 +42,14 @@ public class OrderRepository {
         this.orderedGoodDao = db.orderedGoodDao();
     }
 
-    public LiveData<List<Order>> getOrdersByServerShopId(int serverShopId) {
+    public LiveData<List<Order>> getOrdersByServerShopId(int serverShopId, int orders_type) {
+        switch (orders_type){
+            case MyOrdersActivity.CLOSED_ORDERS :
+                return orderDao.getClosedOrdersByServerShopId(serverShopId);
+            case MyOrdersActivity.ONGOING_ORDERS :
+                return orderDao.getOrdersByServerShopId(serverShopId);
+        }
+
         return orderDao.getOrdersByServerShopId(serverShopId);
     }
 

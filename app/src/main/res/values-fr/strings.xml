@@ -9,7 +9,7 @@
     <string name="sms_sent_to">Nous venons d\'envoyer un SMS à&#160;</string>
     <string name="with_code">&#160;avec un code à saisir ici</string>
     <string name="welcome_to_listapro">Bienvenue sur Lista Pro</string>
-    <string name="my_orders">Mes commandes</string>
+    <string name="my_orders">Commandes</string>
     <string name="represents_the_shop_s_orders">représente les commandes du magasin</string>
     <string name="next">Continuer</string>
     <string name="hint_verification_code">123456</string>
@@ -57,4 +57,6 @@
     <string name="status">Statut</string>
     <string name="items_number">Nb d\'articles :</string>
     <string name="update_items_status">Clicker sur un article pour précisier sa disponibilité.</string>
+    <string name="ongoing_orders">Commandes en cours</string>
+    <string name="closed_orders">Commandes clôturées</string>
 </resources>

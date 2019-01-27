@@ -57,4 +57,6 @@
     <string name="status">الوضع</string>
     <string name="items_number">عدد العناصر :</string>
     <string name="update_items_status">يرجى تحديث حالة العناصر.</string>
+    <string name="ongoing_orders">الطلبات الجارية</string>
+    <string name="closed_orders">الطلبات المغلقة</string>
 </resources>

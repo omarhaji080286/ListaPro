@@ -23,6 +23,7 @@ import winservices.com.listapro.models.entities.ShopKeeper;
 import winservices.com.listapro.viewmodels.OrderVM;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
 import winservices.com.listapro.viewmodels.ShopVM;
+import winservices.com.listapro.views.activities.MyOrdersActivity;
 import winservices.com.listapro.views.adapters.OrdersAdapter;
 
 
@@ -36,6 +37,7 @@ public class OrdersFragment extends Fragment {
     private RecyclerView rvOrders;
     private OrdersAdapter ordersAdapter;
     private TextView txtNoOrderRegistered;
+    private int orders_type;
 
     public OrdersFragment() {
     }
@@ -55,6 +57,12 @@ public class OrdersFragment extends Fragment {
         shopVM = ViewModelProviders.of(this).get(ShopVM.class);
         rvOrders = view.findViewById(R.id.rvOrders);
         txtNoOrderRegistered = view.findViewById(R.id.txtNoOrderRegistered);
+
+        Bundle bundle = getArguments();
+        if (bundle!=null){
+            orders_type = bundle.getInt(MyOrdersActivity.ORDERS_TYPE);
+        }
+
 
         ordersAdapter = new OrdersAdapter(this, getContext(), orderVM);
         rvOrders.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -81,7 +89,7 @@ public class OrdersFragment extends Fragment {
     }
 
     private void setOrdersToAdapter(int serverShopId) {
-        orderVM.getOrdersByServerShopId(serverShopId).observe(this, new Observer<List<Order>>() {
+        orderVM.getOrdersByServerShopId(serverShopId, orders_type).observe(this, new Observer<List<Order>>() {
             @Override
             public void onChanged(List<Order> ordersInDb) {
                 if (ordersInDb.size() == 0){

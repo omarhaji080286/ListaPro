@@ -30,6 +30,13 @@ public interface OrderDao {
             " ORDER BY `statusId` ASC, `creationDate` DESC")
     LiveData<List<Order>> getOrdersByServerShopId(int serverShopId);
 
+    @Query("SELECT *  FROM `orders`" +
+            " WHERE `serverShopIdFk`=:serverShopId" +
+            " AND `statusId` IN (" + Order.COMPLETED + "," + Order.NOT_SUPPORTED + ")" +
+            " ORDER BY `statusId` ASC, `creationDate` DESC")
+    LiveData<List<Order>> getClosedOrdersByServerShopId(int serverShopId);
+
+
     @Query("SELECT COUNT(*)" +
             " FROM orders as o, shops as s, shopkeepers as sk" +
             " WHERE o.serverShopIdFk = s.serverShopId " +

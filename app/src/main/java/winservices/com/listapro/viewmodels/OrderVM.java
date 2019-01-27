@@ -25,8 +25,8 @@ public class OrderVM extends AndroidViewModel {
         repository.insert(order);
     }
 
-    public LiveData<List<Order>> getOrdersByServerShopId(int serverShopId) {
-        return repository.getOrdersByServerShopId(serverShopId);
+    public LiveData<List<Order>> getOrdersByServerShopId(int serverShopId, int orders_type) {
+        return repository.getOrdersByServerShopId(serverShopId, orders_type);
     }
 
     public void loadOrders(Context context, int serverShopId) {
