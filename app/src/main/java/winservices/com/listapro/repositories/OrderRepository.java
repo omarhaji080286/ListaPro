@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
@@ -116,6 +117,7 @@ public class OrderRepository {
         String jsonRequest = gson.toJson(order);
         Log.d(TAG, "jsonRequest: " + jsonRequest);
         hashMap.put("jsonRequest", jsonRequest);
+        hashMap.put("language", Locale.getDefault().getLanguage());
         Call<WebServiceResponse> call = ws.updateOrder(hashMap);
 
         call.enqueue(new Callback<WebServiceResponse>() {

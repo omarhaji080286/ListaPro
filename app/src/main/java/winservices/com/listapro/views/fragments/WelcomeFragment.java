@@ -139,6 +139,8 @@ public class WelcomeFragment extends Fragment {
                 }
             }
         });
+
+        orderVM.loadOrders(getContext(), shop.getServerShopId());
     }
 
     @Override
