@@ -54,4 +54,7 @@
     <string name="items_sold">Articles vendus :</string>
     <string name="category1_n_category2">- categorie1  - categorie2</string>
     <string name="no_order_registered">Aucune commande enregistrée</string>
+    <string name="status">Statut</string>
+    <string name="items_number">Nb d\'articles :</string>
+    <string name="update_items_status">Clicker sur un article pour précisier sa disponibilité.</string>
 </resources>

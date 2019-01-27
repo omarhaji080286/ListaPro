@@ -149,6 +149,10 @@ public class OrderRepository {
         return orderDao.getSentOrdersNum(serverShopId);
     }
 
+    public LiveData<Integer> getOrderedGoodsNum(int serverUserId, int serverOrderId) {
+        return orderDao.getOrderedGoodsNum(serverUserId, serverOrderId);
+    }
+
     public LiveData<Order> getOrderByServerOrderId(int serverOrderId) {
         return orderDao.getOrderByServerOrderId(serverOrderId);
     }

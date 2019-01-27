@@ -15,6 +15,8 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.Client;
@@ -31,10 +33,12 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
     private List<Order> orders = new ArrayList<>();
     private OrderVM orderVM;
     private Context context;
+    private Fragment fragment;
 
-    public OrdersAdapter(Context context, OrderVM orderVM) {
+    public OrdersAdapter(Fragment fragment,Context context, OrderVM orderVM) {
         this.context = context;
         this.orderVM = orderVM;
+        this.fragment = fragment;
     }
 
     @NonNull
@@ -46,7 +50,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull OrderVH holder, int position) {
+    public void onBindViewHolder(@NonNull final OrderVH holder, int position) {
         final Order order = orders.get(position);
 
         String imagePath = SharedPrefManager.getInstance(context).getImagePath(Client.PREFIX + order.getClient().getServerUserId());
@@ -62,6 +66,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
         holder.txtDate.setText(stringDate);
         holder.txtReference.setText(String.valueOf(order.getServerOrderId()));
         holder.txtStatus.setText(order.getStatus().getStatusName());
+
+
+
         holder.consLayOrderContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,6 +83,14 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
                     order.setStatus(status);
                     orderVM.updateOrderOnServer(order);
                 }
+            }
+        });
+
+
+        orderVM.getOrderedGoodsNum(order.getClient().getServerUserId(), order.getServerOrderId()).observe(fragment, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer orderedGoodsNum) {
+                holder.txtItemsNb.setText(String.valueOf(orderedGoodsNum));
             }
         });
     }
@@ -93,7 +108,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
 
     class OrderVH extends RecyclerView.ViewHolder {
 
-        private TextView txtClientName, txtReference, txtDate, txtStatus;
+        private TextView txtClientName, txtReference, txtDate, txtStatus, txtItemsNb;
         private ImageView imgClientPic;
         private ConstraintLayout consLayOrderContainer;
 
@@ -105,6 +120,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
             txtReference = itemView.findViewById(R.id.txtReference);
             txtDate = itemView.findViewById(R.id.txtDate);
             txtStatus = itemView.findViewById(R.id.txtStatus);
+            txtItemsNb = itemView.findViewById(R.id.txtItemsNb);
             imgClientPic = itemView.findViewById(R.id.imgClientPic);
 
         }

@@ -14,11 +14,11 @@ import androidx.room.PrimaryKey;
 import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(
-            tableName = "orders",
-            foreignKeys = @ForeignKey(entity = Shop.class, parentColumns = "serverShopId", childColumns = "serverShopIdFk",
-                    onDelete = CASCADE),
-            indices = @Index(value = "serverShopIdFk")
-        )
+        tableName = "orders",
+        foreignKeys = @ForeignKey(entity = Shop.class, parentColumns = "serverShopId", childColumns = "serverShopIdFk",
+                onDelete = CASCADE),
+        indices = @Index(value = "serverShopIdFk")
+)
 public class Order {
 
     public final static String SERVER_ORDER_ID = "serverOrderId";
@@ -63,6 +63,7 @@ public class Order {
     public void setOrderedGoods(List<OrderedGood> orderedGoods) {
         this.orderedGoods = orderedGoods;
     }
+
 
     public int getServerShopIdFk() {
         return serverShopIdFk;

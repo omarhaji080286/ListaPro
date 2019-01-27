@@ -106,7 +106,7 @@ public class OrderDetailsFragment extends Fragment {
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 } else {
-                    Toast.makeText(getContext(), "Please, modify the articles status.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.update_items_status), Toast.LENGTH_SHORT).show();
                 }
             }
         });

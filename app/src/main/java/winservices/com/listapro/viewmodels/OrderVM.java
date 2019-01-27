@@ -45,6 +45,10 @@ public class OrderVM extends AndroidViewModel {
         return repository.getSentOrdersNum(serverShopId);
     }
 
+    public LiveData<Integer>  getOrderedGoodsNum(int serverUserId, int serverOrderId){
+        return repository.getOrderedGoodsNum(serverUserId, serverOrderId);
+    }
+
     public void updateOrderOnServer(Order order){
         repository.updateOrderOnServer(order);
     }
@@ -56,4 +60,6 @@ public class OrderVM extends AndroidViewModel {
     public LiveData<Order> getOrderByServerOrderId(int serverOrderId) {
         return repository.getOrderByServerOrderId(serverOrderId);
     }
+
+
 }

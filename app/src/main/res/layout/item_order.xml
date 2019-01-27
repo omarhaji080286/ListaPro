@@ -16,28 +16,41 @@
             android:layout_width="@dimen/user_img_height"
             android:layout_height="@dimen/user_img_width"
             android:src="@drawable/user"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/labelClient"
             style="@style/TextInOrder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/client"
-            app:layout_constraintStart_toEndOf="@+id/imgClientPic"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/txtClientName"
             style="@style/TextInOrder"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/user_img_width"
             android:layout_height="wrap_content"
             android:text="@string/client_name"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/labelClient"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:maxLines="2"
+            app:layout_constraintStart_toStartOf="@+id/imgClientPic"
+            app:layout_constraintEnd_toEndOf="@+id/imgClientPic"
+            app:layout_constraintTop_toBottomOf="@+id/imgClientPic"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/labelStatus"
+            style="@style/TextInOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/status"
+            app:layout_constraintStart_toEndOf="@+id/imgClientPic"
+            app:layout_constraintTop_toTopOf="@+id/imgClientPic" />
+
+        <TextView
+            android:id="@+id/txtStatus"
+            style="@style/TextInOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/status"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/labelStatus"
+            app:layout_constraintTop_toTopOf="@+id/imgClientPic"/>
 
         <TextView
             android:id="@+id/labelReference"
@@ -46,7 +59,7 @@
             android:layout_height="wrap_content"
             android:text="@string/reference"
             app:layout_constraintStart_toEndOf="@+id/imgClientPic"
-            app:layout_constraintTop_toBottomOf="@+id/labelClient" />
+            app:layout_constraintTop_toBottomOf="@+id/labelStatus" />
 
         <TextView
             android:id="@+id/txtReference"
@@ -56,7 +69,7 @@
             android:text="@string/order_reference"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/labelReference"
-            app:layout_constraintTop_toBottomOf="@+id/txtClientName" />
+            app:layout_constraintTop_toBottomOf="@+id/txtStatus" />
 
         <TextView
             android:id="@+id/labelDate"
@@ -65,7 +78,7 @@
             android:layout_height="wrap_content"
             android:text="@string/date"
             app:layout_constraintStart_toEndOf="@+id/imgClientPic"
-            app:layout_constraintTop_toBottomOf="@+id/labelReference" />
+            app:layout_constraintTop_toBottomOf="@+id/labelReference"/>
 
         <TextView
             android:id="@+id/txtDate"
@@ -75,18 +88,26 @@
             android:text="@string/order_date"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/labelDate"
-            app:layout_constraintTop_toBottomOf="@+id/txtReference" />
+            app:layout_constraintTop_toBottomOf="@+id/txtReference"/>
 
         <TextView
-            android:id="@+id/txtStatus"
+            android:id="@+id/labelItemsNb"
             style="@style/TextInOrder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="25dp"
-            android:text="STATUS"
+            android:text="@string/items_number"
+            app:layout_constraintStart_toEndOf="@+id/imgClientPic"
+            app:layout_constraintTop_toBottomOf="@+id/labelDate"/>
+
+        <TextView
+            android:id="@+id/txtItemsNb"
+            style="@style/TextInOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/items_number"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/imgArrowRight"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/labelItemsNb"
+            app:layout_constraintTop_toBottomOf="@+id/txtDate"/>
 
         <ImageView
             android:id="@+id/imgArrowRight"

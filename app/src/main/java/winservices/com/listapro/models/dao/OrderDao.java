@@ -24,7 +24,7 @@ public interface OrderDao {
     @Delete
     void delete(Order order);
 
-    @Query("SELECT * FROM `orders`" +
+    @Query("SELECT *  FROM `orders`" +
             " WHERE `serverShopIdFk`=:serverShopId" +
             " AND `statusId` NOT IN (" + Order.COMPLETED + "," + Order.NOT_SUPPORTED + ")" +
             " ORDER BY `statusId` ASC, `creationDate` DESC")
@@ -42,4 +42,12 @@ public interface OrderDao {
 
     @Query("SELECT * FROM orders WHERE serverOrderId = :serverOrderId")
     LiveData<Order> getOrderByServerOrderId(int serverOrderId);
+
+    @Query("SELECT count(*)" +
+           " FROM ordered_goods as og, orders as o" +
+           " WHERE o.`serverUserId` = :serverUserId" +
+           " AND o.serverOrderId = :serverOrderId"+
+           " AND o.serverOrderId = og.serverOrderIdFk")
+    LiveData<Integer> getOrderedGoodsNum(int serverUserId, int serverOrderId);
+
 }

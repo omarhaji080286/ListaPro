@@ -56,7 +56,7 @@ public class OrdersFragment extends Fragment {
         rvOrders = view.findViewById(R.id.rvOrders);
         txtNoOrderRegistered = view.findViewById(R.id.txtNoOrderRegistered);
 
-        ordersAdapter = new OrdersAdapter(getContext(), orderVM);
+        ordersAdapter = new OrdersAdapter(this, getContext(), orderVM);
         rvOrders.setLayoutManager(new LinearLayoutManager(getContext()));
         rvOrders.setAdapter(ordersAdapter);
 

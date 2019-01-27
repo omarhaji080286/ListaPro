@@ -54,4 +54,7 @@
     <string name="items_sold">Items sold :</string>
     <string name="category1_n_category2">- category1  - category2</string>
     <string name="no_order_registered">No order registered</string>
+    <string name="status">Status</string>
+    <string name="items_number">items number</string>
+    <string name="update_items_status">Please, update the items status.</string>
 </resources>
