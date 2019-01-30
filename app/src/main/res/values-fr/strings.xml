@@ -24,7 +24,7 @@
     <string name="your_shop_name">Le nom de votre magasin</string>
     <string name="add_my_shop">Ajouter mon magasin</string>
     <string name="shop_type">Type de magasin :</string>
-    <string name="choose_shop_type">Selectionner votre type de magasin</string>
+    <string name="choose_shop_type">votre type de magasin</string>
     <string name="nature_of_items_for_shop_type">Selectionner les types d\'articles que vous vendez</string>
     <string name="required_shop_type">Le type du magasin est requis</string>
     <string name="city_required">La ville est requise</string>

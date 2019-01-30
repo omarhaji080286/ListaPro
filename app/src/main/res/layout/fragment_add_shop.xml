@@ -15,19 +15,20 @@
         <TextView
             android:id="@+id/txtAddShopDesc"
             style="@style/SimpleText"
+            android:padding="@dimen/text_content_size_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/add_shop_desc" />
 
         <Spinner
             android:id="@+id/spinnerCity"
-            style="@style/EditText"
+            android:layout_margin="@dimen/text_content_size_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <Spinner
             android:id="@+id/spinnerShopType"
-            style="@style/EditText"
+            android:layout_margin="@dimen/text_content_size_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -54,11 +55,104 @@
 
         <EditText
             android:id="@+id/editShopName"
-            style="@style/EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/your_shop_name"
-            android:inputType="text" />
+            android:inputType="text"
+            android:padding="@dimen/text_content_margin_large"
+            android:textSize="@dimen/text_content_size_large" />
+
+        <GridLayout
+            android:id="@+id/gridOpeningHours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/text_content_margin_large"
+            android:columnCount="4"
+            android:rowCount="2"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/txtOpening"
+                style="@style/SimpleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:gravity="center"
+                android:text="Opening"
+                android:textSize="@dimen/text_content_size_large"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtClosing"
+                style="@style/SimpleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="0"
+                android:layout_column="1"
+                android:gravity="center"
+                android:text="Closing"
+                android:textSize="@dimen/text_content_size_large"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/linlayOpening"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/editHourOpening"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="2"
+                    android:text="09"
+                    android:focusable="false" />
+
+                <EditText
+                    android:id="@+id/editMinuteOpening"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="2"
+                    android:text="00"
+                    android:focusable="false"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linlayClosing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:layout_marginStart="@dimen/text_content_margin_large"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/editHourClosing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLength="2"
+                    android:text="22"
+                    android:focusable="false"/>
+
+                <EditText
+                    android:id="@+id/editMinuteClosing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLength="2"
+                    android:text="00"
+                    android:focusable="false"/>
+
+            </LinearLayout>
+
+
+        </GridLayout>
 
         <Button
             android:id="@+id/btnAddShop"
@@ -66,6 +160,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/add_my_shop" />
+
 
     </LinearLayout>
 

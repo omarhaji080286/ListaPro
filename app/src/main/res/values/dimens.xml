@@ -3,9 +3,9 @@
     <dimen name="text_size_h1">22dp</dimen>
     <dimen name="text_size_h2">20dp</dimen>
     <dimen name="text_size_h3">18dp</dimen>
-    <dimen name="text_content_size_large">16dp</dimen>
-    <dimen name="text_content_size_average">14dp</dimen>
-    <dimen name="text_content_size_small">12dp</dimen>
+    <dimen name="text_content_size_large">16sp</dimen>
+    <dimen name="text_content_size_average">14sp</dimen>
+    <dimen name="text_content_size_small">12sp</dimen>
     <dimen name="text_content_padding">2dp</dimen>
     <dimen name="text_content_margin_large">16dp</dimen>
     <dimen name="margin_average">12dp</dimen>

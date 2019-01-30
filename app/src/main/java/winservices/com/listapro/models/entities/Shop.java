@@ -42,6 +42,10 @@ public class Shop {
     private double longitude;
     @SerializedName("latitude")
     private double latitude;
+    @SerializedName("opening_time")
+    private String openingTime;
+    @SerializedName("closing_time")
+    private String closingTime;
 
     //secondary key
     @SerializedName("server_shopkeeper_id")
@@ -69,6 +73,22 @@ public class Shop {
         this.longitude = longitude;
         this.latitude = latitude;
         this.serverShopKeeperIdFk = serverShopKeeperIdFk;
+    }
+
+    public String getOpeningTime() {
+        return openingTime;
+    }
+
+    public void setOpeningTime(String openingTime) {
+        this.openingTime = openingTime;
+    }
+
+    public String getClosingTime() {
+        return closingTime;
+    }
+
+    public void setClosingTime(String closingTime) {
+        this.closingTime = closingTime;
     }
 
     public String getShopImage() {

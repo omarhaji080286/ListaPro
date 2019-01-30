@@ -13,6 +13,6 @@
 
     <TextView
         android:id="@+id/txtDCategory"
-        style="@style/TextInSelectList"
+        style="@style/SpinnerText"
         android:layout_weight="90"/>
 </LinearLayout>
