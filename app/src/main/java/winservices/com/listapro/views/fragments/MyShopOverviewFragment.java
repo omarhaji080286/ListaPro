@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,6 +54,7 @@ public class MyShopOverviewFragment extends Fragment {
     private ImageView imgShopPic, imgShopTypeImg;
     private String currentImagePath;
     private int serverShopId;
+    private EditText editMinuteOpening, editMinuteClosing, editHourOpening, editHourClosing;
 
 
     public MyShopOverviewFragment() {
@@ -79,6 +81,10 @@ public class MyShopOverviewFragment extends Fragment {
         txtCategories = view.findViewById(R.id.txtShopDCategories);
         imgShopPic = view.findViewById(R.id.imgShopPic);
         imgShopTypeImg = view.findViewById(R.id.imgShopTypeImg);
+        editMinuteOpening = view.findViewById(R.id.editMinuteOpening);
+        editMinuteClosing = view.findViewById(R.id.editMinuteClosing);
+        editHourOpening = view.findViewById(R.id.editHourOpening);
+        editHourClosing = view.findViewById(R.id.editHourClosing);
 
         imgShopPic.setEnabled(false);
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
@@ -173,6 +179,11 @@ public class MyShopOverviewFragment extends Fragment {
                     sb.append("\n");
                 }
                 txtCategories.setText(sb);
+
+                editHourOpening.setText(shop.getOpeningTime().substring(0,2));
+                editMinuteOpening.setText(shop.getOpeningTime().substring(3,5));
+                editHourClosing.setText(shop.getClosingTime().substring(0,2));
+                editMinuteClosing.setText(shop.getClosingTime().substring(3,5));
 
                 setShoTypeImage(shop.getShopType().getServerShopTypeId());
 

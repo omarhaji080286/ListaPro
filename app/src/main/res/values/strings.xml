@@ -65,5 +65,7 @@
     <string name="update_items_status">Please, update the items status.</string>
     <string name="ongoing_orders">Ongoing orders</string>
     <string name="closed_orders">Closed orders</string>
+    <string name="opening">Opening</string>
+    <string name="closing">Closing</string>
 
 </resources>

@@ -203,5 +203,11 @@ public class UtilsFunctions {
                 || "google_sdk".equals(Build.PRODUCT);
     }
 
+    public static String to2digits(int number) {
+        if (number >= 0 && number < 10) {
+            return "0" + String.valueOf(number);
+        }
+        return String.valueOf(number);
+    }
 
 }

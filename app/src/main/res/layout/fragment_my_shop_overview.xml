@@ -65,7 +65,7 @@
         android:src="@drawable/steak"
         app:layout_constraintStart_toEndOf="@+id/txtShopType"
         app:layout_constraintTop_toBottomOf="@+id/txtShopName"
-        android:layout_marginTop="@dimen/margin_average"
+        android:layout_marginTop="@dimen/margin_small"
         android:layout_marginStart="@dimen/text_content_margin_large"/>
 
     <TextView
@@ -80,7 +80,6 @@
 
     <TextView
         android:id="@+id/txtShopDCategories"
-        style="@style/TextValuesInShopOverview"
         android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -112,6 +111,94 @@
         app:layout_constraintStart_toEndOf="@+id/labelPhone"
         app:layout_constraintTop_toBottomOf="@+id/txtShopDCategories" />
 
+    <GridLayout
+        android:id="@+id/gridOpeningHours"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:columnCount="4"
+        android:rowCount="2"
+        app:layout_constraintTop_toBottomOf="@+id/txtPhone"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingStart="@dimen/text_content_margin_large">
 
+        <TextView
+            android:id="@+id/txtOpening"
+            style="@style/SimpleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:gravity="center"
+            android:text="@string/opening"
+            android:textSize="@dimen/text_content_size_large" />
+
+        <TextView
+            android:id="@+id/txtClosing"
+            style="@style/SimpleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="1"
+            android:gravity="center"
+            android:text="@string/closing"
+            android:textSize="@dimen/text_content_size_large" />
+
+        <LinearLayout
+            android:id="@+id/linlayOpening"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editHourOpening"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLength="2"
+                android:text="09"
+                android:focusable="false" />
+
+            <EditText
+                android:id="@+id/editMinuteOpening"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLength="2"
+                android:text="00"
+                android:focusable="false"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linlayClosing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="1"
+            android:layout_marginStart="@dimen/text_content_margin_large"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editHourClosing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLength="2"
+                android:text="22"
+                android:focusable="false"/>
+
+            <EditText
+                android:id="@+id/editMinuteClosing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLength="2"
+                android:text="00"
+                android:focusable="false"/>
+
+        </LinearLayout>
+
+    </GridLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

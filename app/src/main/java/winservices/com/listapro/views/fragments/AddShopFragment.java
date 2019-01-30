@@ -51,6 +51,7 @@ import winservices.com.listapro.views.adapters.DCategoriesToSelectAdapter;
 import winservices.com.listapro.views.adapters.ShopTypeSpinnerAdapter;
 
 import static winservices.com.listapro.utils.PermissionUtil.TXT_FINE_LOCATION;
+import static winservices.com.listapro.utils.UtilsFunctions.to2digits;
 
 public class AddShopFragment extends Fragment implements TimePickerDialog.OnTimeSetListener, View.OnClickListener {
 
@@ -315,20 +316,20 @@ public class AddShopFragment extends Fragment implements TimePickerDialog.OnTime
 
         switch (clickedViewId) {
             case R.id.editHourOpening:
-                editHourOpening.setText(formatNumber(hour));
-                editMinuteOpening.setText(formatNumber(minute));
+                editHourOpening.setText(to2digits(hour));
+                editMinuteOpening.setText(to2digits(minute));
                 break;
             case R.id.editMinuteOpening:
-                editHourOpening.setText(formatNumber(hour));
-                editMinuteOpening.setText(formatNumber(minute));
+                editHourOpening.setText(to2digits(hour));
+                editMinuteOpening.setText(to2digits(minute));
                 break;
             case R.id.editHourClosing:
-                editHourClosing.setText(formatNumber(hour));
-                editMinuteClosing.setText(formatNumber(minute));
+                editHourClosing.setText(to2digits(hour));
+                editMinuteClosing.setText(to2digits(minute));
                 break;
             case R.id.editMinuteClosing:
-                editHourClosing.setText(formatNumber(hour));
-                editMinuteClosing.setText(formatNumber(minute));
+                editHourClosing.setText(to2digits(hour));
+                editMinuteClosing.setText(to2digits(minute));
                 break;
         }
 
@@ -340,10 +341,5 @@ public class AddShopFragment extends Fragment implements TimePickerDialog.OnTime
         loadTimePicker();
     }
 
-    private String formatNumber(int number) {
-        if (number >= 0 && number < 10) {
-            return "0" + String.valueOf(number);
-        }
-        return String.valueOf(number);
-    }
+
 }
