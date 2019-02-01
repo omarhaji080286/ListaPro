@@ -67,5 +67,15 @@
     <string name="closed_orders">Closed orders</string>
     <string name="opening">Opening</string>
     <string name="closing">Closing</string>
+    <string name="forTime">For :</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
 
 </resources>

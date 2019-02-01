@@ -66,8 +66,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
         holder.txtDate.setText(stringDate);
         holder.txtReference.setText(String.valueOf(order.getServerOrderId()));
         holder.txtStatus.setText(order.getStatus().getStatusName());
-
-
+        holder.txtCollectTime.setText(order.getDisplayedCollectTime(context));
 
         holder.consLayOrderContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,7 +107,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
 
     class OrderVH extends RecyclerView.ViewHolder {
 
-        private TextView txtClientName, txtReference, txtDate, txtStatus, txtItemsNb;
+        private TextView txtClientName, txtReference, txtDate, txtStatus, txtItemsNb, txtCollectTime;
         private ImageView imgClientPic;
         private ConstraintLayout consLayOrderContainer;
 
@@ -122,6 +121,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
             txtStatus = itemView.findViewById(R.id.txtStatus);
             txtItemsNb = itemView.findViewById(R.id.txtItemsNb);
             imgClientPic = itemView.findViewById(R.id.imgClientPic);
+            txtCollectTime = itemView.findViewById(R.id.txtCollectTime);
+
 
         }
     }

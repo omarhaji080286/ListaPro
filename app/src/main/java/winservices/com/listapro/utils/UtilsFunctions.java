@@ -210,4 +210,32 @@ public class UtilsFunctions {
         return String.valueOf(number);
     }
 
+    public static String getDayOfWeek(Context context,int value) {
+        String day = "";
+        switch (value) {
+            case 1:
+                day = context.getResources().getString(R.string.sunday);
+                break;
+            case 2:
+                day = context.getResources().getString(R.string.monday);
+                break;
+            case 3:
+                day = context.getResources().getString(R.string.tuesday);
+                break;
+            case 4:
+                day = context.getResources().getString(R.string.wednesday);
+                break;
+            case 5:
+                day = context.getResources().getString(R.string.thursday);
+                break;
+            case 6:
+                day = context.getResources().getString(R.string.friday);
+                break;
+            case 7:
+                day = context.getResources().getString(R.string.saturday);
+                break;
+        }
+        return day;
+    }
+
 }

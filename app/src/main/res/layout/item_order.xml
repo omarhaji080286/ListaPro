@@ -91,13 +91,13 @@
             app:layout_constraintTop_toBottomOf="@+id/txtReference"/>
 
         <TextView
-            android:id="@+id/labelItemsNb"
-            style="@style/TextInOrder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/items_number"
-            app:layout_constraintStart_toEndOf="@+id/imgClientPic"
-            app:layout_constraintTop_toBottomOf="@+id/labelDate"/>
+        android:id="@+id/labelItemsNb"
+        style="@style/TextInOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/items_number"
+        app:layout_constraintStart_toEndOf="@+id/imgClientPic"
+        app:layout_constraintTop_toBottomOf="@+id/labelDate"/>
 
         <TextView
             android:id="@+id/txtItemsNb"
@@ -108,6 +108,26 @@
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/labelItemsNb"
             app:layout_constraintTop_toBottomOf="@+id/txtDate"/>
+
+        <TextView
+            android:id="@+id/labelCollectTime"
+            style="@style/TextInOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forTime"
+            app:layout_constraintStart_toEndOf="@+id/imgClientPic"
+            app:layout_constraintTop_toBottomOf="@+id/labelItemsNb"/>
+
+        <TextView
+            android:id="@+id/txtCollectTime"
+            style="@style/TextInOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forTime"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/labelCollectTime"
+            app:layout_constraintTop_toBottomOf="@+id/txtItemsNb"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ImageView
             android:id="@+id/imgArrowRight"

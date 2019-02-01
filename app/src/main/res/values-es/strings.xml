@@ -61,4 +61,6 @@
     <string name="closed_orders">Closed orders</string>
     <string name="opening">Opening</string>
     <string name="closing">Closing</string>
+    <string name="forTime">For :</string>
+
 </resources>

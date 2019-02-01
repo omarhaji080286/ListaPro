@@ -61,4 +61,15 @@
     <string name="closed_orders">Commandes clôturées</string>
     <string name="opening">Ouverture</string>
     <string name="closing">Fermeture</string>
+    <string name="forTime">Pour :</string>
+    <string name="monday">Lundi</string>
+    <string name="tuesday">Mardi</string>
+    <string name="wednesday">Mercredi</string>
+    <string name="thursday">Jeudi</string>
+    <string name="friday">Vendredi</string>
+    <string name="saturday">Samedi</string>
+    <string name="sunday">Dimanche</string>
+    <string name="today">Aujourd\'hui</string>
+    <string name="tomorrow">Demain</string>
+
 </resources>
