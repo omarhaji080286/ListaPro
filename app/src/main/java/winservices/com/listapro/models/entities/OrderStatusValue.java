@@ -15,6 +15,9 @@ public class OrderStatusValue {
     @SerializedName("status_name")
     private String statusName;
 
+    public OrderStatusValue() {
+    }
+
     public OrderStatusValue(int statusId, String statusName) {
         this.statusId = statusId;
         this.statusName = statusName;

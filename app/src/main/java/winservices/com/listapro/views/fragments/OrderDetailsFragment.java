@@ -83,14 +83,30 @@ public class OrderDetailsFragment extends Fragment {
 
     }
 
+    private boolean isOrderSupported(List<OrderedGood> oGoods){
+        boolean isOrderSupported = false;
+        for (int i = 0; i < oGoods.size(); i++) {
+            if (oGoods.get(i).getStatus()==OrderedGood.PROCESSED) isOrderSupported = true;
+        }
+        return  isOrderSupported;
+    }
+
     private void initFinishButton(final Order order) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         builder.setMessage(R.string.confirm_order_ready);
         builder.setTitle(R.string.order_ready);
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                setOrderStatusToAvailable(order);
+                OrderStatusValue status = new OrderStatusValue();
                 List<OrderedGood> oGoods = oGoodsAdapter.getUpdatedOGoods();
+                if (isOrderSupported(oGoods)) {
+                    status.setStatusId(Order.AVAILABLE);
+                } else {
+                    status.setStatusId(Order.NOT_SUPPORTED);
+                }
+
+                updateOrderStatus(order, status);
+
                 orderVM.updateOrderedGoodsOnServer(oGoods);
             }
         });
@@ -141,13 +157,10 @@ public class OrderDetailsFragment extends Fragment {
         return allGoodsUpdated;
     }
 
-    private void setOrderStatusToAvailable(Order order) {
-        if (order.getStatus().getStatusId() != Order.AVAILABLE) {
-            OrderStatusValue status = new OrderStatusValue(Order.AVAILABLE, "AVAILABLE");
+    private void updateOrderStatus(Order order, OrderStatusValue status) {
             order.setStatus(status);
             orderVM.updateOrderOnServer(order);
             Toast.makeText(getContext(), getString(R.string.notification_sent_to_client), Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void loadOrderedGoods(Order order) {

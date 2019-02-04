@@ -55,14 +55,14 @@ public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapte
         holder.txtOGoodDesc.setText(oGood.getGoodDesc());
         holder.imgOGoodPic.setImageResource(R.drawable.ic_store_black);
 
-        if (oGood.getStatus()!=OrderedGood.UNPROCESSED){
+        if (oGood.getStatus() != OrderedGood.UNPROCESSED) {
             holder.imgCheck.setVisibility(View.VISIBLE);
             holder.imgCheck.setImageResource(getImageResource(oGood));
         } else {
             holder.imgCheck.setVisibility(View.GONE);
         }
 
-        if (orderStatusId != Order.COMPLETED && orderStatusId !=Order.NOT_SUPPORTED) {
+        if (orderStatusId != Order.COMPLETED && orderStatusId != Order.NOT_SUPPORTED && orderStatusId != Order.AVAILABLE) {
             holder.consLayOGoodContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -90,7 +90,7 @@ public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapte
 
     }
 
-    private int getImageResource(OrderedGood oGood){
+    private int getImageResource(OrderedGood oGood) {
         switch (oGood.getStatus()) {
             case OrderedGood.NOT_AVAILABLE:
                 return R.drawable.cross;
@@ -107,7 +107,9 @@ public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapte
         return oGoods.size();
     }
 
-
+    public List<OrderedGood> getUpdatedOGoods() {
+        return updatedOGoods;
+    }
 
     class OrderedGoodVH extends RecyclerView.ViewHolder {
 
@@ -125,9 +127,5 @@ public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapte
             txtOGoodDesc = itemView.findViewById(R.id.txtOGoodDesc);
 
         }
-    }
-
-    public List<OrderedGood> getUpdatedOGoods() {
-        return updatedOGoods;
     }
 }
