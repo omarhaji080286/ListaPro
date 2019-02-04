@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import winservices.com.listapro.R;
+import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.OrderedGood;
 import winservices.com.listapro.viewmodels.OrderVM;
 
@@ -21,6 +22,7 @@ public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapte
     private List<OrderedGood> oGoods = new ArrayList<>();
     private List<OrderedGood> updatedOGoods = new ArrayList<>();
     private OrderVM orderVM;
+    private int orderStatusId;
 
     public OrderedGoodsAdapter(OrderVM orderVM) {
         this.orderVM = orderVM;
@@ -30,6 +32,10 @@ public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapte
         this.oGoods = oGoods;
         this.updatedOGoods = oGoods;
         notifyDataSetChanged();
+    }
+
+    public void setOrderStatusId(int orderStatusId) {
+        this.orderStatusId = orderStatusId;
     }
 
     @NonNull
@@ -56,29 +62,31 @@ public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapte
             holder.imgCheck.setVisibility(View.GONE);
         }
 
-        holder.consLayOGoodContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updatedOGoods.remove(oGood);
-                switch (oGood.getStatus()) {
-                    case OrderedGood.UNPROCESSED:
-                        oGood.setStatus(OrderedGood.PROCESSED);
-                        holder.imgCheck.setImageResource(R.drawable.check);
-                        holder.imgCheck.setVisibility(View.VISIBLE);
-                        break;
-                    case OrderedGood.PROCESSED:
-                        oGood.setStatus(OrderedGood.NOT_AVAILABLE);
-                        holder.imgCheck.setImageResource(R.drawable.cross);
-                        holder.imgCheck.setVisibility(View.VISIBLE);
-                        break;
-                    default:
-                        oGood.setStatus(OrderedGood.UNPROCESSED);
-                        holder.imgCheck.setVisibility(View.GONE);
+        if (orderStatusId != Order.COMPLETED && orderStatusId !=Order.NOT_SUPPORTED) {
+            holder.consLayOGoodContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    updatedOGoods.remove(oGood);
+                    switch (oGood.getStatus()) {
+                        case OrderedGood.UNPROCESSED:
+                            oGood.setStatus(OrderedGood.PROCESSED);
+                            holder.imgCheck.setImageResource(R.drawable.check);
+                            holder.imgCheck.setVisibility(View.VISIBLE);
+                            break;
+                        case OrderedGood.PROCESSED:
+                            oGood.setStatus(OrderedGood.NOT_AVAILABLE);
+                            holder.imgCheck.setImageResource(R.drawable.cross);
+                            holder.imgCheck.setVisibility(View.VISIBLE);
+                            break;
+                        default:
+                            oGood.setStatus(OrderedGood.UNPROCESSED);
+                            holder.imgCheck.setVisibility(View.GONE);
+                    }
+                    orderVM.update(oGood);
+                    updatedOGoods.add(oGood);
                 }
-                orderVM.update(oGood);
-                updatedOGoods.add(oGood);
-            }
-        });
+            });
+        }
 
     }
 

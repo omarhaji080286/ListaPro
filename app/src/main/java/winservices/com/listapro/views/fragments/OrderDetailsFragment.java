@@ -68,6 +68,7 @@ public class OrderDetailsFragment extends Fragment {
             orderVM.getOrderByServerOrderId(serverOrderId).observe(this, new Observer<Order>() {
                 @Override
                 public void onChanged(Order order) {
+                    oGoodsAdapter.setOrderStatusId(order.getStatus().getStatusId());
                     loadOrderedGoods(order);
                     int statusId = order.getStatus().getStatusId();
                     if (statusId == Order.AVAILABLE || statusId == Order.NOT_SUPPORTED || statusId == Order.COMPLETED) {

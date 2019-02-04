@@ -27,13 +27,13 @@ public interface OrderDao {
     @Query("SELECT *  FROM `orders`" +
             " WHERE `serverShopIdFk`=:serverShopId" +
             " AND `statusId` NOT IN (" + Order.COMPLETED + "," + Order.NOT_SUPPORTED + ")" +
-            " ORDER BY `statusId` ASC, `creationDate` DESC")
+            " ORDER BY `serverOrderId` DESC")
     LiveData<List<Order>> getOrdersByServerShopId(int serverShopId);
 
     @Query("SELECT *  FROM `orders`" +
             " WHERE `serverShopIdFk`=:serverShopId" +
             " AND `statusId` IN (" + Order.COMPLETED + "," + Order.NOT_SUPPORTED + ")" +
-            " ORDER BY `statusId` ASC, `creationDate` DESC")
+            " ORDER BY `serverOrderId` DESC")
     LiveData<List<Order>> getClosedOrdersByServerShopId(int serverShopId);
 
 
