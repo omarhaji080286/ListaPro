@@ -71,5 +71,10 @@
     <string name="sunday">Dimanche</string>
     <string name="today">Aujourd\'hui</string>
     <string name="tomorrow">Demain</string>
+    <string name="registered">Enregistré</string>
+    <string name="read">Lu</string>
+    <string name="can_collect">Commande prête</string>
+    <string name="completed">Clôturé</string>
+    <string name="not_supported">Articles non disponibles</string>
 
 </resources>

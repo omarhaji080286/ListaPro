@@ -65,8 +65,51 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
         String stringDate = UtilsFunctions.dateToString(UtilsFunctions.stringToDate(order.getCreationDate()), "dd/MM/YYYY HH:mm:ss");
         holder.txtDate.setText(stringDate);
         holder.txtReference.setText(String.valueOf(order.getServerOrderId()));
-        holder.txtStatus.setText(order.getStatus().getStatusName());
         holder.txtCollectTime.setText(order.getDisplayedCollectTime(context));
+
+        switch (order.getStatus().getStatusId()){
+            case Order.REGISTERED :
+                holder.imgRegistered.setImageResource(R.drawable.checked);
+                holder.imgRead.setImageResource(R.drawable.checked_gray);
+                holder.imgAvailable.setImageResource(R.drawable.checked_gray);
+                holder.imgClosedOrNotSuported.setVisibility(View.GONE);
+                holder.txtStatus.setText(context.getString(R.string.registered));
+                break;
+            case Order.READ :
+                holder.imgRegistered.setImageResource(R.drawable.checked);
+                holder.imgRead.setImageResource(R.drawable.checked);
+                holder.imgAvailable.setImageResource(R.drawable.checked_gray);
+                holder.imgClosedOrNotSuported.setVisibility(View.GONE);
+                holder.txtStatus.setText(context.getString(R.string.read));
+
+                break;
+            case Order.AVAILABLE :
+                holder.imgRegistered.setImageResource(R.drawable.checked);
+                holder.imgRead.setImageResource(R.drawable.checked);
+                holder.imgAvailable.setImageResource(R.drawable.checked);
+                holder.imgClosedOrNotSuported.setVisibility(View.GONE);
+                holder.txtStatus.setText(context.getString(R.string.can_collect));
+
+                break;
+            case Order.COMPLETED :
+                holder.imgRegistered.setVisibility(View.GONE);
+                holder.imgRead.setVisibility(View.GONE);
+                holder.imgAvailable.setVisibility(View.GONE);
+                holder.imgClosedOrNotSuported.setImageResource(R.drawable.completed);
+                holder.imgClosedOrNotSuported.setVisibility(View.VISIBLE);
+                holder.txtStatus.setText(context.getString(R.string.completed));
+
+                break;
+            case Order.NOT_SUPPORTED:
+                holder.imgRegistered.setVisibility(View.GONE);
+                holder.imgRead.setVisibility(View.GONE);
+                holder.imgAvailable.setVisibility(View.GONE);
+                holder.imgClosedOrNotSuported.setImageResource(R.drawable.not_supported);
+                holder.imgClosedOrNotSuported.setVisibility(View.VISIBLE);
+                holder.txtStatus.setText(context.getString(R.string.not_supported));
+                break;
+        }
+
 
         holder.consLayOrderContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,7 +151,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
     class OrderVH extends RecyclerView.ViewHolder {
 
         private TextView txtClientName, txtReference, txtDate, txtStatus, txtItemsNb, txtCollectTime;
-        private ImageView imgClientPic;
+        private ImageView imgClientPic, imgRegistered, imgRead, imgAvailable, imgClosedOrNotSuported ;
         private ConstraintLayout consLayOrderContainer;
 
         OrderVH(@NonNull View itemView) {
@@ -122,6 +165,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
             txtItemsNb = itemView.findViewById(R.id.txtItemsNb);
             imgClientPic = itemView.findViewById(R.id.imgClientPic);
             txtCollectTime = itemView.findViewById(R.id.txtCollectTime);
+            imgRegistered = itemView.findViewById(R.id.imgRegistered);
+            imgRead = itemView.findViewById(R.id.imgRead);
+            imgAvailable = itemView.findViewById(R.id.imgAvailable);
+            imgClosedOrNotSuported = itemView.findViewById(R.id.imgClosedOrNotSuported);
 
 
         }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/recycler_margin">
@@ -33,14 +34,46 @@
             app:layout_constraintTop_toBottomOf="@+id/imgClientPic"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <TextView
-            android:id="@+id/labelStatus"
-            style="@style/TextInOrder"
+
+        <LinearLayout
+            android:id="@+id/linlayStatusImg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/status"
-            app:layout_constraintStart_toEndOf="@+id/imgClientPic"
-            app:layout_constraintTop_toTopOf="@+id/imgClientPic" />
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/margin_small"
+            app:layout_constraintTop_toTopOf="@+id/imgClientPic"
+            app:layout_constraintStart_toEndOf="@+id/imgClientPic">
+
+            <ImageView
+                android:id="@+id/imgRegistered"
+                android:layout_width="@dimen/small_size_icon"
+                android:layout_height="@dimen/small_size_icon"
+                android:src="@drawable/checked_gray"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/imgRead"
+                android:layout_width="@dimen/small_size_icon"
+                android:layout_height="@dimen/small_size_icon"
+                android:src="@drawable/checked_gray"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/imgAvailable"
+                android:layout_width="@dimen/small_size_icon"
+                android:layout_height="@dimen/small_size_icon"
+                android:src="@drawable/checked_gray"
+                android:visibility="visible" />
+
+
+            <ImageView
+                android:id="@+id/imgClosedOrNotSuported"
+                android:layout_width="@dimen/small_size_icon"
+                android:layout_height="@dimen/small_size_icon"
+                android:src="@drawable/completed"
+                android:visibility="gone" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/txtStatus"
@@ -49,8 +82,9 @@
             android:layout_height="wrap_content"
             android:text="@string/status"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/labelStatus"
-            app:layout_constraintTop_toTopOf="@+id/imgClientPic"/>
+            app:layout_constraintStart_toEndOf="@+id/linlayStatusImg"
+            app:layout_constraintTop_toTopOf="@+id/linlayStatusImg"
+            app:layout_constraintBottom_toBottomOf="@+id/linlayStatusImg"/>
 
         <TextView
             android:id="@+id/labelReference"
@@ -59,7 +93,7 @@
             android:layout_height="wrap_content"
             android:text="@string/reference"
             app:layout_constraintStart_toEndOf="@+id/imgClientPic"
-            app:layout_constraintTop_toBottomOf="@+id/labelStatus" />
+            app:layout_constraintTop_toBottomOf="@+id/linlayStatusImg" />
 
         <TextView
             android:id="@+id/txtReference"
@@ -69,7 +103,7 @@
             android:text="@string/order_reference"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/labelReference"
-            app:layout_constraintTop_toBottomOf="@+id/txtStatus" />
+            app:layout_constraintTop_toBottomOf="@+id/linlayStatusImg" />
 
         <TextView
             android:id="@+id/labelDate"
@@ -137,7 +171,8 @@
             android:src="@drawable/ic_arrow_right_black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/add_shop_desc" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

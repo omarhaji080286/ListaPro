@@ -77,5 +77,10 @@
     <string name="sunday">Sunday</string>
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
+    <string name="registered">Registered</string>
+    <string name="read">Read</string>
+    <string name="can_collect">Order ready</string>
+    <string name="completed">Completed</string>
+    <string name="not_supported">Items not available</string>
 
 </resources>

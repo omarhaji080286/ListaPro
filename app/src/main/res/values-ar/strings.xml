@@ -71,5 +71,10 @@
     <string name="sunday">الأحد</string>
     <string name="today">اليوم</string>
     <string name="tomorrow">غدا</string>
+    <string name="registered">مسجل</string>
+    <string name="read">قرأ</string>
+    <string name="can_collect">الطلب جاهز</string>
+    <string name="completed">منجز</string>
+    <string name="not_supported">العناصر غير متوفرة</string>
 
 </resources>

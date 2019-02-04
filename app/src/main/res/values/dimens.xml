@@ -33,4 +33,5 @@
     <dimen name="size_height_shop_image">180dp</dimen>
     <dimen name="size_width_shop_type">48dp</dimen>
     <dimen name="size_height_shop_type">48dp</dimen>
+    <dimen name="small_size_icon">25dp</dimen>
 </resources>
