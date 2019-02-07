@@ -101,8 +101,10 @@ public class OrderDetailsFragment extends Fragment {
                 List<OrderedGood> oGoods = oGoodsAdapter.getUpdatedOGoods();
                 if (isOrderSupported(oGoods)) {
                     status.setStatusId(Order.AVAILABLE);
+                    status.setStatusName("AVAILABLE");
                 } else {
                     status.setStatusId(Order.NOT_SUPPORTED);
+                    status.setStatusName("NOT SUPPORTED");
                 }
 
                 updateOrderStatus(order, status);
