@@ -22,7 +22,8 @@
         android:src="@drawable/ic_edit_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp"
+        android:contentDescription="@string/add_shop_desc" />
 
     <TextView
         android:id="@+id/txtShopName"
@@ -162,6 +163,7 @@
                 android:maxLength="2"
                 android:text="09"
                 android:focusable="false"
+                android:textSize="18sp"
                 tools:ignore="Autofill,HardcodedText"/>
 
             <EditText
@@ -171,6 +173,8 @@
                 android:inputType="number"
                 android:maxLength="2"
                 android:text="00"
+                android:hint="00"
+                android:textSize="18sp"
                 android:focusable="false"
                 tools:ignore="Autofill,HardcodedText"/>
 
@@ -191,7 +195,10 @@
                 android:layout_height="wrap_content"
                 android:maxLength="2"
                 android:text="22"
+                android:hint="22"
                 android:focusable="false"
+                android:inputType="number"
+                android:textSize="18sp"
                 tools:ignore="Autofill,HardcodedText"
                 android:labelFor="@+id/txtClosing"/>
 
@@ -199,9 +206,12 @@
                 android:id="@+id/editMinuteClosing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="18sp"
                 android:maxLength="2"
                 android:text="00"
+                android:hint="00"
                 android:focusable="false"
+                android:inputType="number"
                 tools:ignore="Autofill,HardcodedText"
                 android:labelFor="@+id/txtClosing"/>
 
