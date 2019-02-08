@@ -35,7 +35,6 @@ public class OrderDetailsFragment extends Fragment {
     public final static String TAG = "OrderDetailsFragment";
 
     private final static int GRID_COLUMN_NUMBER = 3;
-    private RecyclerView rvOGoods;
     private OrderedGoodsAdapter oGoodsAdapter;
     private OrderVM orderVM;
     private Button btnFinishOrder;
@@ -55,7 +54,7 @@ public class OrderDetailsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         orderVM = ViewModelProviders.of(this).get(OrderVM.class);
-        rvOGoods = view.findViewById(R.id.rvOGoods);
+        RecyclerView rvOGoods = view.findViewById(R.id.rvOGoods);
         btnFinishOrder = view.findViewById(R.id.btnFinishOrder);
 
         oGoodsAdapter = new OrderedGoodsAdapter(orderVM);
