@@ -13,14 +13,13 @@
         android:layout_height="@dimen/size_height_shop_image"
         android:layout_below="@+id/txtShopName"
         android:contentDescription="@string/shop_picture"
-        android:background="@color/colorPrimaryDark"
-        android:src="@drawable/ic_store_black"/>
+        android:src="@drawable/store_default"/>
 
     <ImageView
         android:id="@+id/imgEditShopPic"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:src="@drawable/ic_edit_white"
+        android:src="@drawable/ic_edit_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="10dp"/>

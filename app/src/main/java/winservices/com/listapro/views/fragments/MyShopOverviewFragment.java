@@ -162,10 +162,10 @@ public class MyShopOverviewFragment extends Fragment {
                     if (imageBitmap != null) {
                         imgShopPic.setImageBitmap(imageBitmap);
                     } else {
-                        imgShopPic.setImageResource(R.drawable.ic_store_black);
+                        imgShopPic.setImageResource(R.drawable.store_default);
                     }
                 } else {
-                    imgShopPic.setImageResource(R.drawable.ic_store_black);
+                    imgShopPic.setImageResource(R.drawable.store_default);
                 }
 
                 txtShopName.setText(shop.getShopName());

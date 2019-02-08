@@ -40,7 +40,7 @@
     <string name="ordered_good_description">Description de l\'article commandé</string>
     <string name="item_icon">Icone de l\'article</string>
     <string name="finish">Terminer</string>
-    <string name="confirm_order_ready">Votre client sera informé que la commande est prête. Confirmez-vous?</string>
+    <string name="confirm_order_ready">Une notification sera envoyée à votre client. Confirmez-vous?</string>
     <string name="order_ready">Confirmation que la commande est prête</string>
     <string name="cancel">Annuler</string>
     <string name="confirm">Confirmer</string>

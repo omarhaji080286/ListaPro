@@ -40,7 +40,7 @@
     <string name="ordered_good_description">وصف العنصر المطلوب</string>
     <string name="item_icon">رمز العنصر</string>
     <string name="finish">إنهاء</string>
-    <string name="confirm_order_ready">سيتم إشعار زبونك بأن الطلب جاهز. هل تؤكد ?</string>
+    <string name="confirm_order_ready">سيتم إشعار زبونك. هل تؤكد ?</string>
     <string name="order_ready"> تؤكد الطلبات جاهزة </string>
     <string name="cancel">إلغاء</string>
     <string name="confirm">تؤكد</string>
