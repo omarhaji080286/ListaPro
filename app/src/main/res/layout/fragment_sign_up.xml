@@ -68,12 +68,12 @@
 
             <EditText
                 android:id="@+id/editPhone"
-                style="@style/EditText"
+                android:layout_marginStart="@dimen/margin_small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="phone"
                 android:maxLength="9"
-                android:text="666285728"
+                android:hint="12345678"
                 android:visibility="visible"/>
 
         </LinearLayout>
@@ -90,11 +90,11 @@
 
         <EditText
             android:id="@+id/editVerifCode"
-            style="@style/EditText"
+            android:layout_marginStart="@dimen/margin_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
-            android:text="@string/hint_verification_code"
+            android:hint="@string/hint_verification_code"
             android:maxLength="6"
             android:visibility="gone" />
 

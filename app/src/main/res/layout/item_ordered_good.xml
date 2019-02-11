@@ -30,7 +30,8 @@
                 android:text="@string/ordered_good_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/txtOGoodDesc"/>
 
             <TextView
                 android:id="@+id/txtOGoodDesc"
@@ -40,7 +41,8 @@
                 android:text="@string/ordered_good_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtOGoodName" />
+                app:layout_constraintTop_toBottomOf="@+id/txtOGoodName"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <ImageView
                 android:id="@+id/imgOGoodPic"
@@ -51,7 +53,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txtOGoodDesc"
                 android:layout_marginTop="@dimen/margin_small"
-                android:contentDescription="@string/item_icon" />
+                android:contentDescription="@string/item_icon"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/imgCheck"
