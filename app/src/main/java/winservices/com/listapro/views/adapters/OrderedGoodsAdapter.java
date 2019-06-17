@@ -6,12 +6,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.OrderedGood;
@@ -51,7 +52,7 @@ public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapte
 
         final OrderedGood oGood = oGoods.get(position);
 
-        holder.txtOGoodName.setText(oGood.getGoodName());
+                holder.txtOGoodName.setText(oGood.getGoodName());
         holder.txtOGoodDesc.setText(oGood.getGoodDesc());
         holder.imgOGoodPic.setImageResource(R.drawable.ic_store_black);
 
@@ -86,6 +87,8 @@ public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapte
                     updatedOGoods.add(oGood);
                 }
             });
+        } else {
+            holder.consLayOGoodContainer.setClickable(false);
         }
 
     }

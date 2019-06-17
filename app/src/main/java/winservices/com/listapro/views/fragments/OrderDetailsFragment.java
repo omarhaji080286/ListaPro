@@ -12,9 +12,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.util.List;
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -23,6 +20,10 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+import java.util.Objects;
+
 import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.OrderStatusValue;
@@ -39,6 +40,7 @@ public class OrderDetailsFragment extends Fragment {
     private OrderVM orderVM;
     private Button btnFinishOrder;
     private GridLayoutManager glm;
+    private RecyclerView rvOGoods;
 
     public OrderDetailsFragment() {
     }
@@ -54,7 +56,7 @@ public class OrderDetailsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         orderVM = ViewModelProviders.of(this).get(OrderVM.class);
-        RecyclerView rvOGoods = view.findViewById(R.id.rvOGoods);
+        rvOGoods = view.findViewById(R.id.rvOGoods);
         btnFinishOrder = view.findViewById(R.id.btnFinishOrder);
 
         oGoodsAdapter = new OrderedGoodsAdapter(orderVM);
@@ -107,8 +109,9 @@ public class OrderDetailsFragment extends Fragment {
                 }
 
                 updateOrderStatus(order, status);
-
                 orderVM.updateOrderedGoodsOnServer(oGoods);
+
+
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -171,5 +174,12 @@ public class OrderDetailsFragment extends Fragment {
                 oGoodsAdapter.setOGoods(orderedGoods);
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        List<OrderedGood> oGoods = oGoodsAdapter.getUpdatedOGoods();
+        orderVM.updateOrderedGoodsOnServer(oGoods);
     }
 }
