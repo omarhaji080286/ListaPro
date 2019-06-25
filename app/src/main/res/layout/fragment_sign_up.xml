@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="phone"
                 android:maxLength="9"
-                android:text="505551234"
+                android:hint="123456789"
                 android:visibility="visible"/>
 
         </LinearLayout>
@@ -94,7 +94,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
-            android:text="@string/hint_verification_code"
+            android:hint="@string/hint_verification_code"
             android:maxLength="6"
             android:visibility="gone" />
 
