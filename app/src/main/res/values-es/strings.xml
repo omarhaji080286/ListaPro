@@ -76,5 +76,6 @@
     <string name="can_collect">You can collect your order</string>
     <string name="completed">Completed</string>
     <string name="not_supported">Items not available</string>
+    <string name="sign_in_failed">Signing in failed. please try again.</string>
 
 </resources>

@@ -13,6 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -29,11 +35,6 @@ import com.google.firebase.iid.InstanceIdResult;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.ShopKeeper;
 import winservices.com.listapro.utils.SharedPrefManager;
@@ -232,34 +233,34 @@ public class SignUpFragment extends Fragment {
 
     private void signInWithPhoneAuthCredential(final PhoneAuthCredential credential) {
         firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(Objects.requireNonNull(getActivity()), new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    FirebaseUser user = task.getResult().getUser();
+            .addOnCompleteListener(Objects.requireNonNull(getActivity()), new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                    Log.d(TAG, "signIn success - phone number : " + user.getPhoneNumber());
-                                    Log.d(TAG, "signIn success - display name : " + user.getDisplayName());
+                    dialog = UtilsFunctions.getDialogBuilder(getLayoutInflater(), getContext(), getString(R.string.signing_up)).create();
+                    dialog.show();
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = task.getResult().getUser();
 
-                                    registerShopKeeper();
+                        Log.d(TAG, "signIn success - phone number : " + user.getPhoneNumber());
+                        Log.d(TAG, "signIn success - display name : " + user.getDisplayName());
 
-                                } else {
-                                    Log.d(TAG, "signIn : failure");
-                                    editVerifCode.setError(getString(R.string.not_valid_code));
-                                    editVerifCode.requestFocus();
-                                    if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                        Log.w(TAG, "signInWithCredential:failure", task.getException());
-                                    }
-                                }
-                            }
+                        registerShopKeeper();
+
+                    } else {
+                        Log.d(TAG, "signIn : failure");
+                        Toast.makeText(getContext(), R.string.sign_in_failed, Toast.LENGTH_SHORT).show();
+                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
                         }
-                );
+                        dialog.dismiss();
+                    }
+                    }
+                }
+            );
     }
 
     private void registerShopKeeper() {
-        dialog = UtilsFunctions.getDialogBuilder(getLayoutInflater(), getContext(), getString(R.string.signing_up)).create();
-        dialog.show();
-
         //TODO - for test
         //String phone = "+16" + editPhone.getText().toString();
 

@@ -76,5 +76,6 @@
     <string name="can_collect">الطلب جاهز</string>
     <string name="completed">منجز</string>
     <string name="not_supported">العناصر غير متوفرة</string>
+    <string name="sign_in_failed">فشل تسجيل الدخول. حاول مرة اخرى.</string>
 
 </resources>

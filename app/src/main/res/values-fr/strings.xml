@@ -76,5 +76,6 @@
     <string name="can_collect">Commande prête</string>
     <string name="completed">Clôturé</string>
     <string name="not_supported">Articles non disponibles</string>
+    <string name="sign_in_failed">L\'enregistrement a échoué. Veuillez réessayer.</string>
 
 </resources>
