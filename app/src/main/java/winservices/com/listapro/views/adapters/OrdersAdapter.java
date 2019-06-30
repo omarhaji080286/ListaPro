@@ -10,14 +10,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.Client;
 import winservices.com.listapro.models.entities.Order;
@@ -62,7 +63,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
         }
 
         holder.txtClientName.setText(order.getClient().getUserName());
-        String stringDate = UtilsFunctions.dateToString(UtilsFunctions.stringToDate(order.getCreationDate()), "dd/MM/YYYY HH:mm:ss");
+        String stringDate = UtilsFunctions.dateToString(UtilsFunctions.stringToDate(order.getCreationDate()), "dd/MM/yyyy HH:mm:ss");
         holder.txtDate.setText(stringDate);
         holder.txtReference.setText(String.valueOf(order.getServerOrderId()));
         holder.txtCollectTime.setText(order.getDisplayedCollectTime(context));

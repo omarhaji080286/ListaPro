@@ -17,6 +17,8 @@ import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
@@ -25,7 +27,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
-import androidx.appcompat.app.AlertDialog;
 import winservices.com.listapro.R;
 
 public class UtilsFunctions {
@@ -237,5 +238,6 @@ public class UtilsFunctions {
         }
         return day;
     }
+
 
 }
