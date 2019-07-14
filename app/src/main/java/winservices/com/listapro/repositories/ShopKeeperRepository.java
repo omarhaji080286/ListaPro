@@ -5,14 +5,15 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+
 import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -87,6 +88,7 @@ public class ShopKeeperRepository {
                 if (!response.isSuccessful()) {
                     Log.d(TAG, "Error : " + response.code());
                 } else {
+
                     WebServiceResponse wsResponse = response.body();
                     if (wsResponse != null) {
                         if (!wsResponse.isError()) {
