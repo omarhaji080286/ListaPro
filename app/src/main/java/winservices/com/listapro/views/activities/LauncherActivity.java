@@ -20,7 +20,6 @@ import winservices.com.listapro.services.ListaMessagingService;
 import winservices.com.listapro.viewmodels.OrderVM;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
 import winservices.com.listapro.viewmodels.ShopVM;
-import winservices.com.listapro.views.fragments.AddShopFragment;
 import winservices.com.listapro.views.fragments.SignUpFragment;
 import winservices.com.listapro.views.fragments.WelcomeFragment;
 
@@ -99,7 +98,8 @@ public class LauncherActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Shop> shops) {
                 if (shops == null || shops.size()==0){
-                    displayFragment(new AddShopFragment(), AddShopFragment.TAG);
+                    startActivity(new Intent(LauncherActivity.this, AddShopActivity.class));
+                    LauncherActivity.this.finish();
                     return;
                 }
                 shopKeeper.setShops(shops);
@@ -110,15 +110,15 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
     private void routeUser(ShopKeeper shopKeeper) {
-        Fragment fragment;
-        String tag;
+        Fragment fragment = new SignUpFragment();
+        String tag = WelcomeFragment.TAG;
         if (shopKeeper.getIsLoggedIn() == ShopKeeper.LOGGED_IN) {
             if (shopKeeper.getShops().size() > 0) {
                 fragment = new WelcomeFragment();
                 tag = WelcomeFragment.TAG;
             } else {
-                fragment = new AddShopFragment();
-                tag = AddShopFragment.TAG;
+                startActivity(new Intent(this, AddShopActivity.class));
+                this.finish();
             }
         } else {
             fragment = new SignUpFragment();

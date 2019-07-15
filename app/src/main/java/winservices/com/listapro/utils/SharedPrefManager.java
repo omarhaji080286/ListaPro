@@ -14,6 +14,7 @@ public class SharedPrefManager {
 
     private static final String SHARED_PREF_NAME = "listaSharedPreferences";
     private static final String KEY_ACCESS_TOKEN = "token";
+    private static final String KEY_ACCESS_SERVER_CITY_ID = "serverCityId";
 
     private Context context;
     private static SharedPrefManager instance;
@@ -27,6 +28,18 @@ public class SharedPrefManager {
             instance = new SharedPrefManager(context.getApplicationContext());
         }
         return instance;
+    }
+
+    public void storeServerCityId(int serverCityId){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(KEY_ACCESS_SERVER_CITY_ID, serverCityId);
+        editor.apply();
+    }
+
+    public int getServerCityId(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(KEY_ACCESS_SERVER_CITY_ID, 0);
     }
 
     public void storeToken(String token){

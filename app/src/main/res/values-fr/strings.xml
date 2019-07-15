@@ -77,5 +77,9 @@
     <string name="completed">Clôturé</string>
     <string name="not_supported">Articles non disponibles</string>
     <string name="sign_in_failed">L\'enregistrement a échoué. Veuillez réessayer.</string>
+    <string name="shop_data">Shop data</string>
+    <string name="select_your_city">Select your city</string>
+    <string name="select_your_shop_type">Select your shop type</string>
+    <string name="back">Back</string>
 
 </resources>
