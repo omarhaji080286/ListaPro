@@ -1,12 +1,13 @@
 package winservices.com.listapro.models.entities;
 
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
 import winservices.com.listapro.R;
 
 @Entity(tableName = "shop_types")
@@ -37,12 +38,22 @@ public class ShopType {
     @Ignore
     private List<DefaultCategory> dCategories;
 
+    //for shop list selection when creationg a shop
+    @Ignore
+    private boolean isChecked;
+
     public ShopType(int serverShopTypeId, String shopTypeName) {
         this.serverShopTypeId = serverShopTypeId;
         this.shopTypeName = shopTypeName;
         this.icon = getResourceId(serverShopTypeId);
     }
-    
+
+    public ShopType(int serverShopTypeId, String shopTypeName, boolean isChecked) {
+        this.serverShopTypeId = serverShopTypeId;
+        this.shopTypeName = shopTypeName;
+        this.isChecked = isChecked;
+    }
+
     private int getResourceId(int serverShopTypeId) {
         switch (serverShopTypeId) {
             case GENERAL_SHOP:
@@ -64,6 +75,14 @@ public class ShopType {
             default:
                 return R.drawable.others;
         }
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 
     public String getShopTypeImagePath() {
