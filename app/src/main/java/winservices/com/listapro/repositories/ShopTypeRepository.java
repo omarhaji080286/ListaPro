@@ -6,6 +6,9 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,8 +18,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -251,6 +252,8 @@ public class ShopTypeRepository {
         return cityDao.getAllCities() ;
     }
 
-
+    public LiveData<List<DefaultCategory>> getCategories(int serverShopTypeId) {
+        return defaultCategoryDao.getCategories(serverShopTypeId);
+    }
 
 }

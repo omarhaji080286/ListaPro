@@ -38,20 +38,10 @@ public class ShopType {
     @Ignore
     private List<DefaultCategory> dCategories;
 
-    //for shop list selection when creationg a shop
-    @Ignore
-    private boolean isChecked;
-
     public ShopType(int serverShopTypeId, String shopTypeName) {
         this.serverShopTypeId = serverShopTypeId;
         this.shopTypeName = shopTypeName;
         this.icon = getResourceId(serverShopTypeId);
-    }
-
-    public ShopType(int serverShopTypeId, String shopTypeName, boolean isChecked) {
-        this.serverShopTypeId = serverShopTypeId;
-        this.shopTypeName = shopTypeName;
-        this.isChecked = isChecked;
     }
 
     private int getResourceId(int serverShopTypeId) {
@@ -75,14 +65,6 @@ public class ShopType {
             default:
                 return R.drawable.others;
         }
-    }
-
-    public boolean isChecked() {
-        return isChecked;
-    }
-
-    public void setChecked(boolean checked) {
-        isChecked = checked;
     }
 
     public String getShopTypeImagePath() {

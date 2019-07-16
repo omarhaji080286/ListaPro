@@ -15,6 +15,7 @@ public class SharedPrefManager {
     private static final String SHARED_PREF_NAME = "listaSharedPreferences";
     private static final String KEY_ACCESS_TOKEN = "token";
     private static final String KEY_ACCESS_SERVER_CITY_ID = "serverCityId";
+    private static final String KEY_ACCESS_SHOP_TYPE_ID = "serverShopTypeId";
 
     private Context context;
     private static SharedPrefManager instance;
@@ -28,6 +29,18 @@ public class SharedPrefManager {
             instance = new SharedPrefManager(context.getApplicationContext());
         }
         return instance;
+    }
+
+    public void storeServerShopTypeId(int serverShopTypeId){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(KEY_ACCESS_SHOP_TYPE_ID, serverShopTypeId);
+        editor.apply();
+    }
+
+    public int getServerShopTypeId(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(KEY_ACCESS_SHOP_TYPE_ID, 0);
     }
 
     public void storeServerCityId(int serverCityId){
