@@ -27,11 +27,13 @@ public class ShopTypesAdapter extends RecyclerView.Adapter<ShopTypesAdapter.Shop
     private Context context;
     private int rowIndex = -1;
     private static final String TAG = ShopTypesAdapter.class.getSimpleName();
+    private int selectedShopTypeId;
 
-    public ShopTypesAdapter(Context context, List<ShopType> shopTypes, IntShowButtons mCallback) {
+    public ShopTypesAdapter(Context context, List<ShopType> shopTypes, IntShowButtons mCallback, int selectedShopTypeId) {
         this.shopTypes = shopTypes;
         this.context = context;
         this.mCallback = mCallback;
+        this.selectedShopTypeId = selectedShopTypeId;
     }
 
     @NonNull
@@ -44,9 +46,9 @@ public class ShopTypesAdapter extends RecyclerView.Adapter<ShopTypesAdapter.Shop
 
     @Override
     public void onBindViewHolder(@NonNull final ShopTypeVH holder, final int position) {
-        ShopType shopType = shopTypes.get(position);
+        final ShopType shopType = shopTypes.get(position);
 
-        Bitmap bitmap = UtilsFunctions.getOrientedBitmap(shopType.getShopTypeImagePath());
+        Bitmap bitmap = UtilsFunctions.getPNG(shopType.getShopTypeImagePath());
         holder.imgShopType.setImageBitmap(bitmap);
         holder.txtShopType.setText(shopType.getShopTypeName());
 
@@ -54,6 +56,7 @@ public class ShopTypesAdapter extends RecyclerView.Adapter<ShopTypesAdapter.Shop
             @Override
             public void onClick(View v) {
                 rowIndex = position;
+                selectedShopTypeId = shopType.getServerShopTypeId();
                 notifyDataSetChanged();
             }
         });
@@ -64,6 +67,10 @@ public class ShopTypesAdapter extends RecyclerView.Adapter<ShopTypesAdapter.Shop
             mCallback.onShopTypeSelected();
         } else {
             holder.rbShopType.setChecked(false);
+        }
+
+        if (shopType.getServerShopTypeId() == selectedShopTypeId) {
+            holder.rbShopType.setChecked(true);
         }
 
     }

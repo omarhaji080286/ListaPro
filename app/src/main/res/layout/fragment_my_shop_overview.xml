@@ -11,9 +11,11 @@
         android:id="@+id/imgShopPic"
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_height_shop_image"
-        android:layout_below="@+id/txtShopName"
         android:contentDescription="@string/shop_picture"
-        android:src="@drawable/store_default"/>
+        android:src="@drawable/store_default"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <ImageView
         android:id="@+id/imgEditShopPic"
@@ -62,7 +64,6 @@
         android:id="@+id/imgShopTypeImg"
         android:layout_width="@dimen/size_width_shop_type"
         android:layout_height="@dimen/size_height_shop_type"
-        android:src="@drawable/steak"
         app:layout_constraintStart_toEndOf="@+id/txtShopType"
         app:layout_constraintTop_toBottomOf="@+id/txtShopName"
         android:layout_marginTop="@dimen/margin_small"

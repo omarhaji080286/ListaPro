@@ -58,7 +58,11 @@ public class SelectShopTypeFragment extends Fragment implements ShopTypesAdapter
             @Override
             public void onChanged(List<ShopType> shopTypes) {
 
-                ShopTypesAdapter shopTypesAdapter = new ShopTypesAdapter(getContext(), shopTypes, SelectShopTypeFragment.this);
+                SharedPrefManager spm = SharedPrefManager.getInstance(getContext());
+                int selectedShopTypeId = spm.getServerShopTypeId();
+                if (selectedShopTypeId!= 0) btnNext.setVisibility(View.VISIBLE);
+
+                ShopTypesAdapter shopTypesAdapter = new ShopTypesAdapter(getContext(), shopTypes, SelectShopTypeFragment.this, selectedShopTypeId);
                 rvShopTypes.setAdapter(shopTypesAdapter);
 
                 LinearLayoutManager llm = new LinearLayoutManager(getContext());
@@ -67,6 +71,11 @@ public class SelectShopTypeFragment extends Fragment implements ShopTypesAdapter
             }
         });
 
+        prepareButtons();
+
+    }
+
+    private void prepareButtons() {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +100,7 @@ public class SelectShopTypeFragment extends Fragment implements ShopTypesAdapter
                         displayFragment(new SelectCityFragment(), SelectCityFragment.TAG);
             }
         });
+
     }
 
     @Override
