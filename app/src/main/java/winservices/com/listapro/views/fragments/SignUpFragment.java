@@ -60,6 +60,8 @@ public class SignUpFragment extends Fragment {
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
             Log.d(TAG, "onVerificationCompleted: " + phoneAuthCredential.getSignInMethod());
+            dialog = UtilsFunctions.getDialogBuilder(getLayoutInflater(), getContext(), getString(R.string.signing_up)).create();
+            dialog.show();
             signInWithPhoneAuthCredential(phoneAuthCredential);
         }
 
@@ -159,6 +161,8 @@ public class SignUpFragment extends Fragment {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog = UtilsFunctions.getDialogBuilder(getLayoutInflater(), getContext(), getString(R.string.signing_up)).create();
+                dialog.show();
                 if (UtilsFunctions.checkNetworkConnection(Objects.requireNonNull(getContext()))) {
                     FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(Objects.requireNonNull(getActivity()), new OnSuccessListener<InstanceIdResult>() {
                         @Override
@@ -170,6 +174,7 @@ public class SignUpFragment extends Fragment {
                     });
                     verifySignUpCode();
                 } else {
+                    dialog.dismiss();
                     Toast.makeText(getContext(), getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                 }
 
@@ -187,6 +192,7 @@ public class SignUpFragment extends Fragment {
                 PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codeSent, codeEntered);
                 signInWithPhoneAuthCredential(credential);
             } else {
+                dialog.dismiss();
                 editVerifCode.setError(getString(R.string.not_valid_code));
                 editVerifCode.requestFocus();
             }
@@ -242,10 +248,8 @@ public class SignUpFragment extends Fragment {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
-                    dialog = UtilsFunctions.getDialogBuilder(getLayoutInflater(), getContext(), getString(R.string.signing_up)).create();
-                    dialog.show();
                     if (task.isSuccessful()) {
-                        FirebaseUser user = task.getResult().getUser();
+                        FirebaseUser user = Objects.requireNonNull(task.getResult()).getUser();
 
                         Log.d(TAG, "signIn success - phone number : " + user.getPhoneNumber());
                         Log.d(TAG, "signIn success - display name : " + user.getDisplayName());
@@ -279,9 +283,8 @@ public class SignUpFragment extends Fragment {
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
             public void onChanged(ShopKeeper shopKeeper) {
-                dialog.dismiss();
                 if (shopKeeper == null) return;
-                //Toast.makeText(getContext(), R.string.welcome_to_listapro, Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
                 Objects.requireNonNull(getActivity()).finish();
                 startActivity(new Intent(getActivity(), AddShopActivity.class));
             }

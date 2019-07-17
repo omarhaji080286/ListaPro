@@ -33,8 +33,10 @@ public class LauncherActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_launcher);
+        setTitle(R.string.welcome_to_listapro);
 
         Bundle extras = getIntent().getExtras();
 
@@ -53,9 +55,6 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
     private void launchApp(){
-
-        setContentView(R.layout.activity_launcher);
-        setTitle(R.string.welcome_to_listapro);
 
         shopKeeperVM = ViewModelProviders.of(this).get(ShopKeeperVM.class);
         shopVM = ViewModelProviders.of(this).get(ShopVM.class);
@@ -126,9 +125,6 @@ public class LauncherActivity extends AppCompatActivity {
         }
         displayFragment(fragment, tag);
     }
-
-
-
 
     public void displayFragment(Fragment fragment, String tag) {
         if (currentFragTag.equals(tag)) return;

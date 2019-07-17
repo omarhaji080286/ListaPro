@@ -79,12 +79,19 @@ public class SelectCityFragment extends Fragment {
 
     private void prepareCitiesRadioGroup(List<City> cities) {
 
+        SharedPrefManager spm = SharedPrefManager.getInstance(getContext());
+        int storedServerCityId = spm.getServerCityId();
+
         RadioGroup.LayoutParams lp = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.MATCH_PARENT);
         rgCities.removeAllViews();
         for (int i = 0; i < cities.size(); i++) {
             RadioButton rb = new RadioButton(getContext());
             rb.setText(cities.get(i).getCityName());
             rb.setId(cities.get(i).getServerCityId());
+            if (cities.get(i).getServerCityId() == storedServerCityId){
+                rb.setChecked(true);
+                btnNext.setVisibility(View.VISIBLE);
+            }
             rgCities.addView(rb, lp);
         }
 
