@@ -82,5 +82,6 @@
     <string name="select_your_shop_type">Select your shop type</string>
     <string name="back">Back</string>
     <string name="select_categories">Select the categories you\'re selling</string>
+    <string name="enter_your_shop_name">Enter your shop name</string>
 
 </resources>

@@ -11,9 +11,13 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
+
+import java.util.Objects;
+
 import winservices.com.listapro.R;
 
 import static androidx.core.app.ActivityCompat.requestPermissions;
@@ -149,5 +153,16 @@ public class PermissionUtil {
         context.startActivity(intent);
     }
 
+
+    public static void requestPermissionInFragment(Activity activity) {
+
+        PermissionUtil permissionUtil = new PermissionUtil(Objects.requireNonNull(activity));
+
+        if (permissionUtil.checkPermission(TXT_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionUtil.requestPermission(TXT_FINE_LOCATION, activity);
+            Log.d(TAG, "permission requested");
+        }
+
+    }
 
 }

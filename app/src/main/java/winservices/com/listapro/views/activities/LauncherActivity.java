@@ -111,7 +111,7 @@ public class LauncherActivity extends AppCompatActivity {
 
     private void routeUser(ShopKeeper shopKeeper) {
         Fragment fragment = new SignUpFragment();
-        String tag = WelcomeFragment.TAG;
+        String tag = SignUpFragment.TAG;
         if (shopKeeper.getIsLoggedIn() == ShopKeeper.LOGGED_IN) {
             if (shopKeeper.getShops().size() > 0) {
                 fragment = new WelcomeFragment();

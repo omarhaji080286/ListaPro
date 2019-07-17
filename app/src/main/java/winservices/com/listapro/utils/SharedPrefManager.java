@@ -7,7 +7,12 @@ import android.graphics.Bitmap;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import winservices.com.listapro.models.entities.DefaultCategory;
 import winservices.com.listapro.models.entities.Shop;
 
 public class SharedPrefManager {
@@ -16,6 +21,7 @@ public class SharedPrefManager {
     private static final String KEY_ACCESS_TOKEN = "token";
     private static final String KEY_ACCESS_SERVER_CITY_ID = "serverCityId";
     private static final String KEY_ACCESS_SHOP_TYPE_ID = "serverShopTypeId";
+    private static final String KEY_ACCESS_SELECTED_CATEGORIES = "selectedCategories";
 
     private Context context;
     private static SharedPrefManager instance;
@@ -29,6 +35,27 @@ public class SharedPrefManager {
             instance = new SharedPrefManager(context.getApplicationContext());
         }
         return instance;
+    }
+
+    public void storeSelectedCategories(List<DefaultCategory> categories){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Set<String> set = new HashSet<String>();
+        for (int i = 0; i < categories.size(); i++) {
+            set.add(String.valueOf(categories.get(i).getDCategoryId()));
+        }
+        editor.putStringSet(KEY_ACCESS_SELECTED_CATEGORIES, set );
+        editor.apply();
+    }
+
+    public List<Integer> getSelectedCategoriesIds(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        Set<String> stringSet = sharedPreferences.getStringSet(KEY_ACCESS_SELECTED_CATEGORIES, null);
+        if (stringSet==null) return null;
+        List<Integer> intSet = new ArrayList<>();
+        for(String strCategoryId : stringSet)
+            intSet.add(Integer.parseInt(strCategoryId));
+        return intSet;
     }
 
     public void storeServerShopTypeId(int serverShopTypeId){

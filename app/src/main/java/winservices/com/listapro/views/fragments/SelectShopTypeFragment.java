@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,7 +32,7 @@ public class SelectShopTypeFragment extends Fragment implements ShopTypesAdapter
     private RecyclerView rvShopTypes;
     private Button btnNext, btnPrevious;
     private ShopTypeVM shopTypeVM;
-    private boolean isCategoriesToSelect;
+    private boolean multipleCategories;
 
     public SelectShopTypeFragment() {
     }
@@ -71,11 +70,15 @@ public class SelectShopTypeFragment extends Fragment implements ShopTypesAdapter
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isCategoriesToSelect) {
+                if (multipleCategories) {
+
                     ((AddShopActivity) Objects.requireNonNull(getActivity())).
                             displayFragment(new SelectCategoriesFragment(), SelectCityFragment.TAG);
                 } else {
-                    Toast.makeText(getContext(), "go to shop name and horaire", Toast.LENGTH_SHORT).show();
+
+                    ((AddShopActivity) Objects.requireNonNull(getActivity())).
+                            displayFragment(new ShopNameFragment(), ShopNameFragment.TAG);
+
                 }
 
             }
@@ -93,15 +96,17 @@ public class SelectShopTypeFragment extends Fragment implements ShopTypesAdapter
     @Override
     public void onShopTypeSelected() {
 
-        SharedPrefManager spm = SharedPrefManager.getInstance(getContext());
-        int selectedShopId = spm.getServerShopTypeId();
-        shopTypeVM.getCategories(selectedShopId).observe(this, new Observer<List<DefaultCategory>>() {
+        final SharedPrefManager spm = SharedPrefManager.getInstance(getContext());
+
+        shopTypeVM.getCategories(spm.getServerShopTypeId()).observe(SelectShopTypeFragment.this, new Observer<List<DefaultCategory>>() {
             @Override
             public void onChanged(List<DefaultCategory> defaultCategories) {
-                if (defaultCategories.size() > 1) isCategoriesToSelect = true;
+                if (defaultCategories == null) return;
+                spm.storeSelectedCategories(defaultCategories);
+                multipleCategories = defaultCategories.size() > 1;
                 btnNext.setVisibility(View.VISIBLE);
-                btnPrevious.setVisibility(View.VISIBLE);
             }
         });
+
     }
 }

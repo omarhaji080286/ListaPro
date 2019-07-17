@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,12 +25,14 @@ import winservices.com.listapro.viewmodels.ShopTypeVM;
 import winservices.com.listapro.views.activities.AddShopActivity;
 import winservices.com.listapro.views.adapters.CategoriesAdapter;
 
-public class SelectCategoriesFragment extends Fragment {
+public class SelectCategoriesFragment extends Fragment implements CategoriesAdapter.IntShowNextButton{
 
     private RecyclerView rvCategories;
     private Button btnNext, btnPrevious;
     private List<DefaultCategory> categories;
     private ShopTypeVM shopTypeVM;
+    private CategoriesAdapter categoriesAdapter;
+    private static final String TAG = "SelectCategoriesFrag";
 
     public SelectCategoriesFragment() {
     }
@@ -70,7 +71,12 @@ public class SelectCategoriesFragment extends Fragment {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "go to next", Toast.LENGTH_SHORT).show();
+                SharedPrefManager spm = SharedPrefManager.getInstance(getContext());
+                spm.storeSelectedCategories(categoriesAdapter.getSelectedCategories());
+
+                ((AddShopActivity) Objects.requireNonNull(getActivity())).
+                        displayFragment(new ShopNameFragment(), ShopNameFragment.TAG);
+
             }
         });
 
@@ -84,12 +90,22 @@ public class SelectCategoriesFragment extends Fragment {
             @Override
             public void onChanged(List<DefaultCategory> defaultCategories) {
                 categories = defaultCategories;
-                CategoriesAdapter categoriesAdapter = new CategoriesAdapter(categories);
+                categoriesAdapter = new CategoriesAdapter(categories, SelectCategoriesFragment.this);
                 rvCategories.setAdapter(categoriesAdapter);
                 LinearLayoutManager llm = new LinearLayoutManager(getContext());
                 rvCategories.setLayoutManager(llm);
             }
         });
 
+    }
+
+
+    @Override
+    public void onCategoriesSelected(boolean showNextButton) {
+        if (showNextButton) {
+            btnNext.setVisibility(View.VISIBLE);
+        } else {
+            btnNext.setVisibility(View.GONE);
+        }
     }
 }

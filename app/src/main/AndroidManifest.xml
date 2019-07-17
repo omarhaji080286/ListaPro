@@ -23,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher"
         tools:ignore="UnusedAttribute">
-        <activity android:name=".views.activities.AddShopActivity"></activity>
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -55,6 +55,13 @@
         </activity>
         <activity
             android:name=".views.activities.MyOrdersActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".views.activities.AddShopActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>

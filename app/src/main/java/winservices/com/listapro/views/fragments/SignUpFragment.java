@@ -2,6 +2,7 @@ package winservices.com.listapro.views.fragments;
 
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,6 +41,7 @@ import winservices.com.listapro.models.entities.ShopKeeper;
 import winservices.com.listapro.utils.SharedPrefManager;
 import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
+import winservices.com.listapro.views.activities.AddShopActivity;
 import winservices.com.listapro.views.activities.LauncherActivity;
 
 public class SignUpFragment extends Fragment {
@@ -72,6 +74,7 @@ public class SignUpFragment extends Fragment {
             super.onCodeSent(s, forceResendingToken);
             editVerifCode.setEnabled(true);
             btnSignUp.setEnabled(true);
+            editVerifCode.requestFocus();
             codeSent = s;
         }
     };
@@ -101,6 +104,8 @@ public class SignUpFragment extends Fragment {
         btnSignUp = view.findViewById(R.id.btnNext);
         txtDescription = view.findViewById(R.id.txtDescription);
         linlayPhoneCointaner = view.findViewById(R.id.linLayPhoneContainer);
+
+        editPhone.requestFocus();
 
         editVerifCode.setEnabled(false);
         btnSignUp.setEnabled(false);
@@ -276,9 +281,9 @@ public class SignUpFragment extends Fragment {
             public void onChanged(ShopKeeper shopKeeper) {
                 dialog.dismiss();
                 if (shopKeeper == null) return;
-                Toast.makeText(getContext(), R.string.welcome_to_listapro, Toast.LENGTH_SHORT).show();
-                LauncherActivity launcherActivity = (LauncherActivity) getActivity();
-                Objects.requireNonNull(launcherActivity).displayFragment(new AddShopFragment(), AddShopFragment.TAG);
+                //Toast.makeText(getContext(), R.string.welcome_to_listapro, Toast.LENGTH_SHORT).show();
+                Objects.requireNonNull(getActivity()).finish();
+                startActivity(new Intent(getActivity(), AddShopActivity.class));
             }
         });
     }

@@ -74,9 +74,20 @@ public class ShopTypeVM extends AndroidViewModel {
         return repository.getAllCities();
     }
 
+    public LiveData<City> getCity(int serverCityId){
+        return repository.getCity(serverCityId);
+    }
+
     public LiveData<List<DefaultCategory>> getCategories(int serverShopTypeId) {
         return repository.getCategories(serverShopTypeId);
 
     }
+
+    public LiveData<List<DefaultCategory>> getCategoriesByIds(List<Integer> categoriesIds) {
+        return repository.getCategoriesByIds(categoriesIds);
+
+    }
+
+
 
 }

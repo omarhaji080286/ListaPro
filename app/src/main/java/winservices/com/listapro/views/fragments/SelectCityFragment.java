@@ -21,6 +21,7 @@ import java.util.Objects;
 
 import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.City;
+import winservices.com.listapro.utils.PermissionUtil;
 import winservices.com.listapro.utils.SharedPrefManager;
 import winservices.com.listapro.viewmodels.ShopTypeVM;
 import winservices.com.listapro.views.activities.AddShopActivity;
@@ -30,7 +31,6 @@ public class SelectCityFragment extends Fragment {
 
     public static final String TAG = "SelectCityFragment";
     private ShopTypeVM shopTypeVM;
-    private boolean isCitiesListLoaded = false;
     private RadioGroup rgCities;
     private Button btnNext;
 
@@ -72,15 +72,15 @@ public class SelectCityFragment extends Fragment {
             @Override
             public void onChanged(List<City> cities) {
                 if (cities == null) return;
-                if (isCitiesListLoaded) return;
-                prepareCitiesRadioGroup(view, cities);
+                prepareCitiesRadioGroup(cities);
             }
         });
     }
 
-    private void prepareCitiesRadioGroup(View view, List<City> cities) {
+    private void prepareCitiesRadioGroup(List<City> cities) {
 
         RadioGroup.LayoutParams lp = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.MATCH_PARENT);
+        rgCities.removeAllViews();
         for (int i = 0; i < cities.size(); i++) {
             RadioButton rb = new RadioButton(getContext());
             rb.setText(cities.get(i).getCityName());
@@ -88,7 +88,7 @@ public class SelectCityFragment extends Fragment {
             rgCities.addView(rb, lp);
         }
 
-        isCitiesListLoaded = true;
+        PermissionUtil.requestPermissionInFragment(getActivity());
 
         rgCities.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

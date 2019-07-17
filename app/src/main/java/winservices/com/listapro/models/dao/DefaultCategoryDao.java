@@ -38,4 +38,9 @@ public interface DefaultCategoryDao {
             " AND assoc.serverShopTypeId = st.serverShopTypeId " +
             " AND st.serverShopTypeId = :serverShopTypeId ")
     LiveData<List<DefaultCategory>> getCategories(int serverShopTypeId);
+
+    @Query("SELECT * FROM default_categories WHERE dCategoryId IN (:categoriesIds)")
+    LiveData<List<DefaultCategory>> getCategoriesByIds(List<Integer> categoriesIds);
+
+
 }

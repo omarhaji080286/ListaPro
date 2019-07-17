@@ -89,6 +89,12 @@ public class ShopTypeRepository {
         return shopTypeDao.getShopType(serverShopTypeId);
     }
 
+    public LiveData<City> getCity(int serverCityId) {
+        return cityDao.getCity(serverCityId);
+    }
+
+
+
     private static class InsertCityAsyncTask extends AsyncTask<City, Void, Void> {
 
         private CityDao cityDao;
@@ -254,6 +260,10 @@ public class ShopTypeRepository {
 
     public LiveData<List<DefaultCategory>> getCategories(int serverShopTypeId) {
         return defaultCategoryDao.getCategories(serverShopTypeId);
+    }
+
+    public LiveData<List<DefaultCategory>> getCategoriesByIds(List<Integer> categoriesIds) {
+        return defaultCategoryDao.getCategoriesByIds(categoriesIds);
     }
 
 }

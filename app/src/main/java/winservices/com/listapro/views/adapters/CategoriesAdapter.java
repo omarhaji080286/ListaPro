@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import winservices.com.listapro.R;
@@ -19,13 +20,16 @@ import winservices.com.listapro.models.entities.DefaultCategory;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoryVH> {
 
-    private List<DefaultCategory> categories;
+    private List<DefaultCategory> categories, selectedCategories;
     private Context context;
+    private IntShowNextButton mCallback; //Interface
     private int rowIndex = -1;
     private static final String TAG = CategoriesAdapter.class.getSimpleName();
 
-    public CategoriesAdapter(List<DefaultCategory> categories) {
+    public CategoriesAdapter(List<DefaultCategory> categories, IntShowNextButton mCallback) {
         this.categories = categories;
+        this.selectedCategories = new ArrayList<>();
+        this.mCallback = mCallback;
     }
 
     @NonNull
@@ -37,16 +41,59 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CategoryVH holder, int position) {
-        DefaultCategory category = categories.get(position);
+    public void onBindViewHolder(@NonNull final CategoryVH holder, int position) {
+        final DefaultCategory category = categories.get(position);
 
         holder.txtCategory.setText(category.getDCategoryName());
 
+        if (isCategoryChecked(category)) {
+            holder.cbCategory.setChecked(true);
+        } else {
+            holder.cbCategory.setChecked(false);
+        }
+
+
+        holder.clCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!holder.cbCategory.isChecked()){
+                    holder.cbCategory.setChecked(true);
+                    selectedCategories.add(category);
+                } else {
+                    holder.cbCategory.setChecked(false);
+                    selectedCategories.remove(category);
+                }
+                manageButtonNextVisibility();
+            }
+        });
+    }
+
+    private void manageButtonNextVisibility() {
+        if (selectedCategories.size() > 0) {
+            mCallback.onCategoriesSelected(true);
+        } else {
+            mCallback.onCategoriesSelected(false);
+        }
+    }
+
+    private boolean isCategoryChecked(DefaultCategory category){
+        for (int i = 0; i < categories.size(); i++) {
+            for (int j = 0; j < selectedCategories.size(); j++) {
+                if (categories.get(i).getDCategoryId() == selectedCategories.get(j).getDCategoryId()){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
     public int getItemCount() {
         return categories.size();
+    }
+
+    public List<DefaultCategory> getSelectedCategories() {
+        return selectedCategories;
     }
 
     class CategoryVH extends RecyclerView.ViewHolder {
@@ -66,4 +113,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
         }
     }
+
+    public interface IntShowNextButton {
+        void onCategoriesSelected(boolean showNextButton);
+    }
+
+
+
+
 }
