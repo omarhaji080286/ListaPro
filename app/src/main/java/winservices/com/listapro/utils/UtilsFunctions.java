@@ -193,6 +193,18 @@ public class UtilsFunctions {
         return rotatedBitmap;
     }
 
+    public static Bitmap getPNG(String PNGPath){
+
+        Bitmap bitmap = null;
+        try {
+            bitmap = BitmapFactory.decodeFile(PNGPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+
+    }
+
     public static boolean isEmulator() {
         return Build.FINGERPRINT.startsWith("generic")
                 || Build.FINGERPRINT.startsWith("unknown")
