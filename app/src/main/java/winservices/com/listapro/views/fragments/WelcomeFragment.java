@@ -67,6 +67,8 @@ public class WelcomeFragment extends Fragment {
         linlayMyShop = view.findViewById(R.id.linlayMyShop);
         txtOrdersSentNum = view.findViewById(R.id.txtOrdersSentNum);
 
+        UtilsFunctions.hideKeyboardFrom(Objects.requireNonNull(getContext()), consLayMyOrders);
+
         initLogOutAndOrdersNum();
         initMyShopItem();
         initMyOrdersItem();

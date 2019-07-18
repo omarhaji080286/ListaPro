@@ -60,7 +60,7 @@ public class SelectShopTypeFragment extends Fragment implements ShopTypesAdapter
 
                 SharedPrefManager spm = SharedPrefManager.getInstance(getContext());
                 int selectedShopTypeId = spm.getServerShopTypeId();
-                if (selectedShopTypeId!= 0) btnNext.setVisibility(View.VISIBLE);
+                if (selectedShopTypeId != 0) btnNext.setVisibility(View.VISIBLE);
 
                 ShopTypesAdapter shopTypesAdapter = new ShopTypesAdapter(getContext(), shopTypes, SelectShopTypeFragment.this, selectedShopTypeId);
                 rvShopTypes.setAdapter(shopTypesAdapter);
@@ -79,16 +79,26 @@ public class SelectShopTypeFragment extends Fragment implements ShopTypesAdapter
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (multipleCategories) {
+                final SharedPrefManager spm = SharedPrefManager.getInstance(getContext());
+                shopTypeVM.getCategories(spm.getServerShopTypeId()).observe(SelectShopTypeFragment.this, new Observer<List<DefaultCategory>>() {
+                    @Override
+                    public void onChanged(List<DefaultCategory> defaultCategories) {
 
-                    ((AddShopActivity) Objects.requireNonNull(getActivity())).
-                            displayFragment(new SelectCategoriesFragment(), SelectCityFragment.TAG);
-                } else {
+                        if (defaultCategories == null) return;
 
-                    ((AddShopActivity) Objects.requireNonNull(getActivity())).
-                            displayFragment(new ShopNameFragment(), ShopNameFragment.TAG);
+                        if (defaultCategories.size() > 1) {
 
-                }
+                            ((AddShopActivity) Objects.requireNonNull(getActivity())).
+                                    displayFragment(new SelectCategoriesFragment(), SelectCityFragment.TAG);
+                        } else {
+
+                            ((AddShopActivity) Objects.requireNonNull(getActivity())).
+                                    displayFragment(new ShopNameFragment(), ShopNameFragment.TAG);
+
+                        }
+
+                    }
+                });
 
             }
         });
@@ -113,7 +123,6 @@ public class SelectShopTypeFragment extends Fragment implements ShopTypesAdapter
             public void onChanged(List<DefaultCategory> defaultCategories) {
                 if (defaultCategories == null) return;
                 spm.storeSelectedCategories(defaultCategories);
-                multipleCategories = defaultCategories.size() > 1;
                 btnNext.setVisibility(View.VISIBLE);
             }
         });

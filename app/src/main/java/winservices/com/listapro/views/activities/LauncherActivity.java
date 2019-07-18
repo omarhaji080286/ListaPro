@@ -19,6 +19,7 @@ import winservices.com.listapro.models.entities.ShopKeeper;
 import winservices.com.listapro.services.ListaMessagingService;
 import winservices.com.listapro.viewmodels.OrderVM;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
+import winservices.com.listapro.viewmodels.ShopTypeVM;
 import winservices.com.listapro.viewmodels.ShopVM;
 import winservices.com.listapro.views.fragments.SignUpFragment;
 import winservices.com.listapro.views.fragments.WelcomeFragment;
@@ -30,6 +31,7 @@ public class LauncherActivity extends AppCompatActivity {
     private ShopVM shopVM;
     private OrderVM orderVM;
     private String currentFragTag = "none";
+    private ShopTypeVM shopTypeVM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class LauncherActivity extends AppCompatActivity {
             launchApp();
         }
 
+
     }
 
     private void launchApp(){
@@ -59,6 +62,9 @@ public class LauncherActivity extends AppCompatActivity {
         shopKeeperVM = ViewModelProviders.of(this).get(ShopKeeperVM.class);
         shopVM = ViewModelProviders.of(this).get(ShopVM.class);
         orderVM = ViewModelProviders.of(this).get(OrderVM.class);
+        shopTypeVM = ViewModelProviders.of(this).get(ShopTypeVM.class);
+
+        loadParametersFromServer();
 
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
@@ -133,6 +139,13 @@ public class LauncherActivity extends AppCompatActivity {
         manager.beginTransaction()
                 .replace(R.id.frameLauncherActivity, fragment, tag)
                 .commit();
+    }
+
+    private void loadParametersFromServer() {
+
+        shopTypeVM.loadCitiesFromServer();
+        shopTypeVM.loadShopTypes(this);
+
     }
 
 

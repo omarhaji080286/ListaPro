@@ -3,7 +3,6 @@ package winservices.com.listapro.views.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
@@ -12,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -40,6 +38,7 @@ import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
 import winservices.com.listapro.models.entities.ShopType;
 import winservices.com.listapro.utils.SharedPrefManager;
+import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
 import winservices.com.listapro.viewmodels.ShopTypeVM;
 import winservices.com.listapro.viewmodels.ShopVM;
@@ -97,8 +96,7 @@ public class ShopNameFragment extends Fragment implements TimePickerDialog.OnTim
         btnFinish = view.findViewById(R.id.btnFinish);
 
         editShopName.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editShopName, InputMethodManager.SHOW_IMPLICIT);
+        UtilsFunctions.showKeyboardOn(getActivity(), editShopName);
 
         editMinuteOpening = view.findViewById(R.id.editMinuteOpening);
         editMinuteClosing = view.findViewById(R.id.editMinuteClosing);
@@ -124,11 +122,14 @@ public class ShopNameFragment extends Fragment implements TimePickerDialog.OnTim
     }
 
     private void prepareButtons() {
+
         btnPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((AddShopActivity) Objects.requireNonNull(getActivity())).
                         displayFragment(new SelectShopTypeFragment(), SelectShopTypeFragment.TAG);
+
+                UtilsFunctions.hideKeyboardFrom(Objects.requireNonNull(getContext()), editShopName);
             }
         });
 

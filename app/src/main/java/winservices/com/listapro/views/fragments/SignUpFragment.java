@@ -33,14 +33,17 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import winservices.com.listapro.R;
+import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
 import winservices.com.listapro.utils.SharedPrefManager;
 import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
+import winservices.com.listapro.viewmodels.ShopVM;
 import winservices.com.listapro.views.activities.AddShopActivity;
 import winservices.com.listapro.views.activities.LauncherActivity;
 
@@ -55,6 +58,7 @@ public class SignUpFragment extends Fragment {
     private TextView txtDescription;
     private LinearLayout linlayPhoneCointaner;
     private ShopKeeperVM shopKeeperVM;
+    private ShopVM shopVM;
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
@@ -146,8 +150,9 @@ public class SignUpFragment extends Fragment {
                                     shopKeeper.setIsLoggedIn(ShopKeeper.LOGGED_IN);
                                     shopKeeper.setLastLogged(ShopKeeper.LAST_LOGGED);
                                     shopKeeperVM.logIn(shopKeeper);
-                                    LauncherActivity launcherActivity = (LauncherActivity) getActivity();
-                                    Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment(), WelcomeFragment.TAG);
+                                    //LauncherActivity launcherActivity = (LauncherActivity) getActivity();
+                                    //Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment(), WelcomeFragment.TAG);
+                                    routeUser(shopKeeper);
                                 }
                             }
                         });
@@ -244,29 +249,29 @@ public class SignUpFragment extends Fragment {
 
     private void signInWithPhoneAuthCredential(final PhoneAuthCredential credential) {
         firebaseAuth.signInWithCredential(credential)
-            .addOnCompleteListener(Objects.requireNonNull(getActivity()), new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
+                .addOnCompleteListener(Objects.requireNonNull(getActivity()), new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
 
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = Objects.requireNonNull(task.getResult()).getUser();
+                                if (task.isSuccessful()) {
+                                    FirebaseUser user = Objects.requireNonNull(task.getResult()).getUser();
 
-                        Log.d(TAG, "signIn success - phone number : " + user.getPhoneNumber());
-                        Log.d(TAG, "signIn success - display name : " + user.getDisplayName());
+                                    Log.d(TAG, "signIn success - phone number : " + user.getPhoneNumber());
+                                    Log.d(TAG, "signIn success - display name : " + user.getDisplayName());
 
-                        registerShopKeeper();
+                                    registerShopKeeper();
 
-                    } else {
-                        Log.d(TAG, "signIn : failure");
-                        Toast.makeText(getContext(), R.string.sign_in_failed, Toast.LENGTH_SHORT).show();
-                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                                } else {
+                                    Log.d(TAG, "signIn : failure");
+                                    Toast.makeText(getContext(), R.string.sign_in_failed, Toast.LENGTH_SHORT).show();
+                                    if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                                    }
+                                    dialog.dismiss();
+                                }
+                            }
                         }
-                        dialog.dismiss();
-                    }
-                    }
-                }
-            );
+                );
     }
 
     private void registerShopKeeper() {
@@ -285,10 +290,28 @@ public class SignUpFragment extends Fragment {
             public void onChanged(ShopKeeper shopKeeper) {
                 if (shopKeeper == null) return;
                 dialog.dismiss();
-                Objects.requireNonNull(getActivity()).finish();
-                startActivity(new Intent(getActivity(), AddShopActivity.class));
+                routeUser(shopKeeper);
             }
         });
     }
+
+    private void routeUser(ShopKeeper shopKeeper) {
+
+        ShopVM shopVM = ViewModelProviders.of(this).get(ShopVM.class);
+        shopVM.getShopsByShopKeeperId(shopKeeper.getServerShopKeeperId()).observe(this, new Observer<List<Shop>>() {
+            @Override
+            public void onChanged(List<Shop> shops) {
+                if (shops == null || shops.size()==0 ){
+                    Objects.requireNonNull(getActivity()).finish();
+                    startActivity(new Intent(getActivity(), AddShopActivity.class));
+                } else {
+                    LauncherActivity launcherActivity = (LauncherActivity) getActivity();
+                    Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment(), WelcomeFragment.TAG);
+                }
+            }
+        });
+
+    }
+
 
 }
