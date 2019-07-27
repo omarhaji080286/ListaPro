@@ -3,6 +3,8 @@ package winservices.com.listapro.views.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +23,16 @@ import androidx.lifecycle.ViewModelProviders;
 import java.util.List;
 import java.util.Objects;
 
+import winservices.com.listapro.BuildConfig;
 import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
+import winservices.com.listapro.utils.AnimationManager;
+import winservices.com.listapro.utils.SharedPrefManager;
 import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.viewmodels.OrderVM;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
 import winservices.com.listapro.viewmodels.ShopVM;
-import winservices.com.listapro.views.activities.LauncherActivity;
 import winservices.com.listapro.views.activities.MyOrdersActivity;
 import winservices.com.listapro.views.activities.MyShopActivity;
 
@@ -37,11 +41,11 @@ public class WelcomeFragment extends Fragment {
     private ShopKeeperVM shopKeeperVM;
     private OrderVM orderVM;
     private ShopVM shopVM;
-    private ImageView imgLogOut;
     private LinearLayout linlayMyShop;
     private ConstraintLayout consLayMyOrders;
     private TextView txtOrdersSentNum;
     private int serverShopId;
+    private ImageView imgGooglePlay, imgShare;
     public final static String TAG = WelcomeFragment.class.getSimpleName();
 
     public WelcomeFragment() {
@@ -62,12 +66,20 @@ public class WelcomeFragment extends Fragment {
         orderVM = ViewModelProviders.of(this).get(OrderVM.class);
         shopVM = ViewModelProviders.of(this).get(ShopVM.class);
 
-        imgLogOut = view.findViewById(R.id.imgLogOut);
         consLayMyOrders = view.findViewById(R.id.consLayMyOrders);
         linlayMyShop = view.findViewById(R.id.linlayMyShop);
         txtOrdersSentNum = view.findViewById(R.id.txtOrdersSentNum);
+        imgGooglePlay = view.findViewById(R.id.imgGooglePlay);
+        imgShare = view.findViewById(R.id.imgShare);
 
         UtilsFunctions.hideKeyboardFrom(Objects.requireNonNull(getContext()), consLayMyOrders);
+
+        imgShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareAppStoreLink();
+            }
+        });
 
         initLogOutAndOrdersNum();
         initMyShopItem();
@@ -79,15 +91,6 @@ public class WelcomeFragment extends Fragment {
             @Override
             public void onChanged(final ShopKeeper shopKeeper) {
                 if (shopKeeper == null) return;
-                imgLogOut.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        shopKeeper.setIsLoggedIn(ShopKeeper.LOGGED_OUT);
-                        shopKeeperVM.update(shopKeeper);
-                        LauncherActivity launcherActivity = (LauncherActivity) getActivity();
-                        Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment(), WelcomeFragment.TAG);
-                    }
-                });
                 loadOrdersNum(shopKeeper);
             }
         });
@@ -154,7 +157,57 @@ public class WelcomeFragment extends Fragment {
             orderVM.loadOrders(getContext(), serverShopId);
         }
 
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                manageGooglePlayIcon();
+                Log.d(TAG, "Icons handled");
+            }
+        });
+
     }
+
+    private void manageGooglePlayIcon() {
+
+        SharedPrefManager spm = SharedPrefManager.getInstance(getContext());
+        int googlePlayVersion = spm.getGooglePlayVersion();
+
+        int userVersion = BuildConfig.VERSION_CODE;
+        if (googlePlayVersion > userVersion) {
+            imgGooglePlay.setVisibility(View.VISIBLE);
+            AnimationManager am = new AnimationManager(getContext());
+            am.animateItem(imgGooglePlay, R.anim.blink, 1000);
+            imgGooglePlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UtilsFunctions.goToMarket(Objects.requireNonNull(getContext()));
+                }
+            });
+        } else {
+            imgGooglePlay.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void shareAppStoreLink() {
+
+        String listaLink = "https://play.google.com/store/apps/details?id=com.winservices.wingoods";
+        String mainMessage = Objects.requireNonNull(getContext()).getResources().getString(R.string.share_message);
+        String subject = "avec Lista, les courses deviennent fun";
+
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+        String body = mainMessage +
+                "\n" +
+                listaLink;
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
+        startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.listapro) ));
+
+    }
+
+
 
 
 }

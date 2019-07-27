@@ -23,6 +23,7 @@ import winservices.com.listapro.viewmodels.ShopTypeVM;
 import winservices.com.listapro.viewmodels.ShopVM;
 import winservices.com.listapro.views.fragments.SignUpFragment;
 import winservices.com.listapro.views.fragments.WelcomeFragment;
+import winservices.com.listapro.services.RemoteConfigService;
 
 public class LauncherActivity extends AppCompatActivity {
 
@@ -65,6 +66,9 @@ public class LauncherActivity extends AppCompatActivity {
         shopTypeVM = ViewModelProviders.of(this).get(ShopTypeVM.class);
 
         loadParametersFromServer();
+
+        RemoteConfigService remoteConfigService = new RemoteConfigService(this);
+        remoteConfigService.loadGooglePlayVersion();
 
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override

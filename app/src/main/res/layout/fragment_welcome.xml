@@ -9,31 +9,54 @@
     android:weightSum="100"
     tools:context=".views.fragments.WelcomeFragment">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="20"
         android:orientation="horizontal"
         android:background="@color/colorPrimary">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imgGooglePlay"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/ic_update_selector"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ImageView
+                android:id="@+id/imgShare"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_share_selector"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/logo" />
+            android:src="@drawable/logo"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-        <ImageView
-            android:id="@+id/imgLogOut"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="@dimen/margin_small"
-            android:src="@drawable/ic_exit_white"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:visibility="gone"/>
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TableLayout
         android:layout_width="match_parent"

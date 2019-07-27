@@ -83,5 +83,7 @@
     <string name="back">Back</string>
     <string name="select_categories">Select the categories you\'re selling</string>
     <string name="enter_your_shop_name">Enter your shop name</string>
+    <string name="share_message">Gagnez du temps avec Lista, l\'application qui facilite la corvée des courses ;-)</string>
+    <string name="listapro">ListaPro</string>
 
 </resources>

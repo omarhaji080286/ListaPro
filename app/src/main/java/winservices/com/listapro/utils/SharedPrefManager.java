@@ -22,6 +22,7 @@ public class SharedPrefManager {
     private static final String KEY_ACCESS_SERVER_CITY_ID = "serverCityId";
     private static final String KEY_ACCESS_SHOP_TYPE_ID = "serverShopTypeId";
     private static final String KEY_ACCESS_SELECTED_CATEGORIES = "selectedCategories";
+    public static final String GOOGLE_PLAY_VERSION_CODE = "google_play_version_code";
 
     private Context context;
     private static SharedPrefManager instance;
@@ -37,10 +38,22 @@ public class SharedPrefManager {
         return instance;
     }
 
+    public int getGooglePlayVersion(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(GOOGLE_PLAY_VERSION_CODE, 0);
+    }
+
+    public void storeGooglePlayVersion(int googlePlayVersion) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(GOOGLE_PLAY_VERSION_CODE, googlePlayVersion);
+        editor.apply();
+    }
+
     public void storeSelectedCategories(List<DefaultCategory> categories){
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
         for (int i = 0; i < categories.size(); i++) {
             set.add(String.valueOf(categories.get(i).getDCategoryId()));
         }

@@ -1,16 +1,21 @@
 package winservices.com.listapro.utils;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -20,12 +25,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.exifinterface.media.ExifInterface;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
@@ -36,6 +43,7 @@ public class UtilsFunctions {
 
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     private static String uniqueID = null;
+    private static final String TAG = UtilsFunctions.class.getSimpleName();
 
     public synchronized static String getUuid(Context context) {
         if (uniqueID == null) {
@@ -221,7 +229,7 @@ public class UtilsFunctions {
 
     public static String to2digits(int number) {
         if (number >= 0 && number < 10) {
-            return "0" + String.valueOf(number);
+            return "0" + number;
         }
         return String.valueOf(number);
     }
@@ -263,6 +271,31 @@ public class UtilsFunctions {
     public static void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static void  goToMarket(Context context) {
+        Intent intent;
+        final String appPackageName = context.getPackageName();
+        try {
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName));
+        } catch (ActivityNotFoundException anfe) {
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName));
+        }
+
+        PackageManager manager = context.getPackageManager();
+        List<ResolveInfo> infos = manager.queryIntentActivities(intent, 0);
+        if (infos.size() > 0) {
+            //Then there is an Application(s) can handle your intent
+            Log.d(TAG, "Notification intent ok");
+        } else {
+            //No Application can handle your intent
+            Log.d(TAG, "Notification intent NOT ok");
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName));
+        }
+
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        context.startActivity(intent);
     }
 
 

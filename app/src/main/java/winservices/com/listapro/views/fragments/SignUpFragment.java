@@ -150,8 +150,7 @@ public class SignUpFragment extends Fragment {
                                     shopKeeper.setIsLoggedIn(ShopKeeper.LOGGED_IN);
                                     shopKeeper.setLastLogged(ShopKeeper.LAST_LOGGED);
                                     shopKeeperVM.logIn(shopKeeper);
-                                    //LauncherActivity launcherActivity = (LauncherActivity) getActivity();
-                                    //Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment(), WelcomeFragment.TAG);
+
                                     routeUser(shopKeeper);
                                 }
                             }
@@ -276,10 +275,10 @@ public class SignUpFragment extends Fragment {
 
     private void registerShopKeeper() {
         //TODO - for test
-        //String phone = "+16" + editPhone.getText().toString();
+        String phone = "+16" + editPhone.getText().toString();
 
         //TODO - For release
-        String phone = "+212" + editPhone.getText().toString();
+        //String phone = "+212" + editPhone.getText().toString();
 
         String uuid = UtilsFunctions.getUuid(getContext());
         String fcmToken = SharedPrefManager.getInstance(getContext()).getToken();
