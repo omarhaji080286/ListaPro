@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -17,13 +18,13 @@ import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
 import winservices.com.listapro.services.ListaMessagingService;
+import winservices.com.listapro.services.RemoteConfigService;
 import winservices.com.listapro.viewmodels.OrderVM;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
 import winservices.com.listapro.viewmodels.ShopTypeVM;
 import winservices.com.listapro.viewmodels.ShopVM;
 import winservices.com.listapro.views.fragments.SignUpFragment;
 import winservices.com.listapro.views.fragments.WelcomeFragment;
-import winservices.com.listapro.services.RemoteConfigService;
 
 public class LauncherActivity extends AppCompatActivity {
 
@@ -55,7 +56,6 @@ public class LauncherActivity extends AppCompatActivity {
             launchApp();
         }
 
-
     }
 
     private void launchApp(){
@@ -65,10 +65,15 @@ public class LauncherActivity extends AppCompatActivity {
         orderVM = ViewModelProviders.of(this).get(OrderVM.class);
         shopTypeVM = ViewModelProviders.of(this).get(ShopTypeVM.class);
 
-        loadParametersFromServer();
-
-        RemoteConfigService remoteConfigService = new RemoteConfigService(this);
-        remoteConfigService.loadGooglePlayVersion();
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                loadParametersFromServer();
+                RemoteConfigService remoteConfigService = new RemoteConfigService(getApplicationContext());
+                remoteConfigService.loadGooglePlayVersion();
+            }
+        });
 
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override

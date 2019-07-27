@@ -7,16 +7,16 @@ public class RetrofitHelper {
 
 
     //TODO Version web
-    private final static String webVersion = "L15_LP7";
+    private final static String webVersion = "L16_LP8";
 
     //TODO Lista LOCAL
     //private static final String HOST = "http://192.168.43.211/lista_local/lista_"+webVersion+"/webservices/";
 
     //TODO Lista LWS_PRE_PROD
-    private final static String HOST = "http://lista-courses.com/lista_pre_prod/lista_"+webVersion+"/webservices/";
+    //private final static String HOST = "http://lista-courses.com/lista_pre_prod/lista_"+webVersion+"/webservices/";
 
     //TODO Lista LWS_PROD
-    //private final static String HOST = "http://lista-courses.com/lista_prod/lista_"+webVersion+"/webservices/";
+    private final static String HOST = "http://lista-courses.com/lista_prod/lista_"+webVersion+"/webservices/";
 
     public ListaProWebServices initWebServices() {
         Retrofit retrofit = new Retrofit.Builder()

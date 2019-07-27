@@ -30,7 +30,7 @@ public class RemoteConfigService {
 
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
                 //TODO For test only
-                .setMinimumFetchIntervalInSeconds(10)
+                //.setMinimumFetchIntervalInSeconds(10)
                 .build();
         firebaseRemoteConfig.setConfigSettingsAsync(configSettings);
 
