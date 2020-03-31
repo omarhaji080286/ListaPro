@@ -4,16 +4,19 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,8 +27,21 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.exifinterface.media.ExifInterface;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -39,11 +55,14 @@ import java.util.UUID;
 
 import winservices.com.listapro.R;
 
+import static android.content.Context.LOCATION_SERVICE;
+
 public class UtilsFunctions {
 
+    public final static int REQUEST_LOCATION = 199;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
-    private static String uniqueID = null;
     private static final String TAG = UtilsFunctions.class.getSimpleName();
+    private static String uniqueID = null;
 
     public synchronized static String getUuid(Context context) {
         if (uniqueID == null) {
@@ -204,7 +223,7 @@ public class UtilsFunctions {
         return rotatedBitmap;
     }
 
-    public static Bitmap getPNG(String PNGPath){
+    public static Bitmap getPNG(String PNGPath) {
 
         Bitmap bitmap = null;
         try {
@@ -234,7 +253,7 @@ public class UtilsFunctions {
         return String.valueOf(number);
     }
 
-    public static String getDayOfWeek(Context context,int value) {
+    public static String getDayOfWeek(Context context, int value) {
         String day = "";
         switch (value) {
             case 1:
@@ -273,7 +292,7 @@ public class UtilsFunctions {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public static void  goToMarket(Context context) {
+    public static void goToMarket(Context context) {
         Intent intent;
         final String appPackageName = context.getPackageName();
         try {
@@ -296,6 +315,88 @@ public class UtilsFunctions {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         context.startActivity(intent);
+    }
+
+
+    public static void enableGPS(final Activity activity) {
+
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(activity)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(Bundle bundle) {
+                        Log.e("location", "Connect");
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+                        Log.e("location", "fail");
+                        //googleApiClient.connect();
+                    }
+                })
+                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Log.d("location", "Location error " + connectionResult.getErrorCode());
+                    }
+                }).build();
+        googleApiClient.connect();
+
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(30 * 1000);
+        locationRequest.setFastestInterval(5 * 1000);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+
+        SettingsClient client = LocationServices.getSettingsClient(activity);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+        task.addOnSuccessListener(activity, new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                // All location settings are satisfied. The client can initialize
+                // location requests here.
+                // ...
+                Log.d("location_enable", "enable");
+            }
+        });
+
+        task.addOnFailureListener(activity, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof ResolvableApiException) {
+                    // Location settings are not satisfied, but this can be fixed
+                    // by showing the user a dialog.
+                    try {
+                        // Show the dialog by calling startResolutionForResult(),
+                        // and check the result in onActivityResult().
+                        ResolvableApiException resolvable = (ResolvableApiException) e;
+                        resolvable.startResolutionForResult(activity,
+                                REQUEST_LOCATION);
+                    } catch (IntentSender.SendIntentException sendEx) {
+                        // Ignore the error.
+                    }
+                }
+            }
+        });
+
+
+    }
+
+    public static boolean isGPSEnabled(Context context) {
+        try {
+            LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception ex) {
+            return false;
+        }
+
+
     }
 
 

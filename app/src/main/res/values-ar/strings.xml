@@ -85,5 +85,7 @@
     <string name="enter_your_shop_name">Enter your shop name</string>
     <string name="share_message">Gagnez du temps avec Lista, l\'application qui facilite la corvée des courses ;-)</string>
     <string name="listapro">ListaPro</string>
+    <string name="enable_location">Please enable location (GPS)</string>
+    <string name="error_opening_window">Make sure closing time is after opening time</string>
 
 </resources>

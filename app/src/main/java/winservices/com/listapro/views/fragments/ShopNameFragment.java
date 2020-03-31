@@ -1,7 +1,6 @@
 package winservices.com.listapro.views.fragments;
 
 
-import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.location.Location;
 import android.os.Bundle;
@@ -54,11 +53,9 @@ public class ShopNameFragment extends Fragment implements TimePickerDialog.OnTim
     public static final String TAG = "ShopNameFragment";
     private Button btnFinish, btnPrevious;
     private EditText editShopName, editMinuteOpening, editMinuteClosing, editHourOpening, editHourClosing;
-    private ShopKeeperVM shopKeeperVM;
     private ShopTypeVM shopTypeVM;
     private ShopVM shopVM;
     private Shop shop;
-    private boolean[] isDataReady = new boolean[3];
     private ShopKeeper currentSK;
     private int clickedViewId;
     private Location lastLocation;
@@ -83,11 +80,12 @@ public class ShopNameFragment extends Fragment implements TimePickerDialog.OnTim
 
         new Thread(new Runnable() {
             public void run() {
+
                 getLocation();
             }
         }).start();
 
-        shopKeeperVM = ViewModelProviders.of(this).get(ShopKeeperVM.class);
+        ShopKeeperVM shopKeeperVM = ViewModelProviders.of(this).get(ShopKeeperVM.class);
         shopVM = ViewModelProviders.of(this).get(ShopVM.class);
         shopTypeVM = ViewModelProviders.of(this).get(ShopTypeVM.class);
 
@@ -233,6 +231,16 @@ public class ShopNameFragment extends Fragment implements TimePickerDialog.OnTim
             editShopName.requestFocus();
             return false;
         }
+
+        int hourOpening = Integer.valueOf(editHourOpening.getText().toString());
+        int hourClosing = Integer.valueOf(editHourClosing.getText().toString());
+
+        if (hourOpening >= hourClosing) {
+            editHourClosing.setError(getString(R.string.error_opening_window));
+            editHourClosing.requestFocus();
+            return false;
+        }
+
         return true;
     }
 
@@ -248,17 +256,11 @@ public class ShopNameFragment extends Fragment implements TimePickerDialog.OnTim
 
         switch (clickedViewId) {
             case R.id.editHourOpening:
-                editHourOpening.setText(to2digits(hour));
-                editMinuteOpening.setText(to2digits(minute));
-                break;
             case R.id.editMinuteOpening:
                 editHourOpening.setText(to2digits(hour));
                 editMinuteOpening.setText(to2digits(minute));
                 break;
             case R.id.editHourClosing:
-                editHourClosing.setText(to2digits(hour));
-                editMinuteClosing.setText(to2digits(minute));
-                break;
             case R.id.editMinuteClosing:
                 editHourClosing.setText(to2digits(hour));
                 editMinuteClosing.setText(to2digits(minute));
@@ -273,7 +275,6 @@ public class ShopNameFragment extends Fragment implements TimePickerDialog.OnTim
         loadTimePicker();
     }
 
-    @SuppressLint("MissingPermission")
     private void getLocation() {
 
         FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getContext()));
@@ -293,5 +294,7 @@ public class ShopNameFragment extends Fragment implements TimePickerDialog.OnTim
         });
 
     }
+
+
 
 }

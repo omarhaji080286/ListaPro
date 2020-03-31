@@ -1,6 +1,9 @@
 package winservices.com.listapro.views.fragments;
 
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,8 +26,11 @@ import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.City;
 import winservices.com.listapro.utils.PermissionUtil;
 import winservices.com.listapro.utils.SharedPrefManager;
+import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.viewmodels.ShopTypeVM;
 import winservices.com.listapro.views.activities.AddShopActivity;
+
+import static winservices.com.listapro.utils.PermissionUtil.TXT_FINE_LOCATION;
 
 
 public class SelectCityFragment extends Fragment {
@@ -52,6 +58,7 @@ public class SelectCityFragment extends Fragment {
         rgCities = view.findViewById(R.id.rgCities);
         btnNext = view.findViewById(R.id.btnNext);
 
+
         loadCities(view);
 
         btnNext.setOnClickListener(new View.OnClickListener() {
@@ -61,10 +68,43 @@ public class SelectCityFragment extends Fragment {
                 SharedPrefManager spm = SharedPrefManager.getInstance(getContext());
                 spm.storeServerCityId(rgCities.getCheckedRadioButtonId());
                 Log.d(TAG, "serverCityId = " + spm.getServerCityId());
-                ((AddShopActivity) Objects.requireNonNull(getActivity())).
+
+                //PermissionUtil.requestPermissionInFragment(getActivity());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+                    requestLocationPermission();
+                } else {
+                    ((AddShopActivity) Objects.requireNonNull(getActivity())).
                             displayFragment(new SelectShopTypeFragment(), SelectShopTypeFragment.TAG);
+                }
+
+
             }
         });
+    }
+
+    private void requestLocationPermission() {
+
+        PermissionUtil permissionUtil = new PermissionUtil(Objects.requireNonNull(getContext()));
+
+        if (permissionUtil.checkPermission(TXT_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                permissionUtil.showPermissionExplanation(TXT_FINE_LOCATION, getActivity());
+            } else if (!permissionUtil.checkPermissionPreference(TXT_FINE_LOCATION)) {
+                permissionUtil.requestPermission(TXT_FINE_LOCATION, getActivity());
+                permissionUtil.updatePermissionPreference(TXT_FINE_LOCATION);
+            } else {
+                permissionUtil.goToAppSettings();
+            }
+        } else {
+
+            if(UtilsFunctions.isGPSEnabled(getContext())){
+                ((AddShopActivity) Objects.requireNonNull(getActivity())).
+                        displayFragment(new SelectShopTypeFragment(), SelectShopTypeFragment.TAG);
+            } else {
+                UtilsFunctions.enableGPS(getActivity());
+            }
+
+        }
     }
 
     private void loadCities(final View view) {
@@ -94,8 +134,6 @@ public class SelectCityFragment extends Fragment {
             }
             rgCities.addView(rb, lp);
         }
-
-        PermissionUtil.requestPermissionInFragment(getActivity());
 
         rgCities.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
