@@ -77,15 +77,27 @@
     <string name="completed">منجز</string>
     <string name="not_supported">العناصر غير متوفرة</string>
     <string name="sign_in_failed">فشل تسجيل الدخول. حاول مرة اخرى.</string>
-    <string name="shop_data">Shop data</string>
-    <string name="select_your_city">Select your city</string>
-    <string name="select_your_shop_type">Select your shop type</string>
-    <string name="back">Back</string>
-    <string name="select_categories">Select the categories you\'re selling</string>
-    <string name="enter_your_shop_name">Enter your shop name</string>
+    <string name="shop_data">بيانات المتجر</string>
+    <string name="select_your_city">حدد مدينتك</string>
+    <string name="select_your_shop_type">حدد نوع متجرك</string>
+    <string name="back">عودة</string>
+    <string name="select_categories">حدد الفئات التي تبيعها</string>
+    <string name="enter_your_shop_name">أدخل اسم متجرك</string>
     <string name="share_message">Gagnez du temps avec Lista, l\'application qui facilite la corvée des courses ;-)</string>
     <string name="listapro">ListaPro</string>
-    <string name="enable_location">Please enable location (GPS)</string>
-    <string name="error_opening_window">Make sure closing time is after opening time</string>
+    <string name="enable_location">يرجى تمكين الموقع (GPS)</string>
+    <string name="error_opening_window">تأكد من أن وقت الإغلاق بعد وقت الفتح</string>
+    <string name="share">Partager</string>
+    <string name="delivery_type">Livraison le :</string>
+    <string name="to_collect">Collecter le :</string>
+    <string name="_123">123</string>
+    <string name="livraison_le">Livraison le :</string>
+    <string name="vendredi_09">Vendredi 09</string>
+    <string name="client_text">Client :</string>
+    <string name="name_client">prenom nom</string>
+    <string name="phone_num_text">06 12 34 56 78</string>
+    <string name="adresse">Adresse :</string>
+    <string name="address_example">Appt 6, Rue khalij kabiss Hay el Fath 10100 Rabat ferfzerfzerf</string>
+    <string name="localisation_gps">Localisation GPS</string>
 
 </resources>

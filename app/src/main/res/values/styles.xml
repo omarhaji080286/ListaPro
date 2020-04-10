@@ -113,6 +113,16 @@
         <item name="android:layout_marginBottom">@dimen/margin_small</item>
     </style>
 
+    <style name="TextInOrderDetails">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:layout_marginEnd">4dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+
     <style name="OrderedItemText">
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/text_content_size_average</item>
@@ -133,6 +143,10 @@
         <item name="android:padding">@dimen/margin_very_small</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:layout_marginTop">@dimen/margin_very_small</item>
+    </style>
+
+    <style name="myDialog">
+        <item name="android:windowNoTitle">true</item>
     </style>
 
 

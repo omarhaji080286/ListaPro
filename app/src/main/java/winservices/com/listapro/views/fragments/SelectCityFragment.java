@@ -69,7 +69,6 @@ public class SelectCityFragment extends Fragment {
                 spm.storeServerCityId(rgCities.getCheckedRadioButtonId());
                 Log.d(TAG, "serverCityId = " + spm.getServerCityId());
 
-                //PermissionUtil.requestPermissionInFragment(getActivity());
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
                     requestLocationPermission();
                 } else {

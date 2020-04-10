@@ -7,6 +7,9 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -17,8 +20,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,6 +55,10 @@ public class ShopRepository {
 
     public void insert(Shop shop) {
         new InsertShopAsyncTask(shopDao, assocDao).execute(shop);
+    }
+
+    private void updateShopDelivering(Shop shop) {
+        new updateShopDeliveringAsyncTask(shopDao).execute(shop);
     }
 
     public void insertShopOnServer(final Shop shop) {
@@ -93,11 +98,48 @@ public class ShopRepository {
         });
     }
 
+    public void updateShopDelivering(int serverShopId) {
+        RetrofitHelper rh = new RetrofitHelper();
+        ListaProWebServices ws = rh.initWebServices();
+
+        Gson gson = new Gson();
+        Map<String, String> hashMap = new HashMap<>();
+        String jsonRequest = gson.toJson(serverShopId);
+        Log.d(TAG, "jsonRequest: " + jsonRequest);
+        hashMap.put("jsonRequest", jsonRequest);
+        Call<WebServiceResponse> call = ws.getShop(hashMap);
+
+        call.enqueue(new Callback<WebServiceResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<WebServiceResponse> call, @NonNull Response<WebServiceResponse> response) {
+                if (!response.isSuccessful()) {
+                    Log.d(TAG, "Error : " + response.code());
+                } else {
+                    WebServiceResponse wsResponse = response.body();
+                    Log.d(TAG, "response body: " + response.body());
+                    if (wsResponse != null) {
+                        if (!wsResponse.isError()) {
+                            Shop shop =  wsResponse.getShop();
+                            updateShopDelivering(shop);
+                        } else {
+                            Log.d(TAG, "Error on server : " + wsResponse.getMessage());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<WebServiceResponse> call, @NonNull Throwable t) {
+                Log.d(TAG, "Failure : " + t.getMessage());
+            }
+        });
+    }
+
     public List<DefaultCategory> getShopDCategoriesByShopId(final int serverShopId)
                                         throws ExecutionException, InterruptedException{
             Callable<List<DefaultCategory>> callable = new Callable<List<DefaultCategory>>() {
                 @Override
-                public List<DefaultCategory> call() throws Exception {
+                public List<DefaultCategory> call() {
                     return shopDao.getShopDCategoriesByShopId(serverShopId);
                 }
             };
@@ -105,6 +147,20 @@ public class ShopRepository {
             return future.get();
     }
 
+    private static class updateShopDeliveringAsyncTask extends AsyncTask<Shop, Void, Void> {
+
+        private ShopDao shopDao;
+
+        private updateShopDeliveringAsyncTask(ShopDao shopDao) {
+            this.shopDao = shopDao;
+        }
+
+        @Override
+        protected Void doInBackground(Shop... shops) {
+            shopDao.updateShopDelivering(shops[0].getIsDelivering(), shops[0].getServerShopId());
+            return null;
+        }
+    }
 
     private static class InsertShopAsyncTask extends AsyncTask<Shop, Void, Void> {
 

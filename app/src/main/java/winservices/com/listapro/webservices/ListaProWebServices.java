@@ -40,4 +40,7 @@ public interface ListaProWebServices {
     @POST("uploadShopImage.php")
     Call<WebServiceResponse> uploadShopImage(@FieldMap Map<String,String> hashMap);
 
+    @FormUrlEncoded
+    @POST("getShop.php")
+    Call<WebServiceResponse> getShop(@FieldMap Map<String, String> body);
 }

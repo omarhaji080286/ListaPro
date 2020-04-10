@@ -66,7 +66,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
         String stringDate = UtilsFunctions.dateToString(UtilsFunctions.stringToDate(order.getCreationDate()), "dd/MM/yyyy HH:mm:ss");
         holder.txtDate.setText(stringDate);
         holder.txtReference.setText(String.valueOf(order.getServerOrderId()));
-        holder.txtCollectTime.setText(order.getDisplayedCollectTime(context));
+        holder.txtCollectTime.setText(order.getDisplayedCollectTime(context, order.getEndTime()));
 
         switch (order.getStatus().getStatusId()){
             case Order.REGISTERED :

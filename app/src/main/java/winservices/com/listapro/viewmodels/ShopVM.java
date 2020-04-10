@@ -3,14 +3,15 @@ package winservices.com.listapro.viewmodels;
 import android.app.Application;
 import android.content.Context;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 import androidx.annotation.NonNull;
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.repositories.ShopRepository;
 
@@ -50,4 +51,7 @@ public class ShopVM extends AndroidViewModel {
         repository.uploadShopImage(context, serverShopId);
     }
 
+    public void updateShopDelivering(int serverShopId) {
+        repository.updateShopDelivering(serverShopId);
+    }
 }

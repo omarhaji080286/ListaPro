@@ -42,13 +42,13 @@ public class MyOrdersActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_orders, menu);
+        menu.findItem(R.id.share).setVisible(false);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
 
         switch (id){
             case R.id.menuOngoingOrders :
@@ -60,13 +60,10 @@ public class MyOrdersActivity extends AppCompatActivity {
                 currentOrdersType = CLOSED_ORDERS;
                 break;
             case android.R.id.home :
-                switch (currentFragmentTag) {
-                    case OrderDetailsFragment.TAG:
-                        displayFragment(new OrdersFragment(), OrdersFragment.TAG, currentOrdersType);
-                        break;
-                    default:
-                        this.finish();
-                        break;
+                if (OrderDetailsFragment.TAG.equals(currentFragmentTag)) {
+                    displayFragment(new OrdersFragment(), OrdersFragment.TAG, currentOrdersType);
+                } else {
+                    this.finish();
                 }
                 break;
         }

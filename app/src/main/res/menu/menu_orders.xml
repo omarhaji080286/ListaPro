@@ -13,4 +13,11 @@
         android:title="@string/closed_orders"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/share"
+        android:orderInCategory="1"
+        android:title="@string/share"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_share_white"/>
+
 </menu>

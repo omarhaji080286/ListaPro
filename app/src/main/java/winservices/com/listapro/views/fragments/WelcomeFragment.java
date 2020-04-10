@@ -126,6 +126,7 @@ public class WelcomeFragment extends Fragment {
             public void onChanged(List<Shop> shops) {
                 if (shops == null || shops.size() == 0) return;
                 updateOrdersNum(shops.get(0));
+                shopVM.updateShopDelivering(shops.get(0).getServerShopId());
             }
         });
 

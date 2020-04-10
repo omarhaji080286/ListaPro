@@ -1,5 +1,6 @@
 package winservices.com.listapro.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -19,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -59,7 +61,7 @@ import static android.content.Context.LOCATION_SERVICE;
 
 public class UtilsFunctions {
 
-    public final static int REQUEST_LOCATION = 199;
+    private final static int REQUEST_LOCATION = 199;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     private static final String TAG = UtilsFunctions.class.getSimpleName();
     private static String uniqueID = null;
@@ -82,7 +84,7 @@ public class UtilsFunctions {
     public static AlertDialog.Builder getDialogBuilder(LayoutInflater layoutInflater, Context context, String msg) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        View view = layoutInflater.inflate(R.layout.item_progress, null);
+        @SuppressLint("InflateParams") View view = layoutInflater.inflate(R.layout.item_progress, null);
         TextView txtMsg = view.findViewById(R.id.txt_msg_progress);
         txtMsg.setText(msg);
         builder.setView(view);
@@ -387,16 +389,20 @@ public class UtilsFunctions {
     public static boolean isGPSEnabled(Context context) {
         try {
             LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                return true;
-            } else {
-                return false;
-            }
+            return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch (Exception ex) {
             return false;
         }
+    }
 
-
+    public static AlertDialog.Builder getDialogBuilder(LayoutInflater layoutInflater, Context context, int msgId){
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.myDialog));
+        @SuppressLint("InflateParams") View view = layoutInflater.inflate(R.layout.item_progress, null);
+        TextView msg = view.findViewById(R.id.txt_msg_progress);
+        msg.setText(context.getResources().getString(msgId));
+        builder.setView(view);
+        builder.setCancelable(false);
+        return builder;
     }
 
 

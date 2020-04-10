@@ -46,6 +46,8 @@ public class Shop {
     private String openingTime;
     @SerializedName("closing_time")
     private String closingTime;
+    @SerializedName("is_delivering")
+    private int isDelivering;
 
     //secondary key
     @SerializedName("server_shopkeeper_id")
@@ -76,6 +78,14 @@ public class Shop {
     }
 
     public Shop() {
+    }
+
+    public int getIsDelivering() {
+        return isDelivering;
+    }
+
+    public void setIsDelivering(int isDelivering) {
+        this.isDelivering = isDelivering;
     }
 
     public String getOpeningTime() {

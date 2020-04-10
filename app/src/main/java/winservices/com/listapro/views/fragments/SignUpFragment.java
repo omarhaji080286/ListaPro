@@ -297,10 +297,11 @@ public class SignUpFragment extends Fragment {
     private void routeUser(ShopKeeper shopKeeper) {
 
         ShopVM shopVM = ViewModelProviders.of(this).get(ShopVM.class);
+
         shopVM.getShopsByShopKeeperId(shopKeeper.getServerShopKeeperId()).observe(this, new Observer<List<Shop>>() {
             @Override
-            public void onChanged(List<Shop> shops) {
-                if (shops == null || shops.size()==0 ){
+            public void onChanged(final List<Shop> shops) {
+                if (shops == null || shops.size() == 0) {
                     Objects.requireNonNull(getActivity()).finish();
                     startActivity(new Intent(getActivity(), AddShopActivity.class));
                 } else {

@@ -1,6 +1,7 @@
 package winservices.com.listapro.views.fragments;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +16,14 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Collections;
 import java.util.List;
 
 import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
+import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.viewmodels.OrderVM;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
 import winservices.com.listapro.viewmodels.ShopVM;
@@ -39,6 +42,7 @@ public class OrdersFragment extends Fragment {
     private OrdersAdapter ordersAdapter;
     private TextView txtNoOrderRegistered;
     private int orders_type;
+    private Dialog dialog;
 
     public OrdersFragment() {
     }
@@ -52,6 +56,8 @@ public class OrdersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        dialog = UtilsFunctions.getDialogBuilder(getLayoutInflater(), getContext(), R.string.loading).create();
+        dialog.show();
 
         shopKeeperVM = ViewModelProviders.of(this).get(ShopKeeperVM.class);
         orderVM = ViewModelProviders.of(this).get(OrderVM.class);
@@ -63,7 +69,6 @@ public class OrdersFragment extends Fragment {
         if (bundle!=null){
             orders_type = bundle.getInt(MyOrdersActivity.ORDERS_TYPE);
         }
-
 
         ordersAdapter = new OrdersAdapter(this, getContext(), orderVM);
         rvOrders.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -86,7 +91,6 @@ public class OrdersFragment extends Fragment {
                 setOrdersToAdapter(shops.get(0).getServerShopId());
             }
         });
-
     }
 
     private void setOrdersToAdapter(int serverShopId) {
@@ -98,11 +102,12 @@ public class OrdersFragment extends Fragment {
                 } else {
                     txtNoOrderRegistered.setVisibility(View.GONE);
                 }
+                Collections.sort(ordersInDb);
                 ordersAdapter.setOrders(ordersInDb);
                 ordersAdapter.notifyDataSetChanged();
+                dialog.dismiss();
             }
         });
     }
-
 
 }
