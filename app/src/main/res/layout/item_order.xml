@@ -17,9 +17,12 @@
             android:layout_width="@dimen/user_img_height"
             android:layout_height="@dimen/user_img_width"
             android:src="@drawable/user"
-            style="@style/TextInOrder"
+            android:layout_margin="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/todo"
+            android:foreground="@drawable/rounded_fg"
+            tools:ignore="UnusedAttribute" />
 
         <TextView
             android:id="@+id/txtClientName"
@@ -49,21 +52,24 @@
                 android:layout_width="@dimen/small_size_icon"
                 android:layout_height="@dimen/small_size_icon"
                 android:src="@drawable/checked_gray"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:contentDescription="@string/todo" />
 
             <ImageView
                 android:id="@+id/imgRead"
                 android:layout_width="@dimen/small_size_icon"
                 android:layout_height="@dimen/small_size_icon"
                 android:src="@drawable/checked_gray"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:contentDescription="@string/todo" />
 
             <ImageView
                 android:id="@+id/imgAvailable"
                 android:layout_width="@dimen/small_size_icon"
                 android:layout_height="@dimen/small_size_icon"
                 android:src="@drawable/checked_gray"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:contentDescription="@string/todo" />
 
 
             <ImageView
@@ -71,7 +77,8 @@
                 android:layout_width="@dimen/small_size_icon"
                 android:layout_height="@dimen/small_size_icon"
                 android:src="@drawable/completed"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:contentDescription="@string/todo" />
 
         </LinearLayout>
 
@@ -139,6 +146,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
+            android:text="@string/_0"
             app:layout_constraintStart_toEndOf="@+id/labelItemsNb"
             app:layout_constraintTop_toBottomOf="@+id/txtDate"/>
 
@@ -172,6 +180,31 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:contentDescription="@string/add_shop_desc" />
+
+        <ImageView
+            android:id="@+id/imgDelivery"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="64dp"
+            android:src="@drawable/delivery_bike"
+            app:layout_constraintTop_toBottomOf="@+id/txtDate"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txtItemsNb"
+            android:contentDescription="@string/add_shop_desc"
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/txtToDeliver"
+            style="@style/TextInOrder"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/a_livrer"
+            app:layout_constraintStart_toEndOf="@+id/imgDelivery"
+            app:layout_constraintTop_toTopOf="@+id/imgDelivery"
+            app:layout_constraintBottom_toBottomOf="@+id/imgDelivery"
+            android:visibility="visible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

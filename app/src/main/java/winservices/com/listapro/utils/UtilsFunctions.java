@@ -405,5 +405,9 @@ public class UtilsFunctions {
         return builder;
     }
 
+    public static float convertDpToPx(Context context, float dp) {
+        return dp * context.getResources().getDisplayMetrics().density;
+    }
+
 
 }

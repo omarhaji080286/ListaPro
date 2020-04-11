@@ -31,7 +31,7 @@ import winservices.com.listapro.views.fragments.OrderDetailsFragment;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
 
-    private List<Order> orders = new ArrayList<>();
+    public List<Order> orders = new ArrayList<>();
     private OrderVM orderVM;
     private Context context;
     private Fragment fragment;
@@ -54,17 +54,26 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
     public void onBindViewHolder(@NonNull final OrderVH holder, int position) {
         final Order order = orders.get(position);
 
-        String imagePath = SharedPrefManager.getInstance(context).getImagePath(Client.PREFIX + order.getClient().getServerUserId());
+        SharedPrefManager sp = SharedPrefManager.getInstance(context);
+        String imagePath = sp.getImagePath(Client.PREFIX + order.getClient().getServerUserId());
         if (imagePath != null) {
-            Bitmap imageBitmap = BitmapFactory.decodeFile(imagePath);
+            float width = UtilsFunctions.convertDpToPx(context, 90);
+            float height = UtilsFunctions.convertDpToPx(context, 90);
+
+            Bitmap imageBitmap = sp.rotate(-90.0f, BitmapFactory.decodeFile(imagePath), width, height);
+            holder.imgClientPic.setScaleType(ImageView.ScaleType.CENTER);
             holder.imgClientPic.setImageBitmap(imageBitmap);
         } else {
             holder.imgClientPic.setImageResource(R.drawable.user_default_image);
         }
 
+        if (order.getIsToDeliver()==Order.IS_TO_COLLECT){
+            holder.txtToDeliver.setVisibility(View.GONE);
+            holder.imgDelivery.setVisibility(View.GONE);
+        }
+
         holder.txtClientName.setText(order.getClient().getUserName());
-        String stringDate = UtilsFunctions.dateToString(UtilsFunctions.stringToDate(order.getCreationDate()), "dd/MM/yyyy HH:mm:ss");
-        holder.txtDate.setText(stringDate);
+        holder.txtDate.setText(order.getDisplayedCollectTime(context, order.getCreationDate()));
         holder.txtReference.setText(String.valueOf(order.getServerOrderId()));
         holder.txtCollectTime.setText(order.getDisplayedCollectTime(context, order.getEndTime()));
 
@@ -120,8 +129,15 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
                 bundle.putInt(Order.SERVER_ORDER_ID, order.getServerOrderId());
                 fragment.setArguments(bundle);
                 MyOrdersActivity myOrdersActivity = (MyOrdersActivity) view.getContext();
-                myOrdersActivity.displayFragment(fragment, OrderDetailsFragment.TAG, 0);
-                if (order.getStatus().getStatusId() == Order.REGISTERED) {
+
+                int orders_type = MyOrdersActivity.ONGOING_ORDERS;
+                int orderStatusId = order.getStatus().getStatusId();
+                if (orderStatusId == Order.COMPLETED || orderStatusId == Order.AVAILABLE){
+                    orders_type = MyOrdersActivity.CLOSED_ORDERS;
+                }
+
+                myOrdersActivity.displayFragment(fragment, OrderDetailsFragment.TAG, orders_type, order.getServerOrderId());
+                if (orderStatusId == Order.REGISTERED) {
                     OrderStatusValue status = new OrderStatusValue(Order.READ, "READ");
                     order.setStatus(status);
                     orderVM.updateOrderOnServer(order);
@@ -151,8 +167,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
 
     class OrderVH extends RecyclerView.ViewHolder {
 
-        private TextView txtClientName, txtReference, txtDate, txtStatus, txtItemsNb, txtCollectTime;
-        private ImageView imgClientPic, imgRegistered, imgRead, imgAvailable, imgClosedOrNotSuported ;
+        private TextView txtClientName, txtReference, txtDate, txtStatus, txtItemsNb, txtCollectTime, txtToDeliver;
+        private ImageView imgClientPic, imgRegistered, imgRead, imgAvailable, imgClosedOrNotSuported, imgDelivery ;
         private ConstraintLayout consLayOrderContainer;
 
         OrderVH(@NonNull View itemView) {
@@ -170,6 +186,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
             imgRead = itemView.findViewById(R.id.imgRead);
             imgAvailable = itemView.findViewById(R.id.imgAvailable);
             imgClosedOrNotSuported = itemView.findViewById(R.id.imgClosedOrNotSuported);
+            txtToDeliver = itemView.findViewById(R.id.txtToDeliver);
+            imgDelivery = itemView.findViewById(R.id.imgDelivery);
 
 
         }

@@ -16,6 +16,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,11 @@ import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.OrderStatusValue;
 import winservices.com.listapro.models.entities.OrderedGood;
 import winservices.com.listapro.viewmodels.OrderVM;
+import winservices.com.listapro.views.activities.MyOrdersActivity;
 import winservices.com.listapro.views.adapters.OrderedGoodsAdapter;
+
+import static winservices.com.listapro.views.activities.MyOrdersActivity.ONGOING_ORDERS;
+import static winservices.com.listapro.views.activities.MyOrdersActivity.ORDERS_TYPE;
 
 public class OrderDetailsFragment extends Fragment {
 
@@ -49,11 +54,13 @@ public class OrderDetailsFragment extends Fragment {
     private Button btnFinishOrder;
     private GridLayoutManager glm;
     private RecyclerView rvOGoods;
-    private TextView txtOrderId, txtDeliveryType, txtDeliveryDay, txtClientName, txtClientPhone, txtClientAddress;
+    private TextView txtOrderId, txtDeliveryType, txtDeliveryDay,
+            txtClientName, txtClientPhone, txtClientAddress, txtToDeliver;
     private ImageButton imgBtnPhone, imgBtnLocation;
     private LinearLayoutCompat llAddress, llLocation;
     private Order orderToShare;
     private List<OrderedGood> orderedGoodsToShare;
+    private ImageView imgDelivery;
 
     public OrderDetailsFragment() {
     }
@@ -64,26 +71,35 @@ public class OrderDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.menu_orders, menu);
-        menu.findItem(R.id.menuClosedOrders).setVisible(false);
-        menu.findItem(R.id.menuOngoingOrders).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_order_details, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.share){
-            if (orderToShare!=null && orderedGoodsToShare!=null){
-                shareOrderData(orderToShare, orderedGoodsToShare);
-            }
+        MyOrdersActivity ordersActivity = Objects.requireNonNull((MyOrdersActivity) getActivity());
+        switch (item.getItemId()) {
+            case R.id.share:
+                if (orderToShare != null && orderedGoodsToShare != null) {
+                    shareOrderData(orderToShare, orderedGoodsToShare);
+                }
+                break;
+            case android.R.id.home:
+                int orders_type = ONGOING_ORDERS;
+                if (getArguments() != null) orders_type = getArguments().getInt(ORDERS_TYPE);
+                ordersActivity.displayFragment(new OrdersFragment(), OrdersFragment.TAG, orders_type, 0);
+                break;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Objects.requireNonNull((MyOrdersActivity) getActivity()).setTitle(R.string.order_details_title);
     }
 
     @Override
@@ -111,6 +127,8 @@ public class OrderDetailsFragment extends Fragment {
         imgBtnLocation = view.findViewById(R.id.imgBtnLocation);
         llAddress = view.findViewById(R.id.llAddress);
         llLocation = view.findViewById(R.id.llLocation);
+        txtToDeliver = view.findViewById(R.id.txtToDeliver);
+        imgDelivery = view.findViewById(R.id.imgDelivery);
 
         oGoodsAdapter = new OrderedGoodsAdapter(orderVM);
         glm = new GridLayoutManager(getContext(), GRID_COLUMN_NUMBER);
@@ -144,7 +162,7 @@ public class OrderDetailsFragment extends Fragment {
     private void setupOrderCard(final Order order) {
         txtOrderId.setText(String.valueOf(order.getServerOrderId()));
 
-        if (order.getIsToDeliver()==Order.IS_TO_DELIVER){
+        if (order.getIsToDeliver() == Order.IS_TO_DELIVER) {
             txtDeliveryType.setText(R.string.delivery_type);
             llAddress.setVisibility(View.VISIBLE);
             llLocation.setVisibility(View.VISIBLE);
@@ -152,6 +170,8 @@ public class OrderDetailsFragment extends Fragment {
             txtDeliveryType.setText(R.string.to_collect);
             llAddress.setVisibility(View.GONE);
             llLocation.setVisibility(View.GONE);
+            txtToDeliver.setVisibility(View.GONE);
+            imgDelivery.setVisibility(View.GONE);
         }
 
         txtDeliveryDay.setText(order.getDisplayedCollectTime(getContext(), order.getEndTime()));
@@ -177,12 +197,12 @@ public class OrderDetailsFragment extends Fragment {
 
     }
 
-    private boolean isOrderSupported(List<OrderedGood> oGoods){
+    private boolean isOrderSupported(List<OrderedGood> oGoods) {
         boolean isOrderSupported = false;
         for (int i = 0; i < oGoods.size(); i++) {
-            if (oGoods.get(i).getStatus()==OrderedGood.PROCESSED) isOrderSupported = true;
+            if (oGoods.get(i).getStatus() == OrderedGood.PROCESSED) isOrderSupported = true;
         }
-        return  isOrderSupported;
+        return isOrderSupported;
     }
 
     private void initFinishButton(final Order order) {
@@ -255,9 +275,9 @@ public class OrderDetailsFragment extends Fragment {
     }
 
     private void updateOrderStatus(Order order, OrderStatusValue status) {
-            order.setStatus(status);
-            orderVM.updateOrderOnServer(order);
-            Toast.makeText(getContext(), getString(R.string.notification_sent_to_client), Toast.LENGTH_SHORT).show();
+        order.setStatus(status);
+        orderVM.updateOrderOnServer(order);
+        Toast.makeText(getContext(), getString(R.string.notification_sent_to_client), Toast.LENGTH_SHORT).show();
     }
 
     private void loadOrderedGoods(Order order) {
@@ -277,25 +297,25 @@ public class OrderDetailsFragment extends Fragment {
         orderVM.updateOrderedGoodsOnServer(oGoods);
     }
 
-    private void startGoogleMaps(String location){
-        String uri = "geo:"+ location+"?q="+location;
+    private void startGoogleMaps(String location) {
+        String uri = "geo:" + location + "?q=" + location;
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         startActivity(intent);
     }
 
-    private void startDialer(String clientPhone){
+    private void startDialer(String clientPhone) {
         Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:"+clientPhone));
+        intent.setData(Uri.parse("tel:" + clientPhone));
         startActivity(intent);
     }
 
-    private void shareOrderData(Order order, List<OrderedGood> orderedGoodsToShare){
+    private void shareOrderData(Order order, List<OrderedGood> orderedGoodsToShare) {
 
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         String plainText = order.toPlainText() +
                 "\n" +
-                " - Articles : " + orderedGoodsToShare.size()+
+                " - Articles : " + orderedGoodsToShare.size() +
                 "\n" +
                 listToPlainText(orderedGoodsToShare);
         sendIntent.putExtra(Intent.EXTRA_TEXT, plainText);
@@ -305,15 +325,21 @@ public class OrderDetailsFragment extends Fragment {
         startActivity(shareIntent);
     }
 
-    private String listToPlainText(List<OrderedGood> oGoods){
+    private String listToPlainText(List<OrderedGood> oGoods) {
         StringBuilder sb = new StringBuilder();
-        for (int i=0; i<oGoods.size(); i++) {
+        for (int i = 0; i < oGoods.size(); i++) {
             OrderedGood oGood = oGoods.get(i);
-            sb.append("   ");sb.append(i+1);sb.append("- ");sb.append(oGood.getGoodName());sb.append(" (");sb.append(oGood.getGoodDesc());sb.append(")");
-            if (oGood.getStatus()==OrderedGood.NOT_AVAILABLE){
+            sb.append("   ");
+            sb.append(i + 1);
+            sb.append("- ");
+            sb.append(oGood.getGoodName());
+            sb.append(" (");
+            sb.append(oGood.getGoodDesc());
+            sb.append(")");
+            if (oGood.getStatus() == OrderedGood.NOT_AVAILABLE) {
                 sb.append(" (NON DISPONIBLE)");
             }
-            if (i<oGoods.size()-1){
+            if (i < oGoods.size() - 1) {
                 sb.append("\n");
             }
         }

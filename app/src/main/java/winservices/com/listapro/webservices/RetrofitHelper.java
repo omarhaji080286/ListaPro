@@ -7,7 +7,7 @@ public class RetrofitHelper {
 
 
     //TODO Version web
-    private final static String webVersion = "L16_LP8";
+    private final static String webVersion = "L17_LP10";//update 10/04/2020
 
     //TODO Lista LOCAL
     private static final String HOST = "http://192.168.43.211/lista_local/lista_"+webVersion+"/webservices/";

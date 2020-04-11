@@ -18,7 +18,7 @@
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:padding="4dp"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -101,7 +101,7 @@
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/llAddress"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="100">
@@ -111,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/adresse"
                     android:textAlignment="textStart"
-                    style="@style/TextInOrderDetails" />
+                    style="@style/TextInOrderDetails"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txtClientAddress"
@@ -120,16 +120,17 @@
                     style="@style/TextInOrderDetails"
                     android:textAlignment="textStart"
                     android:textStyle="bold"
+                    android:lines="2"
                     android:text="@string/address_example"/>
-
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/llLocation"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:gravity="start|center"
                 android:weightSum="100">
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -146,7 +147,26 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/location"/>
 
+                <ImageView
+                    android:id="@+id/imgDelivery"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="63dp"
+                    android:src="@drawable/delivery_bike"
+                    android:contentDescription="@string/add_shop_desc"
+                    android:visibility="visible"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txtToDeliver"
+                    style="@style/TextInOrder"
+                    android:textSize="12sp"
+                    android:text="@string/a_livrer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"/>
+
             </androidx.appcompat.widget.LinearLayoutCompat>
+
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

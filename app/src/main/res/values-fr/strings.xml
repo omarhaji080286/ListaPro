@@ -34,7 +34,7 @@
     <string name="client_name">Nom du client :</string>
     <string name="reference">Réf :</string>
     <string name="order_reference">Référence de la commande</string>
-    <string name="date">Date :</string>
+    <string name="date">Date création :</string>
     <string name="order_date">Date de la commande</string>
     <string name="ordered_good_name">Nom de l\'article commandé</string>
     <string name="ordered_good_description">Description de l\'article commandé</string>
@@ -99,5 +99,9 @@
     <string name="adresse">Adresse :</string>
     <string name="address_example">Appt 6, Rue khalij kabiss Hay el Fath 10100 Rabat ferfzerfzerf</string>
     <string name="localisation_gps">Localisation GPS</string>
+    <string name="order_details_title">Détails de la commande</string>
+    <string name="a_livrer">A livrer</string>
+    <string name="_0">0</string>
+    <string name="todo">TODO</string>
 
 </resources>

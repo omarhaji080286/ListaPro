@@ -99,5 +99,9 @@
     <string name="adresse">Adresse :</string>
     <string name="address_example">Appt 6, Rue khalij kabiss Hay el Fath 10100 Rabat ferfzerfzerf</string>
     <string name="localisation_gps">Localisation GPS</string>
+    <string name="order_details_title">Détails de la commande</string>
+    <string name="a_livrer">A livrer</string>
+    <string name="_0">0</string>
+    <string name="todo">TODO</string>
 
 </resources>

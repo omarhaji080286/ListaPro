@@ -172,6 +172,7 @@ public class Order implements Comparable<Order>{
     }
 
     public String getDisplayedCollectTime(Context context, String dateTime){
+        String displayedDate = "empty";
         String day = "empty";
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
@@ -184,18 +185,21 @@ public class Order implements Comparable<Order>{
 
             long diffMilli = collectDay.getTime() - today.getTime();
             String diff = String.valueOf(TimeUnit.DAYS.convert(diffMilli, TimeUnit.MILLISECONDS)).substring(0,1);
-
+            Calendar cal = Calendar.getInstance();
             switch (diff){
                 case "0":
                     day = context.getResources().getString(R.string.today);
+                    displayedDate = day;
                     break;
                 case "1":
                     day = context.getResources().getString(R.string.tomorrow);
+                    displayedDate = day;
                     break;
                 default:
-                    Calendar cal = Calendar.getInstance();
                     cal.setTime(collectDay);
                     day = UtilsFunctions.getDayOfWeek(context,cal.get(Calendar.DAY_OF_WEEK)) + " " + UtilsFunctions.to2digits(cal.get(Calendar.DAY_OF_MONTH));
+                    String month = UtilsFunctions.dateToString(UtilsFunctions.stringToDate(dateTime),"MM");
+                    displayedDate = day + "/" + month;
                     break;
             }
 
@@ -207,7 +211,7 @@ public class Order implements Comparable<Order>{
 
         Log.d(TAG, "DisplayedCollectTime: " + day + " " + time);
 
-        return day;// + " " + time*
+        return displayedDate;// + " " + time*
     }
 
     private Date getDateStartTime(){
@@ -224,21 +228,32 @@ public class Order implements Comparable<Order>{
         try {
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
+            String painText;
+            if (this.isToDeliver==IS_TO_DELIVER){
+                painText = "- Réf commande : " + this.serverOrderId +
+                        "\n" +
+                        "- préparer pour le : " +
+                        UtilsFunctions.dateToString(sdf.parse(this.getEndTime()), "dd/MM/yyyy") +
+                        "\n" +
+                        "- Client : " + this.client.getUserName() +
+                        "\n" +
+                        "- Téléphone : " + this.client.getUserPhone() +
+                        "\n" +
+                        "- Adresse : " + this.getUserAddress() +
+                        "\n" +
+                        "- GPS : " + this.getUserLocation();
+            } else {
+                painText = "- Réf commande : " + this.serverOrderId +
+                        "\n" +
+                        "- préparer pour le : " +
+                        UtilsFunctions.dateToString(sdf.parse(this.getEndTime()), "dd/MM/yyyy") +
+                        "\n" +
+                        "- Client : " + this.client.getUserName() +
+                        "\n" +
+                        "- Téléphone : " + this.client.getUserPhone();
+            }
 
-            String sb = "- Réf commande : " + this.serverOrderId +
-                    "\n" +
-                    "- préparer pour le : " +
-                    UtilsFunctions.dateToString(sdf.parse(this.getEndTime()), "dd/MM/yyyy") +
-                    "\n" +
-                    "- Client : " + this.client.getUserName() +
-                    "\n" +
-                    "- Téléphone : " + this.client.getUserPhone() +
-                    "\n" +
-                    "- Adresse : " + this.getUserAddress() +
-                    "\n" +
-                    "- GPS : " + this.getUserLocation();
-            return sb;
-
+            return painText;
         } catch (ParseException e) {
             e.printStackTrace();
             return null;

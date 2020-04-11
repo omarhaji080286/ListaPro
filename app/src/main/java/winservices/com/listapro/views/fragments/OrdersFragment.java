@@ -4,6 +4,9 @@ package winservices.com.listapro.views.fragments;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.Order;
@@ -29,6 +33,9 @@ import winservices.com.listapro.viewmodels.ShopKeeperVM;
 import winservices.com.listapro.viewmodels.ShopVM;
 import winservices.com.listapro.views.activities.MyOrdersActivity;
 import winservices.com.listapro.views.adapters.OrdersAdapter;
+
+import static winservices.com.listapro.views.activities.MyOrdersActivity.CLOSED_ORDERS;
+import static winservices.com.listapro.views.activities.MyOrdersActivity.ONGOING_ORDERS;
 
 
 public class OrdersFragment extends Fragment {
@@ -50,7 +57,47 @@ public class OrdersFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_orders, container, false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MyOrdersActivity ordersActivity = Objects.requireNonNull((MyOrdersActivity) getActivity());
+        switch (orders_type){
+            case ONGOING_ORDERS :
+                ordersActivity.setTitle(getString(R.string.ongoing_orders));
+                break;
+            case CLOSED_ORDERS :
+                ordersActivity.setTitle(getString(R.string.closed_orders));
+                break;
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_orders, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        MyOrdersActivity ordersActivity = Objects.requireNonNull((MyOrdersActivity) getActivity());
+        switch (item.getItemId()) {
+            case R.id.menuOngoingOrders:
+                ordersActivity.setTitle(getString(R.string.ongoing_orders));
+                ordersActivity.displayFragment(new OrdersFragment(), OrdersFragment.TAG, ONGOING_ORDERS, 0);
+                break;
+            case R.id.menuClosedOrders:
+                ordersActivity.setTitle(getString(R.string.closed_orders));
+                ordersActivity.displayFragment(new OrdersFragment(), OrdersFragment.TAG, CLOSED_ORDERS, 0);
+                break;
+            case android.R.id.home :
+                ordersActivity.finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -97,6 +144,12 @@ public class OrdersFragment extends Fragment {
         orderVM.getOrdersByServerShopId(serverShopId, orders_type).observe(this, new Observer<List<Order>>() {
             @Override
             public void onChanged(List<Order> ordersInDb) {
+
+                int ordersNum = ordersAdapter.orders.size();
+                if (ordersNum>0) {
+                    updateTitle(ordersNum);
+                }
+
                 if (ordersInDb.size() == 0){
                     txtNoOrderRegistered.setVisibility(View.VISIBLE);
                 } else {
@@ -108,6 +161,14 @@ public class OrdersFragment extends Fragment {
                 dialog.dismiss();
             }
         });
+    }
+
+    private void updateTitle(int ordersNum){
+        MyOrdersActivity ordersActivity = Objects.requireNonNull((MyOrdersActivity) getActivity());
+        String ordersTypeTitle = getString(R.string.ongoing_orders);
+        if (orders_type == CLOSED_ORDERS) ordersTypeTitle = getString(R.string.closed_orders);
+        String title = ordersTypeTitle + " ( " + ordersNum + " ) ";
+        ordersActivity.setTitle(title);
     }
 
 }
