@@ -54,7 +54,7 @@ public class OrderedGoodsAdapter extends RecyclerView.Adapter<OrderedGoodsAdapte
 
                 holder.txtOGoodName.setText(oGood.getGoodName());
         holder.txtOGoodDesc.setText(oGood.getGoodDesc());
-        holder.imgOGoodPic.setImageResource(R.drawable.ic_store_black);
+        holder.imgOGoodPic.setImageResource(R.drawable.market);
 
         if (oGood.getStatus() != OrderedGood.UNPROCESSED) {
             holder.imgCheck.setVisibility(View.VISIBLE);
