@@ -13,7 +13,7 @@
     <dimen name="button_margin">16dp</dimen>
     <dimen name="logo_size_height">64dp</dimen>
     <dimen name="logo_size_width">64dp</dimen>
-    <dimen name="linear_border_padding">10dp</dimen>
+    <dimen name="linear_border_padding">4dp</dimen>
     <dimen name="welcome_img_item_height">64dp</dimen>
     <dimen name="welcome_img_item_width">64dp</dimen>
     <dimen name="flag_country_size_width">32dp</dimen>

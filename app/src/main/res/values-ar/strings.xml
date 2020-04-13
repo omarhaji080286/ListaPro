@@ -105,5 +105,8 @@
     <string name="todo">TODO</string>
     <string name="_212">+212</string>
     <string name="_123456789">123456789</string>
+    <string name="tableau_de_bord">Tableau de bord</string>
+    <string name="mes_clients">Mes clients</string>
+    <string name="in_progress">(Disponible prochainement)</string>
 
 </resources>
