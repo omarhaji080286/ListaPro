@@ -9,8 +9,9 @@
 
     <ImageView
         android:id="@+id/imgShopPic"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/size_height_shop_image"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:foreground="@drawable/rounded_fg"
         android:contentDescription="@string/shop_picture"
         android:src="@drawable/store_default"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,7 +26,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="10dp"
-        android:contentDescription="@string/add_shop_desc" />
+        android:contentDescription="@string/add_shop_desc"
+        tools:ignore="UnusedAttribute" />
 
     <TextView
         android:id="@+id/txtShopName"

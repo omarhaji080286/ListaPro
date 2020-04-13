@@ -2,6 +2,7 @@ package winservices.com.listapro.views.fragments;
 
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ public class SelectCityFragment extends Fragment {
     private ShopTypeVM shopTypeVM;
     private RadioGroup rgCities;
     private Button btnNext;
+    private Dialog dialog;
 
     public SelectCityFragment() {
     }
@@ -54,10 +56,11 @@ public class SelectCityFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        dialog = UtilsFunctions.getDialogBuilder(getLayoutInflater(), getContext(), R.string.loading).create();
+
         shopTypeVM = ViewModelProviders.of(this).get(ShopTypeVM.class);
         rgCities = view.findViewById(R.id.rgCities);
         btnNext = view.findViewById(R.id.btnNext);
-
 
         loadCities(view);
 
@@ -110,6 +113,7 @@ public class SelectCityFragment extends Fragment {
         shopTypeVM.getAllCities().observe(this, new Observer<List<City>>() {
             @Override
             public void onChanged(List<City> cities) {
+                dialog.show();
                 if (cities == null) return;
                 prepareCitiesRadioGroup(cities);
             }
@@ -140,6 +144,8 @@ public class SelectCityFragment extends Fragment {
                 btnNext.setVisibility(View.VISIBLE);
             }
         });
+
+        dialog.dismiss();
 
     }
 
