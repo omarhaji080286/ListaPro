@@ -20,11 +20,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Objects;
 
 import winservices.com.listapro.BuildConfig;
 import winservices.com.listapro.R;
+import winservices.com.listapro.models.entities.RemoteConfigParams;
 import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
 import winservices.com.listapro.utils.AnimationManager;
@@ -193,8 +197,16 @@ public class WelcomeFragment extends Fragment {
 
     private void shareAppStoreLink() {
 
-        String listaLink = "https://play.google.com/store/apps/details?id=com.winservices.wingoods";
+        RemoteConfigParams rcp = new RemoteConfigParams(getContext());
         String mainMessage = Objects.requireNonNull(getContext()).getResources().getString(R.string.share_message);
+        try {
+            JSONObject jsonObject = new JSONObject(rcp.getAppMessages());
+            mainMessage = jsonObject.getString("shareMessage");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String listaLink = "https://play.google.com/store/apps/details?id=com.winservices.wingoods";
         String subject = "avec Lista, les courses deviennent fun";
 
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);

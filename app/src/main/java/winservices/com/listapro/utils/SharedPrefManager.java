@@ -24,6 +24,7 @@ public class SharedPrefManager {
     private static final String KEY_ACCESS_SHOP_TYPE_ID = "serverShopTypeId";
     private static final String KEY_ACCESS_SELECTED_CATEGORIES = "selectedCategories";
     public static final String GOOGLE_PLAY_VERSION_CODE = "google_play_version_code";
+    public static final String LISTA_PRO_APP_MESSAGES = "lista_pro_app_messages";
 
     private Context context;
     private static SharedPrefManager instance;
@@ -44,10 +45,17 @@ public class SharedPrefManager {
         return sharedPreferences.getInt(GOOGLE_PLAY_VERSION_CODE, 0);
     }
 
-    public void storeGooglePlayVersion(int googlePlayVersion) {
+    public String getAppMessages(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        String appMessages = "{\"welcome1\":\"Lista Pro\",\"welcome2\":\"Les courses faciles...\",\"shareMessage\":\"Lista ...تقدية ساهلة ماهلة\"}";
+        return sharedPreferences.getString(LISTA_PRO_APP_MESSAGES, appMessages);
+    }
+
+    public void storeRemoteConfigParams(int googlePlayVersion, String appMessages) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(GOOGLE_PLAY_VERSION_CODE, googlePlayVersion);
+        editor.putString(LISTA_PRO_APP_MESSAGES, appMessages);
         editor.apply();
     }
 
