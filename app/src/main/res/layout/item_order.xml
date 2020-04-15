@@ -6,206 +6,256 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/recycler_margin">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/consLayOrderContainer"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llOrderContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?attr/selectableItemBackgroundBorderless">
-
-        <ImageView
-            android:id="@+id/imgClientPic"
-            android:layout_width="@dimen/user_img_height"
-            android:layout_height="@dimen/user_img_width"
-            android:src="@drawable/user"
-            android:layout_margin="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/todo"
-            android:foreground="@drawable/rounded_fg"
-            tools:ignore="UnusedAttribute" />
-
-        <TextView
-            android:id="@+id/txtClientName"
-            style="@style/TextInOrder"
-            android:layout_width="@dimen/user_img_width"
-            android:layout_height="wrap_content"
-            android:text="@string/client_name"
-            android:textStyle="bold"
-            android:maxLines="2"
-            app:layout_constraintStart_toStartOf="@+id/imgClientPic"
-            app:layout_constraintEnd_toEndOf="@+id/imgClientPic"
-            app:layout_constraintTop_toBottomOf="@+id/imgClientPic"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-
-        <LinearLayout
-            android:id="@+id/linlayStatusImg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginStart="@dimen/margin_small"
-            app:layout_constraintTop_toTopOf="@+id/imgClientPic"
-            app:layout_constraintStart_toEndOf="@+id/imgClientPic">
-
-            <ImageView
-                android:id="@+id/imgRegistered"
-                android:layout_width="@dimen/small_size_icon"
-                android:layout_height="@dimen/small_size_icon"
-                android:src="@drawable/checked_gray"
-                android:visibility="visible"
-                android:contentDescription="@string/todo" />
-
-            <ImageView
-                android:id="@+id/imgRead"
-                android:layout_width="@dimen/small_size_icon"
-                android:layout_height="@dimen/small_size_icon"
-                android:src="@drawable/checked_gray"
-                android:visibility="visible"
-                android:contentDescription="@string/todo" />
-
-            <ImageView
-                android:id="@+id/imgAvailable"
-                android:layout_width="@dimen/small_size_icon"
-                android:layout_height="@dimen/small_size_icon"
-                android:src="@drawable/checked_gray"
-                android:visibility="visible"
-                android:contentDescription="@string/todo" />
-
-
-            <ImageView
-                android:id="@+id/imgClosedOrNotSuported"
-                android:layout_width="@dimen/small_size_icon"
-                android:layout_height="@dimen/small_size_icon"
-                android:src="@drawable/completed"
-                android:visibility="gone"
-                android:contentDescription="@string/todo" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/txtStatus"
-            style="@style/TextInOrder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/status"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/linlayStatusImg"
-            app:layout_constraintTop_toTopOf="@+id/linlayStatusImg"
-            app:layout_constraintBottom_toBottomOf="@+id/linlayStatusImg"/>
-
-        <TextView
-            android:id="@+id/labelReference"
-            style="@style/TextInOrder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/reference"
-            app:layout_constraintStart_toEndOf="@+id/imgClientPic"
-            app:layout_constraintTop_toBottomOf="@+id/linlayStatusImg" />
-
-        <TextView
-            android:id="@+id/txtReference"
-            style="@style/TextInOrder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/order_reference"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/labelReference"
-            app:layout_constraintTop_toBottomOf="@+id/linlayStatusImg" />
-
-        <TextView
-            android:id="@+id/labelDate"
-            style="@style/TextInOrder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/date"
-            app:layout_constraintStart_toEndOf="@+id/imgClientPic"
-            app:layout_constraintTop_toBottomOf="@+id/labelReference"/>
-
-        <TextView
-            android:id="@+id/txtDate"
-            style="@style/TextInOrder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/order_date"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/labelDate"
-            app:layout_constraintTop_toBottomOf="@+id/txtReference"/>
-
-        <TextView
-        android:id="@+id/labelItemsNb"
-        style="@style/TextInOrder"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/items_number"
-        app:layout_constraintStart_toEndOf="@+id/imgClientPic"
-        app:layout_constraintTop_toBottomOf="@+id/labelDate"/>
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="4dp">
 
-        <TextView
-            android:id="@+id/txtItemsNb"
-            style="@style/TextInOrder"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llClient"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:text="@string/_0"
-            app:layout_constraintStart_toEndOf="@+id/labelItemsNb"
-            app:layout_constraintTop_toBottomOf="@+id/txtDate"/>
-
-        <TextView
-            android:id="@+id/labelCollectTime"
-            style="@style/TextInOrder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/forTime"
-            app:layout_constraintStart_toEndOf="@+id/imgClientPic"
-            app:layout_constraintTop_toBottomOf="@+id/labelItemsNb"/>
-
-        <TextView
-            android:id="@+id/txtCollectTime"
-            style="@style/TextInOrder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/forTime"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/labelCollectTime"
-            app:layout_constraintTop_toBottomOf="@+id/txtItemsNb"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <ImageView
-            android:id="@+id/imgArrowRight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:src="@drawable/ic_arrow_right_black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/linlayStatusImg"
+            app:layout_constraintEnd_toStartOf="@+id/labelDate"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/add_shop_desc" />
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <ImageView
-            android:id="@+id/imgDelivery"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="64dp"
-            android:src="@drawable/delivery_bike"
-            app:layout_constraintTop_toBottomOf="@+id/txtDate"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txtItemsNb"
-            android:contentDescription="@string/add_shop_desc"
-            android:visibility="visible"/>
+            <ImageView
+                android:id="@+id/imgClientPic"
+                android:layout_width="@dimen/user_img_height"
+                android:layout_height="@dimen/user_img_width"
+                android:src="@drawable/user"
+                android:contentDescription="@string/todo"
+                android:foreground="@drawable/rounded_fg"
+                tools:ignore="UnusedAttribute" />
 
-        <TextView
-            android:id="@+id/txtToDeliver"
-            style="@style/TextInOrder"
-            android:textSize="12sp"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/txtClientName"
+                style="@style/TextInOrder"
+                android:layout_width="@dimen/user_img_width"
+                android:layout_height="wrap_content"
+                android:text="@string/client_name"
+                android:textStyle="bold"
+                android:maxLines="2" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/consLayOrderDataContainer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/a_livrer"
-            app:layout_constraintStart_toEndOf="@+id/imgDelivery"
-            app:layout_constraintTop_toTopOf="@+id/imgDelivery"
-            app:layout_constraintBottom_toBottomOf="@+id/imgDelivery"
-            android:visibility="visible"/>
+            android:background="?attr/selectableItemBackgroundBorderless">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:id="@+id/linlayStatusImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="@dimen/margin_small"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/txtStatus">
+
+                <ImageView
+                    android:id="@+id/imgRegistered"
+                    android:layout_width="@dimen/small_size_icon"
+                    android:layout_height="@dimen/small_size_icon"
+                    android:src="@drawable/checked_gray"
+                    android:visibility="visible"
+                    android:contentDescription="@string/todo" />
+
+                <ImageView
+                    android:id="@+id/imgRead"
+                    android:layout_width="@dimen/small_size_icon"
+                    android:layout_height="@dimen/small_size_icon"
+                    android:src="@drawable/checked_gray"
+                    android:visibility="visible"
+                    android:contentDescription="@string/todo" />
+
+                <ImageView
+                    android:id="@+id/imgAvailable"
+                    android:layout_width="@dimen/small_size_icon"
+                    android:layout_height="@dimen/small_size_icon"
+                    android:src="@drawable/checked_gray"
+                    android:visibility="visible"
+                    android:contentDescription="@string/todo" />
+
+                <ImageView
+                    android:id="@+id/imgClosedOrNotSuported"
+                    android:layout_width="@dimen/small_size_icon"
+                    android:layout_height="@dimen/small_size_icon"
+                    android:src="@drawable/completed"
+                    android:visibility="gone"
+                    android:contentDescription="@string/todo" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtStatus"
+                style="@style/TextInOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/linlayStatusImg"
+                app:layout_constraintTop_toTopOf="@+id/linlayStatusImg"
+                app:layout_constraintBottom_toBottomOf="@+id/linlayStatusImg"/>
+
+            <TextView
+                android:id="@+id/labelReference"
+                style="@style/TextInOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reference"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linlayStatusImg" />
+
+            <TextView
+                android:id="@+id/txtReference"
+                style="@style/TextInOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_reference"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/labelReference"
+                app:layout_constraintTop_toBottomOf="@+id/linlayStatusImg" />
+
+            <TextView
+                android:id="@+id/labelDate"
+                style="@style/TextInOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/labelReference"
+                app:layout_constraintEnd_toStartOf="@+id/txtDate"/>
+
+            <TextView
+                android:id="@+id/txtDate"
+                style="@style/TextInOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_date"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/labelDate"
+                app:layout_constraintTop_toBottomOf="@+id/txtReference"/>
+
+            <TextView
+                android:id="@+id/labelItemsNb"
+                style="@style/TextInOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/items_number"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/labelDate"
+                app:layout_constraintEnd_toStartOf="@+id/txtItemsNb"/>
+
+            <TextView
+                android:id="@+id/txtItemsNb"
+                style="@style/TextInOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/_0"
+                app:layout_constraintStart_toEndOf="@+id/labelItemsNb"
+                app:layout_constraintTop_toBottomOf="@+id/txtDate"/>
+
+            <TextView
+                android:id="@+id/labelCollectTime"
+                style="@style/TextInOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/forTime"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/labelItemsNb"
+                app:layout_constraintEnd_toStartOf="@+id/txtCollectTime"/>
+
+            <TextView
+                android:id="@+id/txtCollectTime"
+                style="@style/TextInOrder"
+                android:layout_marginBottom="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/forTime"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/labelCollectTime"
+                app:layout_constraintTop_toTopOf="@+id/labelCollectTime"
+                app:layout_constraintBottom_toBottomOf="@+id/labelCollectTime"/>
+
+            <ImageView
+                android:id="@+id/imgArrowRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_arrow_right_black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/add_shop_desc" />
+
+            <ImageView
+                android:id="@+id/imgDelivery"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="64dp"
+                android:src="@drawable/delivery_bike"
+                app:layout_constraintTop_toBottomOf="@+id/txtDate"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/txtItemsNb"
+                android:contentDescription="@string/add_shop_desc"
+                android:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/txtToDeliver"
+                style="@style/TextInOrder"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/a_livrer"
+                app:layout_constraintStart_toEndOf="@+id/imgDelivery"
+                app:layout_constraintTop_toTopOf="@+id/imgDelivery"
+                app:layout_constraintBottom_toBottomOf="@+id/imgDelivery"
+                android:visibility="visible"/>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llOrderPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="@+id/labelCollectTime"
+                app:layout_constraintTop_toBottomOf="@+id/labelCollectTime"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:gravity="start|center"
+                android:visibility="gone">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txtOrderPriceLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/prix_dhs"
+                    style="@style/SimpleText"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txtOrderPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_000_00"
+                    android:gravity="start"
+                    style="@style/TextInOrder"
+                    android:textStyle="bold"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.cardview.widget.CardView>

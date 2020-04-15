@@ -50,6 +50,7 @@ public class OrdersFragment extends Fragment {
     private TextView txtNoOrderRegistered;
     private int orders_type;
     private Dialog dialog;
+    private int serverShopKeeperId;
 
     public OrdersFragment() {
     }
@@ -86,12 +87,15 @@ public class OrdersFragment extends Fragment {
         MyOrdersActivity ordersActivity = Objects.requireNonNull((MyOrdersActivity) getActivity());
         switch (item.getItemId()) {
             case R.id.menuOngoingOrders:
-                ordersActivity.setTitle(getString(R.string.ongoing_orders));
+                ordersActivity.setCustomTitle(getString(R.string.ongoing_orders));
                 ordersActivity.displayFragment(new OrdersFragment(), OrdersFragment.TAG, ONGOING_ORDERS, 0);
                 break;
             case R.id.menuClosedOrders:
-                ordersActivity.setTitle(getString(R.string.closed_orders));
+                ordersActivity.setCustomTitle(getString(R.string.closed_orders));
                 ordersActivity.displayFragment(new OrdersFragment(), OrdersFragment.TAG, CLOSED_ORDERS, 0);
+                break;
+            case R.id.sync:
+                orderVM.loadOrders( getContext(), serverShopKeeperId);
                 break;
             case android.R.id.home :
                 ordersActivity.finish();
@@ -124,7 +128,8 @@ public class OrdersFragment extends Fragment {
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
             public void onChanged(ShopKeeper shopKeeper) {
-                loadShop(shopKeeper.getServerShopKeeperId());
+                serverShopKeeperId = shopKeeper.getServerShopKeeperId();
+                loadShop(serverShopKeeperId);
             }
         });
 
@@ -134,7 +139,7 @@ public class OrdersFragment extends Fragment {
         shopVM.getShopsByShopKeeperId(serverShopKeeperId).observe(this, new Observer<List<Shop>>() {
             @Override
             public void onChanged(List<Shop> shops) {
-                orderVM.loadOrders(getContext(), shops.get(0).getServerShopId());
+                //orderVM.loadOrders(getContext(), shops.get(0).getServerShopId());
                 setOrdersToAdapter(shops.get(0).getServerShopId());
             }
         });
@@ -145,15 +150,12 @@ public class OrdersFragment extends Fragment {
             @Override
             public void onChanged(List<Order> ordersInDb) {
 
-                int ordersNum = ordersAdapter.orders.size();
-                if (ordersNum>0) {
-                    updateTitle(ordersNum);
-                }
-
+                int ordersNum = ordersInDb.size();
                 if (ordersInDb.size() == 0){
                     txtNoOrderRegistered.setVisibility(View.VISIBLE);
                 } else {
                     txtNoOrderRegistered.setVisibility(View.GONE);
+                    updateTitle(ordersNum);
                 }
                 Collections.sort(ordersInDb);
                 ordersAdapter.setOrders(ordersInDb);
@@ -168,7 +170,7 @@ public class OrdersFragment extends Fragment {
         String ordersTypeTitle = getString(R.string.ongoing_orders);
         if (orders_type == CLOSED_ORDERS) ordersTypeTitle = getString(R.string.closed_orders);
         String title = ordersTypeTitle + " ( " + ordersNum + " ) ";
-        ordersActivity.setTitle(title);
+        ordersActivity.setCustomTitle(title);
     }
 
 }

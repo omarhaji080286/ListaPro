@@ -78,6 +78,8 @@ public class WelcomeFragment extends Fragment {
 
         UtilsFunctions.hideKeyboardFrom(Objects.requireNonNull(getContext()), consLayMyOrders);
 
+        //orderVM.loadOrders(getContext(), serverShopId);
+
         imgShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,12 +87,20 @@ public class WelcomeFragment extends Fragment {
             }
         });
 
-        initLogOutAndOrdersNum();
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                updateOrdersNum();
+                Log.d(TAG, "Order numbers handled");
+            }
+        });
+
         initMyShopItem();
         initMyOrdersItem();
     }
 
-    private void initLogOutAndOrdersNum() {
+    private void updateOrdersNum() {
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
             public void onChanged(final ShopKeeper shopKeeper) {
@@ -151,16 +161,16 @@ public class WelcomeFragment extends Fragment {
             }
         });
 
-        orderVM.loadOrders(getContext(), shop.getServerShopId());
+        //orderVM.loadOrders(getContext(), shop.getServerShopId());
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        if (serverShopId!=0){
+        /*if (serverShopId!=0){
             orderVM.loadOrders(getContext(), serverShopId);
-        }
+        }*/
 
         Handler handler = new Handler();
         handler.post(new Runnable() {

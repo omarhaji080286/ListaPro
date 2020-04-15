@@ -185,4 +185,17 @@ public class SharedPrefManager {
         return Bitmap.createBitmap(bitmapOrg, 0, 0,width, height, matrix, true);
     }
 
+    public void storeOrderPriceTemp(int serverOrderId, String orderPriceTemp) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(String.valueOf(serverOrderId), orderPriceTemp);
+        editor.apply();
+    }
+
+    public String getOrderPriceTemp(int serverOrderId){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(String.valueOf(serverOrderId), "");
+    }
+
+
 }

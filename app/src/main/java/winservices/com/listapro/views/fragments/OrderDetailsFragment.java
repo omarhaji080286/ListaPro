@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -53,7 +56,6 @@ public class OrderDetailsFragment extends Fragment {
     private OrderVM orderVM;
     private Button btnFinishOrder;
     private GridLayoutManager glm;
-    private RecyclerView rvOGoods;
     private TextView txtOrderId, txtDeliveryType, txtDeliveryDay,
             txtClientName, txtClientPhone, txtClientAddress, txtToDeliver;
     private ImageButton imgBtnPhone, imgBtnLocation;
@@ -61,6 +63,8 @@ public class OrderDetailsFragment extends Fragment {
     private Order orderToShare;
     private List<OrderedGood> orderedGoodsToShare;
     private ImageView imgDelivery;
+    private AppCompatEditText editOrderPrice;
+    private String orderPrice = "";
 
     public OrderDetailsFragment() {
     }
@@ -68,6 +72,8 @@ public class OrderDetailsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        MyOrdersActivity ordersActivity = Objects.requireNonNull((MyOrdersActivity) getActivity());
+        ordersActivity.setCustomTitle(getString(R.string.order_details_title));
         super.onCreate(savedInstanceState);
     }
 
@@ -113,7 +119,7 @@ public class OrderDetailsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         orderVM = ViewModelProviders.of(this).get(OrderVM.class);
-        rvOGoods = view.findViewById(R.id.rvOGoods);
+        RecyclerView rvOGoods = view.findViewById(R.id.rvOGoods);
         btnFinishOrder = view.findViewById(R.id.btnFinishOrder);
 
         //Card components
@@ -129,6 +135,7 @@ public class OrderDetailsFragment extends Fragment {
         llLocation = view.findViewById(R.id.llLocation);
         txtToDeliver = view.findViewById(R.id.txtToDeliver);
         imgDelivery = view.findViewById(R.id.imgDelivery);
+        editOrderPrice = view.findViewById(R.id.editOrderPrice);
 
         oGoodsAdapter = new OrderedGoodsAdapter(orderVM);
         glm = new GridLayoutManager(getContext(), GRID_COLUMN_NUMBER);
@@ -136,7 +143,7 @@ public class OrderDetailsFragment extends Fragment {
         rvOGoods.setAdapter(oGoodsAdapter);
 
         if (getArguments() != null) {
-            int serverOrderId = getArguments().getInt(Order.SERVER_ORDER_ID);
+            final int serverOrderId = getArguments().getInt(Order.SERVER_ORDER_ID);
             orderVM.getOrderByServerOrderId(serverOrderId).observe(this, new Observer<Order>() {
                 @Override
                 public void onChanged(Order order) {
@@ -149,11 +156,30 @@ public class OrderDetailsFragment extends Fragment {
                     int statusId = order.getStatus().getStatusId();
                     if (statusId == Order.AVAILABLE || statusId == Order.NOT_SUPPORTED || statusId == Order.COMPLETED) {
                         btnFinishOrder.setVisibility(View.GONE);
+                        editOrderPrice.setKeyListener(null);
                     } else {
                         initFinishButton(order);
                     }
                 }
             });
+
+
+            editOrderPrice.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    orderPrice = s.toString();
+                    orderToShare.setOrderPrice(orderPrice);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+            });
+
         }
 
 
@@ -195,6 +221,8 @@ public class OrderDetailsFragment extends Fragment {
             }
         });
 
+        editOrderPrice.setText(order.getOrderPriceTemp(getContext()));
+
     }
 
     private boolean isOrderSupported(List<OrderedGood> oGoods) {
@@ -206,36 +234,23 @@ public class OrderDetailsFragment extends Fragment {
     }
 
     private void initFinishButton(final Order order) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
-        builder.setMessage(R.string.confirm_order_ready);
-        builder.setTitle(R.string.order_ready);
-        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                OrderStatusValue status = new OrderStatusValue();
-                List<OrderedGood> oGoods = oGoodsAdapter.getUpdatedOGoods();
-                if (isOrderSupported(oGoods)) {
-                    status.setStatusId(Order.AVAILABLE);
-                    status.setStatusName("AVAILABLE");
-                } else {
-                    status.setStatusId(Order.NOT_SUPPORTED);
-                    status.setStatusName("NOT SUPPORTED");
-                }
-
-                updateOrderStatus(order, status);
-                orderVM.updateOrderedGoodsOnServer(oGoods);
-
-
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
 
         btnFinishOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                AlertDialog.Builder builder = buildConfirmationDialog();
+
+                if (orderPrice.matches("")) {
+                    builder.setMessage(R.string.order_price_not_filled);
+                }
+
+                builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        order.setOrderPrice(orderPrice);
+                        sendConfirmation(order);
+                    }
+                });
+
                 if (verifyOGoodsStatus()) {
                     AlertDialog dialog = builder.create();
                     dialog.show();
@@ -244,6 +259,34 @@ public class OrderDetailsFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private AlertDialog.Builder buildConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        builder.setMessage(R.string.confirm_order_ready);
+        builder.setTitle(R.string.order_ready);
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        return builder;
+    }
+
+    private void sendConfirmation(Order order) {
+        OrderStatusValue status = new OrderStatusValue();
+        List<OrderedGood> oGoods = oGoodsAdapter.getUpdatedOGoods();
+        if (isOrderSupported(oGoods)) {
+            status.setStatusId(Order.AVAILABLE);
+            status.setStatusName("AVAILABLE");
+        } else {
+            status.setStatusId(Order.NOT_SUPPORTED);
+            status.setStatusName("NOT SUPPORTED");
+        }
+
+        updateOrderStatus(order, status);
+        order.storeOrderPriceTemp(getContext());
+        orderVM.updateOrderedGoodsOnServer(oGoods);
     }
 
     private void animateItem(final int position) {
@@ -293,8 +336,7 @@ public class OrderDetailsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        List<OrderedGood> oGoods = oGoodsAdapter.getUpdatedOGoods();
-        orderVM.updateOrderedGoodsOnServer(oGoods);
+        orderToShare.storeOrderPriceTemp(getContext());
     }
 
     private void startGoogleMaps(String location) {

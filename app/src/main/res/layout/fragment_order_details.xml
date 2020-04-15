@@ -172,6 +172,49 @@
 
     </androidx.cardview.widget.CardView>
 
+    <androidx.cardview.widget.CardView
+        android:layout_margin="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gray"
+        android:elevation="12dp">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/cardOrderPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="start|center">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtOrderPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total_commande_label"
+                style="@style/SimpleText"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/editOrderPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:maxLength="8"
+                android:inputType="numberDecimal"
+                android:hint="@string/_000_00"
+                android:textSize="14sp"
+                android:gravity="end"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imgOrderPrice"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/payment"
+                android:layout_marginStart="24dp"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.cardview.widget.CardView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

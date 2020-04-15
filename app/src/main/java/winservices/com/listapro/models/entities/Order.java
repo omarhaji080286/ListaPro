@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import winservices.com.listapro.R;
+import winservices.com.listapro.utils.SharedPrefManager;
 import winservices.com.listapro.utils.UtilsFunctions;
 
 import static androidx.room.ForeignKey.CASCADE;
@@ -63,6 +64,10 @@ public class Order implements Comparable<Order>{
     private String userAddress;
     @SerializedName("user_location")
     private String userLocation;
+    @SerializedName("ordered_goods_number")
+    private int orderedGoodsNum;
+    @SerializedName("order_price")
+    private String orderPrice;
 
     @Embedded
     @SerializedName("client")
@@ -81,6 +86,22 @@ public class Order implements Comparable<Order>{
         this.serverShopIdFk = serverShopIdFk;
         this.client = client;
         this.status = status;
+    }
+
+    public String getOrderPrice() {
+        return orderPrice;
+    }
+
+    public void setOrderPrice(String orderPrice) {
+        this.orderPrice = orderPrice;
+    }
+
+    public int getOrderedGoodsNum() {
+        return orderedGoodsNum;
+    }
+
+    public void setOrderedGoodsNum(int orderedGoodsNum) {
+        this.orderedGoodsNum = orderedGoodsNum;
     }
 
     public List<OrderedGood> getOrderedGoods() {
@@ -258,6 +279,18 @@ public class Order implements Comparable<Order>{
             e.printStackTrace();
             return null;
         }
+
+    }
+
+    public void storeOrderPriceTemp(Context context) {
+        SharedPrefManager spm = SharedPrefManager.getInstance(context);
+        spm.storeOrderPriceTemp(this.serverOrderId, this.orderPrice);
+    }
+
+
+    public String getOrderPriceTemp(Context context){
+        SharedPrefManager spm = SharedPrefManager.getInstance(context);
+        return spm.getOrderPriceTemp(this.serverOrderId);
 
     }
 

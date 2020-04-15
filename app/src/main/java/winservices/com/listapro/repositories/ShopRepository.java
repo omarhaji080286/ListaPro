@@ -58,7 +58,7 @@ public class ShopRepository {
     }
 
     private void updateShopDelivering(Shop shop) {
-        new updateShopDeliveringAsyncTask(shopDao).execute(shop);
+        new UpdateShopDeliveringAsyncTask(shopDao).execute(shop);
     }
 
     public void insertShopOnServer(final Shop shop) {
@@ -147,11 +147,11 @@ public class ShopRepository {
             return future.get();
     }
 
-    private static class updateShopDeliveringAsyncTask extends AsyncTask<Shop, Void, Void> {
+    private static class UpdateShopDeliveringAsyncTask extends AsyncTask<Shop, Void, Void> {
 
         private ShopDao shopDao;
 
-        private updateShopDeliveringAsyncTask(ShopDao shopDao) {
+        private UpdateShopDeliveringAsyncTask(ShopDao shopDao) {
             this.shopDao = shopDao;
         }
 

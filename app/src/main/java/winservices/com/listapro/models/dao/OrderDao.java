@@ -51,11 +51,6 @@ public interface OrderDao {
     @Query("SELECT * FROM orders WHERE serverOrderId = :serverOrderId")
     LiveData<Order> getOrderByServerOrderId(int serverOrderId);
 
-    @Query("SELECT count(*)" +
-           " FROM ordered_goods as og, orders as o" +
-           " WHERE o.`serverUserId` = :serverUserId" +
-           " AND o.serverOrderId = :serverOrderId"+
-           " AND o.serverOrderId = og.serverOrderIdFk")
-    LiveData<Integer> getOrderedGoodsNum(int serverUserId, int serverOrderId);
-
+/*    @Query("UPDATE orders SET orderPriceTemp = :orderPriceTemp WHERE serverOrderId = :serverOrderId")
+    void updateOrderPriceTemp(int serverOrderId, String orderPriceTemp);*/
 }

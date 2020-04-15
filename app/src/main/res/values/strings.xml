@@ -114,5 +114,10 @@
     <string name="tableau_de_bord">Tableau de bord</string>
     <string name="mes_clients">Mes clients</string>
     <string name="in_progress">(Disponible prochainement)</string>
+    <string name="sync">Sync</string>
+    <string name="total_commande_label">Total Commande (DHs) :</string>
+    <string name="_000_00">00000.00</string>
+    <string name="order_price_not_filled">Le total commande n\'est pas renseigné ! Votre client ne pourra donc pas le voir. Voulez-vous envoyer la confirmation quand même ?</string>
+    <string name="prix_dhs">Prix (Dhs) :</string>
 
 </resources>

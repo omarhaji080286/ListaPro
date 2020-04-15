@@ -11,9 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ import winservices.com.listapro.views.fragments.OrderDetailsFragment;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
 
-    public List<Order> orders = new ArrayList<>();
+    private List<Order> orders = new ArrayList<>();
     private OrderVM orderVM;
     private Context context;
     private Fragment fragment;
@@ -76,6 +75,12 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
         holder.txtDate.setText(order.getDisplayedCollectTime(context, order.getCreationDate()));
         holder.txtReference.setText(String.valueOf(order.getServerOrderId()));
         holder.txtCollectTime.setText(order.getDisplayedCollectTime(context, order.getEndTime()));
+        holder.txtItemsNb.setText(String.valueOf(order.getOrderedGoodsNum()));
+
+        if (!order.getOrderPriceTemp(context).equals("") ){
+            holder.llOrderPrice.setVisibility(View.VISIBLE);
+            holder.txtOrderPrice.setText(order.getOrderPrice());
+        }
 
         switch (order.getStatus().getStatusId()){
             case Order.REGISTERED :
@@ -121,7 +126,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
         }
 
 
-        holder.consLayOrderContainer.setOnClickListener(new View.OnClickListener() {
+        holder.llOrderContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 OrderDetailsFragment fragment = new OrderDetailsFragment();
@@ -145,13 +150,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
             }
         });
 
-
-        orderVM.getOrderedGoodsNum(order.getClient().getServerUserId(), order.getServerOrderId()).observe(fragment, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer orderedGoodsNum) {
-                holder.txtItemsNb.setText(String.valueOf(orderedGoodsNum));
-            }
-        });
     }
 
 
@@ -165,16 +163,16 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
         notifyDataSetChanged();
     }
 
-    class OrderVH extends RecyclerView.ViewHolder {
+    static class OrderVH extends RecyclerView.ViewHolder {
 
-        private TextView txtClientName, txtReference, txtDate, txtStatus, txtItemsNb, txtCollectTime, txtToDeliver;
+        private TextView txtClientName, txtReference, txtDate, txtStatus, txtItemsNb, txtCollectTime, txtToDeliver, txtOrderPrice;
         private ImageView imgClientPic, imgRegistered, imgRead, imgAvailable, imgClosedOrNotSuported, imgDelivery ;
-        private ConstraintLayout consLayOrderContainer;
+        private LinearLayoutCompat llOrderContainer, llOrderPrice;
 
         OrderVH(@NonNull View itemView) {
             super(itemView);
 
-            consLayOrderContainer = itemView.findViewById(R.id.consLayOrderContainer);
+            llOrderContainer = itemView.findViewById(R.id.llOrderContainer);
             txtClientName = itemView.findViewById(R.id.txtClientName);
             txtReference = itemView.findViewById(R.id.txtReference);
             txtDate = itemView.findViewById(R.id.txtDate);
@@ -188,6 +186,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
             imgClosedOrNotSuported = itemView.findViewById(R.id.imgClosedOrNotSuported);
             txtToDeliver = itemView.findViewById(R.id.txtToDeliver);
             imgDelivery = itemView.findViewById(R.id.imgDelivery);
+            llOrderPrice = itemView.findViewById(R.id.llOrderPrice);
+            txtOrderPrice = itemView.findViewById(R.id.txtOrderPrice);
 
 
         }

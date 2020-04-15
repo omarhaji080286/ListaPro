@@ -83,6 +83,7 @@ public class LauncherActivity extends AppCompatActivity {
                     return;
                 }
                 loadShops(shopKeeper);
+
             }
         });
 

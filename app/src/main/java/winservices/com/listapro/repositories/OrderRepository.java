@@ -5,6 +5,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -12,8 +15,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -73,13 +74,19 @@ public class OrderRepository {
         new UpdateOrderedGoodAsyncTask(orderedGoodDao).execute(orderedGood);
     }
 
+/*    public void updateOrderTempPrice(Order order){
+        new UpdateOrderPriceTempAsyncTask(orderDao).execute(order);
+    }*/
+
     public void loadOrdersFromServer(final Context context, int serverShopId) {
+
         RetrofitHelper rh = new RetrofitHelper();
         ListaProWebServices ws = rh.initWebServices();
 
         Map<String, String> hashMap = new HashMap<>();
         hashMap.put("serverShopId", String.valueOf(serverShopId));
         Call<WebServiceResponse> call = ws.getShopOrders(hashMap);
+        Log.d(TAG, "Server called from loadOrdersFromServer");
 
         call.enqueue(new Callback<WebServiceResponse>() {
             @Override
@@ -111,12 +118,13 @@ public class OrderRepository {
 
             @Override
             public void onFailure(@NonNull Call<WebServiceResponse> call, @NonNull Throwable t) {
-                Log.d(TAG, "Failure : " + t.getMessage());
+                Log.d(TAG, "Failure loading orders from server : " + t.getMessage());
             }
         });
     }
 
     public void updateOrderOnServer(final Order order) {
+        Log.d(TAG, "Server called from updateOrderOnServer");
         RetrofitHelper rh = new RetrofitHelper();
         ListaProWebServices ws = rh.initWebServices();
 
@@ -127,6 +135,7 @@ public class OrderRepository {
         hashMap.put("jsonRequest", jsonRequest);
         hashMap.put("language", Locale.getDefault().getLanguage());
         Call<WebServiceResponse> call = ws.updateOrder(hashMap);
+        Log.d(TAG, "Server called from updateOrderOnServer");
 
         call.enqueue(new Callback<WebServiceResponse>() {
             @Override
@@ -148,17 +157,13 @@ public class OrderRepository {
 
             @Override
             public void onFailure(@NonNull Call<WebServiceResponse> call, @NonNull Throwable t) {
-                Log.d(TAG, "Failure : " + t.getMessage());
+                Log.d(TAG, "Failure updating order : " + t.getMessage());
             }
         });
     }
 
     public LiveData<Integer> getSentOrdersNum(int serverShopId) {
         return orderDao.getSentOrdersNum(serverShopId);
-    }
-
-    public LiveData<Integer> getOrderedGoodsNum(int serverUserId, int serverOrderId) {
-        return orderDao.getOrderedGoodsNum(serverUserId, serverOrderId);
     }
 
     public LiveData<Order> getOrderByServerOrderId(int serverOrderId) {
@@ -175,6 +180,7 @@ public class OrderRepository {
         Log.d(TAG, "jsonRequest: " + jsonRequest);
         hashMap.put("jsonRequest", jsonRequest);
         Call<WebServiceResponse> call = ws.updateOrderedGoods(hashMap);
+        Log.d(TAG, "Server called from updateOrderedGoodsOnServer");
 
         call.enqueue(new Callback<WebServiceResponse>() {
             @Override
@@ -196,7 +202,7 @@ public class OrderRepository {
 
             @Override
             public void onFailure(@NonNull Call<WebServiceResponse> call, @NonNull Throwable t) {
-                Log.d(TAG, " WS Failure : " + t.getMessage());
+                Log.d(TAG, " Failure updating ordered goods : " + t.getMessage());
             }
         });
     }
@@ -242,6 +248,21 @@ public class OrderRepository {
             return null;
         }
     }
+
+   /* private static class UpdateOrderPriceTempAsyncTask extends AsyncTask<Order, Void, Void> {
+        private OrderDao orderDao;
+
+        private UpdateOrderPriceTempAsyncTask(OrderDao orderDao) {
+            this.orderDao = orderDao;
+        }
+
+        @Override
+        protected Void doInBackground(Order... orders) {
+            orderDao.updateOrderPriceTemp(orders[0].getServerOrderId(), orders[0].getOrderPriceTemp());
+            return null;
+        }
+    }*/
+
 
     private static class UpdateOrderedGoodAsyncTask extends AsyncTask<OrderedGood, Void, Void> {
         private OrderedGoodDao orderedGoodDao;
