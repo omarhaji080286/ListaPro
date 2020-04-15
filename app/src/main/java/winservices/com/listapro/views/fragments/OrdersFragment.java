@@ -43,14 +43,13 @@ public class OrdersFragment extends Fragment {
     public final static String TAG = "OrdersFragment";
 
     private OrderVM orderVM;
-    private ShopKeeperVM shopKeeperVM;
     private ShopVM shopVM;
-    private RecyclerView rvOrders;
     private OrdersAdapter ordersAdapter;
     private TextView txtNoOrderRegistered;
     private int orders_type;
     private Dialog dialog;
     private int serverShopKeeperId;
+    private int serverShopId;
 
     public OrdersFragment() {
     }
@@ -95,7 +94,7 @@ public class OrdersFragment extends Fragment {
                 ordersActivity.displayFragment(new OrdersFragment(), OrdersFragment.TAG, CLOSED_ORDERS, 0);
                 break;
             case R.id.sync:
-                orderVM.loadOrders( getContext(), serverShopKeeperId);
+                orderVM.loadOrders( getContext(), serverShopId);
                 break;
             case android.R.id.home :
                 ordersActivity.finish();
@@ -110,10 +109,10 @@ public class OrdersFragment extends Fragment {
         dialog = UtilsFunctions.getDialogBuilder(getLayoutInflater(), getContext(), R.string.loading).create();
         dialog.show();
 
-        shopKeeperVM = ViewModelProviders.of(this).get(ShopKeeperVM.class);
+        ShopKeeperVM shopKeeperVM = ViewModelProviders.of(this).get(ShopKeeperVM.class);
         orderVM = ViewModelProviders.of(this).get(OrderVM.class);
         shopVM = ViewModelProviders.of(this).get(ShopVM.class);
-        rvOrders = view.findViewById(R.id.rvOrders);
+        RecyclerView rvOrders = view.findViewById(R.id.rvOrders);
         txtNoOrderRegistered = view.findViewById(R.id.txtNoOrderRegistered);
 
         Bundle bundle = getArguments();
@@ -140,7 +139,9 @@ public class OrdersFragment extends Fragment {
             @Override
             public void onChanged(List<Shop> shops) {
                 //orderVM.loadOrders(getContext(), shops.get(0).getServerShopId());
-                setOrdersToAdapter(shops.get(0).getServerShopId());
+                serverShopId = shops.get(0).getServerShopId();
+                setOrdersToAdapter(serverShopId);
+
             }
         });
     }

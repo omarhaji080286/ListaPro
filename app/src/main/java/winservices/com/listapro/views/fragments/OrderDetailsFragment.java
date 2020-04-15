@@ -242,6 +242,7 @@ public class OrderDetailsFragment extends Fragment {
 
                 if (orderPrice.matches("")) {
                     builder.setMessage(R.string.order_price_not_filled);
+                    builder.setTitle(R.string.total_bill_empty);
                 }
 
                 builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
