@@ -61,7 +61,7 @@ public class ShopTypeRepository {
 
         Callable<List<DefaultCategory>>callable = new Callable<List<DefaultCategory>>() {
             @Override
-            public List<DefaultCategory> call() throws Exception {
+            public List<DefaultCategory> call() {
                 return defaultCategoryDao.getShopTypeDCategories(serverShopTypeId);
             }
         };
@@ -223,6 +223,7 @@ public class ShopTypeRepository {
         ListaProWebServices ws = rh.initWebServices();
 
         Call<WebServiceResponse> call = ws.getCities();
+        Log.d(TAG, "Server called from loadCitiesFromServer");
 
         call.enqueue(new Callback<WebServiceResponse>() {
             @Override

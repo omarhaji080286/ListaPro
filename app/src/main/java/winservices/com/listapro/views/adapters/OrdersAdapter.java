@@ -77,9 +77,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
         holder.txtCollectTime.setText(order.getDisplayedCollectTime(context, order.getEndTime()));
         holder.txtItemsNb.setText(String.valueOf(order.getOrderedGoodsNum()));
 
-        if (!order.getOrderPriceTemp(context).equals("") ){
+        String orderPriceTemp = order.getOrderPriceTemp(context);
+        if (!orderPriceTemp.equals("")){
             holder.llOrderPrice.setVisibility(View.VISIBLE);
-            holder.txtOrderPrice.setText(order.getOrderPrice());
+            holder.txtOrderPrice.setText(orderPriceTemp);
         }
 
         switch (order.getStatus().getStatusId()){
@@ -96,7 +97,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
                 holder.imgAvailable.setImageResource(R.drawable.checked_gray);
                 holder.imgClosedOrNotSuported.setVisibility(View.GONE);
                 holder.txtStatus.setText(context.getString(R.string.read));
-
                 break;
             case Order.AVAILABLE :
                 holder.imgRegistered.setImageResource(R.drawable.checked);
