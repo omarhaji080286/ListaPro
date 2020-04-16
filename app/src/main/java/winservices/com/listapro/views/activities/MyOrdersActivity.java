@@ -13,17 +13,18 @@ import androidx.fragment.app.FragmentManager;
 
 import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.Order;
+import winservices.com.listapro.views.fragments.OrderDetailsFragment;
 import winservices.com.listapro.views.fragments.OrdersFragment;
 
 public class MyOrdersActivity extends AppCompatActivity {
 
-    private final static String TAG = MyOrdersActivity.class.getSimpleName();
+    //private final static String TAG = MyOrdersActivity.class.getSimpleName();
 
     public String currentFragmentTag = OrdersFragment.TAG;
     public final static int CLOSED_ORDERS = 2;
     public final static int ONGOING_ORDERS = 1;
     public final static String ORDERS_TYPE = "orders_type";
-    //public int currentOrdersType = ONGOING_ORDERS;
+    public int currentOrdersType = ONGOING_ORDERS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +51,24 @@ public class MyOrdersActivity extends AppCompatActivity {
             fragment.setArguments(bundle);
         }
 
+        currentOrdersType = orders_type;
         manager.beginTransaction()
                 .replace(R.id.frameMyOrdersActivity, fragment, fragmentTag)
                 .commit();
         currentFragmentTag = fragmentTag;
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager manager = getSupportFragmentManager();
+        OrderDetailsFragment odFragment = (OrderDetailsFragment) manager.findFragmentByTag(OrderDetailsFragment.TAG);
+        if (odFragment != null) {
+            displayFragment(new OrdersFragment(), OrdersFragment.TAG, currentOrdersType, 0);
+        }
+        OrdersFragment oFragment = (OrdersFragment) manager.findFragmentByTag(OrdersFragment.TAG);
+        if (oFragment != null) {
+            this.finish();
+        }
     }
 
     public void setCustomTitle(String title){

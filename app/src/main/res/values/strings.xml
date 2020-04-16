@@ -38,7 +38,7 @@
     <string name="default_category_required">Please, choose at least one category</string>
     <string name="my_shop">My Shop</string>
     <string name="client">Client :</string>
-    <string name="client_name">Client Name</string>
+    <string name="client_name">Client NameNAmeName</string>
     <string name="reference">Ref :</string>
     <string name="order_reference">Order reference</string>
     <string name="date">Registration date :</string>
@@ -120,5 +120,6 @@
     <string name="order_price_not_filled">Votre client ne pourra pas consulter l\'addition. Voulez-vous envoyer la confirmation quand même ?</string>
     <string name="prix_dhs">Prix (Dhs) :</string>
     <string name="total_bill_empty">Total commande non renseigné</string>
+    <string name="no_more_orders">Il n\'y plus de commandes à afficher…</string>
 
 </resources>

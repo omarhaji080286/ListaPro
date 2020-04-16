@@ -53,7 +53,9 @@ public class ShopRepository {
         return shopDao.getShopsByShopKeeperId(skId);
     }
 
-    public void insert(Shop shop) {
+    public void insert(Shop shop, Context context) {
+        SharedPrefManager spm = SharedPrefManager.getInstance(context);
+        spm.storeServerShopId(shop.getServerShopId());
         new InsertShopAsyncTask(shopDao, assocDao).execute(shop);
     }
 
@@ -61,7 +63,7 @@ public class ShopRepository {
         new UpdateShopDeliveringAsyncTask(shopDao).execute(shop);
     }
 
-    public void insertShopOnServer(final Shop shop) {
+    public void insertShopOnServer(final Shop shop, final Context context) {
         RetrofitHelper rh = new RetrofitHelper();
         ListaProWebServices ws = rh.initWebServices();
 
@@ -83,7 +85,7 @@ public class ShopRepository {
                     if (wsResponse != null) {
                         if (!wsResponse.isError()) {
                             shop.setServerShopId(wsResponse.getServerShopId());
-                            insert(shop);
+                            insert(shop, context);
                         } else {
                             Log.d(TAG, "Error on server : " + wsResponse.getMessage());
                         }

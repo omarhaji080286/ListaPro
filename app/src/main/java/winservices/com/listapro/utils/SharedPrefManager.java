@@ -23,6 +23,8 @@ public class SharedPrefManager {
     private static final String KEY_ACCESS_SERVER_CITY_ID = "serverCityId";
     private static final String KEY_ACCESS_SHOP_TYPE_ID = "serverShopTypeId";
     private static final String KEY_ACCESS_SELECTED_CATEGORIES = "selectedCategories";
+    private static final String KEY_ACCESS_SHOP_ID = "serverShopId";
+    private static final String KEY_ACCESS_ONGOING_ORDERS_COUNT = "on_going_orders_count";
     public static final String GOOGLE_PLAY_VERSION_CODE = "google_play_version_code";
     public static final String LISTA_PRO_APP_MESSAGES = "lista_pro_app_messages";
 
@@ -99,6 +101,18 @@ public class SharedPrefManager {
         editor.apply();
     }
 
+    public void storeServerShopId(int serverShopId){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(KEY_ACCESS_SHOP_ID, serverShopId);
+        editor.apply();
+    }
+
+    public int getServerShopId(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(KEY_ACCESS_SHOP_ID, 0);
+    }
+
     public int getServerCityId(){
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getInt(KEY_ACCESS_SERVER_CITY_ID, 0);
@@ -154,7 +168,7 @@ public class SharedPrefManager {
                 storeImagePath(prefix+sharedPrefKey,file.getAbsolutePath());
             }
         };
-        thread.run();
+        thread.start();
     }
 
     private void storeImagePath(String key, String path) {
@@ -195,6 +209,18 @@ public class SharedPrefManager {
     public String getOrderPriceTemp(int serverOrderId){
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(String.valueOf(serverOrderId), "");
+    }
+
+    public void storeOngoingOrdersCount(int shopOrdersCount) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(KEY_ACCESS_ONGOING_ORDERS_COUNT, shopOrdersCount);
+        editor.apply();
+    }
+
+    public int getOngoingOrdersCount(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(KEY_ACCESS_ONGOING_ORDERS_COUNT, 0);
     }
 
 

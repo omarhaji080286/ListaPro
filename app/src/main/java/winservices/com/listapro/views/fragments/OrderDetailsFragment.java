@@ -1,13 +1,17 @@
 package winservices.com.listapro.views.fragments;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,9 +41,12 @@ import java.util.List;
 import java.util.Objects;
 
 import winservices.com.listapro.R;
+import winservices.com.listapro.models.entities.Client;
 import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.OrderStatusValue;
 import winservices.com.listapro.models.entities.OrderedGood;
+import winservices.com.listapro.utils.SharedPrefManager;
+import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.viewmodels.OrderVM;
 import winservices.com.listapro.views.activities.MyOrdersActivity;
 import winservices.com.listapro.views.adapters.OrderedGoodsAdapter;
@@ -62,7 +69,7 @@ public class OrderDetailsFragment extends Fragment {
     private LinearLayoutCompat llAddress, llLocation;
     private Order orderToShare;
     private List<OrderedGood> orderedGoodsToShare;
-    private ImageView imgDelivery;
+    private ImageView imgDelivery, imgClientPic;
     private AppCompatEditText editOrderPrice;
     private String orderPrice = "";
 
@@ -136,6 +143,7 @@ public class OrderDetailsFragment extends Fragment {
         txtToDeliver = view.findViewById(R.id.txtToDeliver);
         imgDelivery = view.findViewById(R.id.imgDelivery);
         editOrderPrice = view.findViewById(R.id.editOrderPrice);
+        imgClientPic = view.findViewById(R.id.imgClientPic);
 
         oGoodsAdapter = new OrderedGoodsAdapter(orderVM);
         glm = new GridLayoutManager(getContext(), GRID_COLUMN_NUMBER);
@@ -147,9 +155,10 @@ public class OrderDetailsFragment extends Fragment {
             orderVM.getOrderByServerOrderId(serverOrderId).observe(this, new Observer<Order>() {
                 @Override
                 public void onChanged(Order order) {
-
+                    if (order==null) return;
                     orderToShare = order;
                     setupOrderCard(order);
+                    setClientImage(order, getContext());
 
                     oGoodsAdapter.setOrderStatusId(order.getStatus().getStatusId());
                     loadOrderedGoods(order);
@@ -162,7 +171,6 @@ public class OrderDetailsFragment extends Fragment {
                     }
                 }
             });
-
 
             editOrderPrice.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -181,47 +189,76 @@ public class OrderDetailsFragment extends Fragment {
             });
 
         }
+    }
 
+    private void setClientImage(final Order order, final Context context){
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+
+                SharedPrefManager sp = SharedPrefManager.getInstance(getContext());
+                String imagePath = sp.getImagePath(Client.PREFIX + order.getClient().getServerUserId());
+                if (imagePath != null) {
+                    float width = UtilsFunctions.convertDpToPx(context, 90);
+                    float height = UtilsFunctions.convertDpToPx(context, 90);
+
+                    Bitmap imageBitmap = sp.rotate(-90.0f, BitmapFactory.decodeFile(imagePath), width, height);
+                    imgClientPic.setScaleType(ImageView.ScaleType.CENTER);
+                    imgClientPic.setImageBitmap(imageBitmap);
+                } else {
+                    imgClientPic.setImageResource(R.drawable.user_default_image);
+                }
+
+                Log.d(TAG, "Client image set");
+            }
+        });
 
     }
 
     private void setupOrderCard(final Order order) {
-        txtOrderId.setText(String.valueOf(order.getServerOrderId()));
-
-        if (order.getIsToDeliver() == Order.IS_TO_DELIVER) {
-            txtDeliveryType.setText(R.string.delivery_type);
-            llAddress.setVisibility(View.VISIBLE);
-            llLocation.setVisibility(View.VISIBLE);
-        } else {
-            txtDeliveryType.setText(R.string.to_collect);
-            llAddress.setVisibility(View.GONE);
-            llLocation.setVisibility(View.GONE);
-            txtToDeliver.setVisibility(View.GONE);
-            imgDelivery.setVisibility(View.GONE);
-        }
-
-        txtDeliveryDay.setText(order.getDisplayedCollectTime(getContext(), order.getEndTime()));
-
-        txtClientName.setText(order.getClient().getUserName());
-        txtClientPhone.setText(order.getClient().getUserPhone());
-
-        imgBtnPhone.setOnClickListener(new View.OnClickListener() {
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
             @Override
-            public void onClick(View v) {
-                startDialer(order.getClient().getUserPhone());
+            public void run() {
+                txtOrderId.setText(String.valueOf(order.getServerOrderId()));
+
+                if (order.getIsToDeliver() == Order.IS_TO_DELIVER) {
+                    txtDeliveryType.setText(R.string.delivery_type);
+                    llAddress.setVisibility(View.VISIBLE);
+                    llLocation.setVisibility(View.VISIBLE);
+                } else {
+                    txtDeliveryType.setText(R.string.to_collect);
+                    llAddress.setVisibility(View.GONE);
+                    llLocation.setVisibility(View.GONE);
+                    txtToDeliver.setVisibility(View.GONE);
+                    imgDelivery.setVisibility(View.GONE);
+                }
+
+                txtDeliveryDay.setText(order.getDisplayedCollectTime(getContext(), order.getEndTime()));
+
+                txtClientName.setText(order.getClient().getUserName());
+                txtClientPhone.setText(order.getClient().getUserPhone());
+
+                imgBtnPhone.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startDialer(order.getClient().getUserPhone());
+                    }
+                });
+
+                txtClientAddress.setText(order.getUserAddress());
+
+                imgBtnLocation.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startGoogleMaps(order.getUserLocation());
+                    }
+                });
+
+                editOrderPrice.setText(order.getOrderPriceTemp(getContext()));
             }
         });
-
-        txtClientAddress.setText(order.getUserAddress());
-
-        imgBtnLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startGoogleMaps(order.getUserLocation());
-            }
-        });
-
-        editOrderPrice.setText(order.getOrderPriceTemp(getContext()));
 
     }
 
@@ -235,31 +272,38 @@ public class OrderDetailsFragment extends Fragment {
 
     private void initFinishButton(final Order order) {
 
-        btnFinishOrder.setOnClickListener(new View.OnClickListener() {
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
             @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = buildConfirmationDialog();
+            public void run() {
+                btnFinishOrder.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                    AlertDialog.Builder builder = buildConfirmationDialog();
 
-                if (orderPrice.matches("")) {
-                    builder.setMessage(R.string.order_price_not_filled);
-                    builder.setTitle(R.string.total_bill_empty);
-                }
+                        if (orderPrice.matches("")) {
+                            builder.setMessage(R.string.order_price_not_filled);
+                            builder.setTitle(R.string.total_bill_empty);
+                        }
 
-                builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        order.setOrderPrice(orderPrice);
-                        sendConfirmation(order);
+                        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                order.setOrderPrice(orderPrice);
+                                sendConfirmation(order);
+                            }
+                        });
+
+                        if (verifyOGoodsStatus()) {
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+                        } else {
+                            Toast.makeText(getContext(), getString(R.string.update_items_status), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
-
-                if (verifyOGoodsStatus()) {
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                } else {
-                    Toast.makeText(getContext(), getString(R.string.update_items_status), Toast.LENGTH_SHORT).show();
-                }
             }
         });
+
     }
 
     private AlertDialog.Builder buildConfirmationDialog() {
@@ -353,10 +397,10 @@ public class OrderDetailsFragment extends Fragment {
     }
 
     private void shareOrderData(Order order, List<OrderedGood> orderedGoodsToShare) {
-
+        orderToShare.storeOrderPriceTemp(getContext());
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        String plainText = order.toPlainText() +
+        String plainText = order.toPlainText(getContext()) +
                 "\n" +
                 " - Articles : " + orderedGoodsToShare.size() +
                 "\n" +

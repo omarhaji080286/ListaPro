@@ -156,9 +156,9 @@ public class Order implements Comparable<Order>{
         return serverShopIdFk;
     }
 
-    public void setServerShopIdFk(int serverShopIdFk) {
+    /*public void setServerShopIdFk(int serverShopIdFk) {
         this.serverShopIdFk = serverShopIdFk;
-    }
+    }*/
 
     public int getServerOrderId() {
         return serverOrderId;
@@ -244,15 +244,20 @@ public class Order implements Comparable<Order>{
         return  getDateStartTime().compareTo(o.getDateStartTime());
     }
 
-
-    public String toPlainText(){
+    public String toPlainText(Context context){
         try {
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
             String painText;
+            String orderPriceTempField = "";
+            if (!this.getOrderPriceTemp(context).equals("")){
+                orderPriceTempField = "- Total (Dhs) : " + this.getOrderPriceTemp(context) + "\n";
+            }
+
             if (this.isToDeliver==IS_TO_DELIVER){
                 painText = "- Réf commande : " + this.serverOrderId +
                         "\n" +
+                        orderPriceTempField +
                         "- préparer pour le : " +
                         UtilsFunctions.dateToString(sdf.parse(this.getEndTime()), "dd/MM/yyyy") +
                         "\n" +
@@ -266,6 +271,7 @@ public class Order implements Comparable<Order>{
             } else {
                 painText = "- Réf commande : " + this.serverOrderId +
                         "\n" +
+                        orderPriceTempField +
                         "- préparer pour le : " +
                         UtilsFunctions.dateToString(sdf.parse(this.getEndTime()), "dd/MM/yyyy") +
                         "\n" +

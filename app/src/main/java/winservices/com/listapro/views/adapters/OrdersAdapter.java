@@ -1,8 +1,6 @@
 package winservices.com.listapro.views.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,18 +10,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import winservices.com.listapro.R;
-import winservices.com.listapro.models.entities.Client;
 import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.OrderStatusValue;
-import winservices.com.listapro.utils.SharedPrefManager;
-import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.viewmodels.OrderVM;
 import winservices.com.listapro.views.activities.MyOrdersActivity;
 import winservices.com.listapro.views.fragments.OrderDetailsFragment;
@@ -33,12 +27,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
     private List<Order> orders = new ArrayList<>();
     private OrderVM orderVM;
     private Context context;
-    private Fragment fragment;
 
-    public OrdersAdapter(Fragment fragment,Context context, OrderVM orderVM) {
+    public OrdersAdapter(Context context, OrderVM orderVM) {
         this.context = context;
         this.orderVM = orderVM;
-        this.fragment = fragment;
     }
 
     @NonNull
@@ -53,22 +45,12 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
     public void onBindViewHolder(@NonNull final OrderVH holder, int position) {
         final Order order = orders.get(position);
 
-        SharedPrefManager sp = SharedPrefManager.getInstance(context);
-        String imagePath = sp.getImagePath(Client.PREFIX + order.getClient().getServerUserId());
-        if (imagePath != null) {
-            float width = UtilsFunctions.convertDpToPx(context, 90);
-            float height = UtilsFunctions.convertDpToPx(context, 90);
-
-            Bitmap imageBitmap = sp.rotate(-90.0f, BitmapFactory.decodeFile(imagePath), width, height);
-            holder.imgClientPic.setScaleType(ImageView.ScaleType.CENTER);
-            holder.imgClientPic.setImageBitmap(imageBitmap);
-        } else {
-            holder.imgClientPic.setImageResource(R.drawable.user_default_image);
-        }
-
         if (order.getIsToDeliver()==Order.IS_TO_COLLECT){
             holder.txtToDeliver.setVisibility(View.GONE);
             holder.imgDelivery.setVisibility(View.GONE);
+        } else {
+            holder.txtToDeliver.setVisibility(View.VISIBLE);
+            holder.imgDelivery.setVisibility(View.VISIBLE);
         }
 
         holder.txtClientName.setText(order.getClient().getUserName());
@@ -163,10 +145,15 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
         notifyDataSetChanged();
     }
 
+    public void addOrders(List<Order> ordersToAdd){
+        orders.addAll(ordersToAdd);
+        notifyDataSetChanged();
+    }
+
     static class OrderVH extends RecyclerView.ViewHolder {
 
         private TextView txtClientName, txtReference, txtDate, txtStatus, txtItemsNb, txtCollectTime, txtToDeliver, txtOrderPrice;
-        private ImageView imgClientPic, imgRegistered, imgRead, imgAvailable, imgClosedOrNotSuported, imgDelivery ;
+        private ImageView imgRegistered, imgRead, imgAvailable, imgClosedOrNotSuported, imgDelivery ;
         private LinearLayoutCompat llOrderContainer, llOrderPrice;
 
         OrderVH(@NonNull View itemView) {
@@ -178,7 +165,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
             txtDate = itemView.findViewById(R.id.txtDate);
             txtStatus = itemView.findViewById(R.id.txtStatus);
             txtItemsNb = itemView.findViewById(R.id.txtItemsNb);
-            imgClientPic = itemView.findViewById(R.id.imgClientPic);
             txtCollectTime = itemView.findViewById(R.id.txtCollectTime);
             imgRegistered = itemView.findViewById(R.id.imgRegistered);
             imgRead = itemView.findViewById(R.id.imgRead);
@@ -189,8 +175,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
             llOrderPrice = itemView.findViewById(R.id.llOrderPrice);
             txtOrderPrice = itemView.findViewById(R.id.txtOrderPrice);
 
-
         }
     }
+
+
 
 }

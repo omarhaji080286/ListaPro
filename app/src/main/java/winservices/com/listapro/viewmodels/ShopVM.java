@@ -43,8 +43,8 @@ public class ShopVM extends AndroidViewModel {
         return shops;
     }
 
-    public void insert(Shop shop){
-        repository.insertShopOnServer(shop);
+    public void insert(Shop shop, Context context){
+        repository.insertShopOnServer(shop, context);
     }
 
     public void uploadShopImage(Context context, int serverShopId){

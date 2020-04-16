@@ -16,17 +16,7 @@
         android:src="@drawable/store_default"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <ImageView
-        android:id="@+id/imgEditShopPic"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:src="@drawable/ic_edit_black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="10dp"
-        android:contentDescription="@string/add_shop_desc"
         tools:ignore="UnusedAttribute" />
 
     <TextView

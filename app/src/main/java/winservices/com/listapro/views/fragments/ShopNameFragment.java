@@ -216,7 +216,7 @@ public class ShopNameFragment extends Fragment implements TimePickerDialog.OnTim
             shop.setOpeningTime(openingTime);
             shop.setClosingTime(closingTime);
 
-            shopVM.insert(shop);
+            shopVM.insert(shop, getContext());
             Toast.makeText(getContext(), getString(R.string.shop_added), Toast.LENGTH_SHORT).show();
 
             ((AddShopActivity) Objects.requireNonNull(getActivity())).
@@ -232,8 +232,8 @@ public class ShopNameFragment extends Fragment implements TimePickerDialog.OnTim
             return false;
         }
 
-        int hourOpening = Integer.valueOf(editHourOpening.getText().toString());
-        int hourClosing = Integer.valueOf(editHourClosing.getText().toString());
+        int hourOpening = Integer.parseInt(editHourOpening.getText().toString());
+        int hourClosing = Integer.parseInt(editHourClosing.getText().toString());
 
         if (hourOpening >= hourClosing) {
             editHourClosing.setError(getString(R.string.error_opening_window));
