@@ -32,7 +32,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import winservices.com.listapro.R;
-import winservices.com.listapro.models.entities.Client;
 import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.OrderedGood;
 import winservices.com.listapro.models.entities.Shop;
@@ -309,10 +308,10 @@ public class OrdersFragment extends Fragment {
             public void run() {
                 for (Order order : orders) {
                     orderVM.insert(order);
-                    String userImage = order.getClient().getUserImage();
+                    /*String userImage = order.getClient().getUserImage();
                     if (!userImage.equals("defaultImage")) {
                         SharedPrefManager.getInstance(getContext()).storeImageToFile(userImage, "jpg", Client.PREFIX, order.getClient().getServerUserId());
-                    }
+                    }*/
                     for (OrderedGood orderedGood : order.getOrderedGoods()) {
                         orderVM.insertOGood(orderedGood);
                     }

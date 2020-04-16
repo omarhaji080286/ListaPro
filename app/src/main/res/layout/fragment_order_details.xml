@@ -27,15 +27,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="center">
 
-                <ImageView
-                    android:id="@+id/imgClientPic"
-                    android:layout_width="@dimen/user_img_height"
-                    android:layout_height="@dimen/user_img_width"
-                    android:src="@drawable/user"
-                    android:contentDescription="@string/todo"
-                    android:foreground="@drawable/rounded_fg"
-                    tools:ignore="UnusedAttribute" />
-
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat

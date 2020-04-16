@@ -1,17 +1,13 @@
 package winservices.com.listapro.views.fragments;
 
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,12 +37,9 @@ import java.util.List;
 import java.util.Objects;
 
 import winservices.com.listapro.R;
-import winservices.com.listapro.models.entities.Client;
 import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.OrderStatusValue;
 import winservices.com.listapro.models.entities.OrderedGood;
-import winservices.com.listapro.utils.SharedPrefManager;
-import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.viewmodels.OrderVM;
 import winservices.com.listapro.views.activities.MyOrdersActivity;
 import winservices.com.listapro.views.adapters.OrderedGoodsAdapter;
@@ -69,7 +62,7 @@ public class OrderDetailsFragment extends Fragment {
     private LinearLayoutCompat llAddress, llLocation;
     private Order orderToShare;
     private List<OrderedGood> orderedGoodsToShare;
-    private ImageView imgDelivery, imgClientPic;
+    private ImageView imgDelivery;
     private AppCompatEditText editOrderPrice;
     private String orderPrice = "";
 
@@ -143,7 +136,7 @@ public class OrderDetailsFragment extends Fragment {
         txtToDeliver = view.findViewById(R.id.txtToDeliver);
         imgDelivery = view.findViewById(R.id.imgDelivery);
         editOrderPrice = view.findViewById(R.id.editOrderPrice);
-        imgClientPic = view.findViewById(R.id.imgClientPic);
+        //imgClientPic = view.findViewById(R.id.imgClientPic);
 
         oGoodsAdapter = new OrderedGoodsAdapter(orderVM);
         glm = new GridLayoutManager(getContext(), GRID_COLUMN_NUMBER);
@@ -158,7 +151,7 @@ public class OrderDetailsFragment extends Fragment {
                     if (order==null) return;
                     orderToShare = order;
                     setupOrderCard(order);
-                    setClientImage(order, getContext());
+                    //setClientImage(order, getContext());
 
                     oGoodsAdapter.setOrderStatusId(order.getStatus().getStatusId());
                     loadOrderedGoods(order);
@@ -191,7 +184,7 @@ public class OrderDetailsFragment extends Fragment {
         }
     }
 
-    private void setClientImage(final Order order, final Context context){
+    /*private void setClientImage(final Order order, final Context context){
         Handler handler = new Handler();
         handler.post(new Runnable() {
             @Override
@@ -214,7 +207,7 @@ public class OrderDetailsFragment extends Fragment {
             }
         });
 
-    }
+    }*/
 
     private void setupOrderCard(final Order order) {
         Handler handler = new Handler();
