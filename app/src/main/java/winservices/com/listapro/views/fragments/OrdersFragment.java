@@ -232,8 +232,11 @@ public class OrdersFragment extends Fragment {
                                 txtNoOrderRegistered.setVisibility(View.VISIBLE);
                             }
 
-                            SharedPrefManager spm = SharedPrefManager.getInstance(getContext());
-                            spm.storeOngoingOrdersCount(wsResponse.getShopOrdersCount());
+                            if (ordersType==ONGOING_ORDERS){
+                                SharedPrefManager spm = SharedPrefManager.getInstance(getContext());
+                                spm.storeOngoingOrdersCount(wsResponse.getShopOrdersCount());
+                            }
+
 
                         } else {
                             Log.d(TAG, "Error on server : " + wsResponse.getMessage());

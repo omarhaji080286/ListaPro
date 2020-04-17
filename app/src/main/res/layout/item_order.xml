@@ -68,6 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:gravity="start|center"
                 android:layout_marginStart="@dimen/margin_small"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
@@ -101,7 +102,7 @@
                     android:layout_width="@dimen/small_size_icon"
                     android:layout_height="@dimen/small_size_icon"
                     android:src="@drawable/completed"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:contentDescription="@string/todo" />
 
                 <TextView
