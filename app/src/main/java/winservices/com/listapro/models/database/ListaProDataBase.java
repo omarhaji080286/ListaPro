@@ -32,7 +32,7 @@ import winservices.com.listapro.repositories.ShopTypeRepository;
 @Database(  entities = {ShopKeeper.class, Shop.class, ShopType.class, AssocShopTypeDCategory.class,
                         DefaultCategory.class, AssocShopDCategory.class, Order.class, OrderedGood.class,
                         City.class},
-            version = 2,
+            version = 3, //update 09/04/2020
             exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class ListaProDataBase extends RoomDatabase {

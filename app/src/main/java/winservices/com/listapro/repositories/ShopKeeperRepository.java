@@ -33,14 +33,14 @@ public class ShopKeeperRepository {
     private ShopKeeperDao shopKeeperDao;
     private LiveData<List<ShopKeeper>> allShopKeepers;
     private ShopRepository shopRepository;
-    private ShopTypeRepository shopTypeRepository;
+    //private ShopTypeRepository shopTypeRepository;
 
     public ShopKeeperRepository(Application application) {
         ListaProDataBase db = ListaProDataBase.getInstance(application);
         shopKeeperDao = db.shopKeeperDao();
         allShopKeepers = shopKeeperDao.getAllShopKeepers();
         shopRepository = new ShopRepository(application);
-        shopTypeRepository = new ShopTypeRepository(application);
+        //shopTypeRepository = new ShopTypeRepository(application);
     }
 
     public LiveData<ShopKeeper> getLastLogged() {
@@ -99,7 +99,7 @@ public class ShopKeeperRepository {
 
                             Shop shop = wsResponse.getShop();
                             if (shop!=null) {
-                                shopRepository.insert(shop);
+                                shopRepository.insert(shop, context);
                                 if (!shop.getShopImage().equals("defaultImage")){
                                     SharedPrefManager.getInstance(context).storeImageToFile(shop.getShopImage(), "jpg", Shop.PREFIX_SHOP, shop.getServerShopId());
                                 }

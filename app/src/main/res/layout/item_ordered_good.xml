@@ -48,7 +48,7 @@
                 android:id="@+id/imgOGoodPic"
                 android:layout_width="@dimen/ordered_good_pic_size_width"
                 android:layout_height="@dimen/ordered_good_pic_size_height"
-                android:src="@drawable/ic_store_black"
+                android:src="@drawable/market"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txtOGoodDesc"

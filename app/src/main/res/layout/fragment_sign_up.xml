@@ -14,7 +14,8 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_content_margin_large">
+        android:layout_margin="@dimen/text_content_margin_large"
+        tools:ignore="UseCompoundDrawables">
 
         <ImageView
             style="@style/LogoImg"
@@ -63,7 +64,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+212"
+                android:text="@string/_212"
                 style="@style/SimpleText"/>
 
             <EditText
@@ -73,8 +74,9 @@
                 android:layout_height="wrap_content"
                 android:inputType="phone"
                 android:maxLength="9"
-                android:hint="123456789"
-                android:visibility="visible"/>
+                android:hint="@string/_123456789"
+                android:visibility="visible"
+                android:autofillHints="@string/todo" />
 
         </LinearLayout>
 
@@ -96,7 +98,8 @@
             android:inputType="number"
             android:hint="@string/hint_verification_code"
             android:maxLength="6"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:autofillHints="@string/todo" />
 
         <Button
             android:id="@+id/btnNext"

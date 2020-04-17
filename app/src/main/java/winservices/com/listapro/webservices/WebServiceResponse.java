@@ -12,12 +12,30 @@ public class WebServiceResponse {
 
     private boolean error;
     private String message;
+    private int newRow;
+    private int shopOrdersCount;
     private ShopKeeper shopKeeper;
     private List<ShopType> shopTypesWithCategories;
     private int serverShopId;
     private List<Order> orders;
     private List<City> cities;
     private Shop shop;
+
+    public int getShopOrdersCount() {
+        return shopOrdersCount;
+    }
+
+    public void setShopOrdersCount(int shopOrdersCount) {
+        this.shopOrdersCount = shopOrdersCount;
+    }
+
+    public int getNewRow() {
+        return newRow;
+    }
+
+    public void setNewRow(int newRow) {
+        this.newRow = newRow;
+    }
 
     public List<City> getCities() {
         return cities;

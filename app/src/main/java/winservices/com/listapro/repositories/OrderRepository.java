@@ -5,6 +5,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -12,18 +15,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import winservices.com.listapro.models.dao.OrderDao;
 import winservices.com.listapro.models.dao.OrderedGoodDao;
 import winservices.com.listapro.models.database.ListaProDataBase;
-import winservices.com.listapro.models.entities.Client;
 import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.OrderedGood;
-import winservices.com.listapro.utils.SharedPrefManager;
 import winservices.com.listapro.views.activities.MyOrdersActivity;
 import winservices.com.listapro.webservices.ListaProWebServices;
 import winservices.com.listapro.webservices.RetrofitHelper;
@@ -61,7 +60,7 @@ public class OrderRepository {
         new InsertOrderAsyncTask(orderDao).execute(order);
     }
 
-    public void insert(OrderedGood orderedGood) {
+    public void insertOGood(OrderedGood orderedGood) {
         new InsertOrderedGoodAsyncTask(orderedGoodDao).execute(orderedGood);
     }
 
@@ -74,12 +73,14 @@ public class OrderRepository {
     }
 
     public void loadOrdersFromServer(final Context context, int serverShopId) {
-        RetrofitHelper rh = new RetrofitHelper();
+
+        /*RetrofitHelper rh = new RetrofitHelper();
         ListaProWebServices ws = rh.initWebServices();
 
         Map<String, String> hashMap = new HashMap<>();
         hashMap.put("serverShopId", String.valueOf(serverShopId));
         Call<WebServiceResponse> call = ws.getShopOrders(hashMap);
+        Log.d(TAG, "Server called from loadOrdersFromServer");
 
         call.enqueue(new Callback<WebServiceResponse>() {
             @Override
@@ -98,7 +99,7 @@ public class OrderRepository {
                                     SharedPrefManager.getInstance(context).storeImageToFile(userImage, "jpg", Client.PREFIX, order.getClient().getServerUserId());
                                 }
                                 for (OrderedGood orderedGood : order.getOrderedGoods()) {
-                                    insert(orderedGood);
+                                    insertOGood(orderedGood);
                                 }
                             }
                             Log.d(TAG, "onResponse: " + orders.size() + " orders inserted or updated");
@@ -111,12 +112,60 @@ public class OrderRepository {
 
             @Override
             public void onFailure(@NonNull Call<WebServiceResponse> call, @NonNull Throwable t) {
-                Log.d(TAG, "Failure : " + t.getMessage());
+                Log.d(TAG, "Failure loading orders from server : " + t.getMessage());
             }
-        });
+        });*/
     }
 
+    /*public void loadOrdersFromServerWithPagination(final Context context, int serverShopId, int row, int rowsCount) {
+
+        RetrofitHelper rh = new RetrofitHelper();
+        ListaProWebServices ws = rh.initWebServices();
+
+        Map<String, String> hashMap = new HashMap<>();
+        hashMap.put("serverShopId", String.valueOf(serverShopId));
+        hashMap.put("row", String.valueOf(row));
+        hashMap.put("rows_count", String.valueOf(rowsCount));
+        Call<WebServiceResponse> call = ws.getShopOrdersPage(hashMap);
+        Log.d(TAG, "Server called from loadOrdersFromServer");
+
+        call.enqueue(new Callback<WebServiceResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<WebServiceResponse> call, @NonNull Response<WebServiceResponse> response) {
+                if (!response.isSuccessful()) {
+                    Log.d(TAG, "Error : " + response.code());
+                } else {
+                    WebServiceResponse wsResponse = response.body();
+                    if (wsResponse != null) {
+                        if (!wsResponse.isError()) {
+                            List<Order> orders = wsResponse.getOrders();
+                            for (Order order : orders) {
+                                insert(order);
+                                String userImage = order.getClient().getUserImage();
+                                if (!userImage.equals("defaultImage")) {
+                                    SharedPrefManager.getInstance(context).storeImageToFile(userImage, "jpg", Client.PREFIX, order.getClient().getServerUserId());
+                                }
+                                for (OrderedGood orderedGood : order.getOrderedGoods()) {
+                                    insertOGood(orderedGood);
+                                }
+                            }
+                            Log.d(TAG, "onResponse: " + orders.size() + " orders inserted or updated");
+                        } else {
+                            Log.d(TAG, "Error on server : " + wsResponse.getMessage());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<WebServiceResponse> call, @NonNull Throwable t) {
+                Log.d(TAG, "Failure loading orders from server : " + t.getMessage());
+            }
+        });
+    }*/
+
     public void updateOrderOnServer(final Order order) {
+        Log.d(TAG, "Server called from updateOrderOnServer");
         RetrofitHelper rh = new RetrofitHelper();
         ListaProWebServices ws = rh.initWebServices();
 
@@ -127,6 +176,7 @@ public class OrderRepository {
         hashMap.put("jsonRequest", jsonRequest);
         hashMap.put("language", Locale.getDefault().getLanguage());
         Call<WebServiceResponse> call = ws.updateOrder(hashMap);
+        Log.d(TAG, "Server called from updateOrderOnServer");
 
         call.enqueue(new Callback<WebServiceResponse>() {
             @Override
@@ -148,17 +198,13 @@ public class OrderRepository {
 
             @Override
             public void onFailure(@NonNull Call<WebServiceResponse> call, @NonNull Throwable t) {
-                Log.d(TAG, "Failure : " + t.getMessage());
+                Log.d(TAG, "Failure updating order : " + t.getMessage());
             }
         });
     }
 
     public LiveData<Integer> getSentOrdersNum(int serverShopId) {
         return orderDao.getSentOrdersNum(serverShopId);
-    }
-
-    public LiveData<Integer> getOrderedGoodsNum(int serverUserId, int serverOrderId) {
-        return orderDao.getOrderedGoodsNum(serverUserId, serverOrderId);
     }
 
     public LiveData<Order> getOrderByServerOrderId(int serverOrderId) {
@@ -175,6 +221,7 @@ public class OrderRepository {
         Log.d(TAG, "jsonRequest: " + jsonRequest);
         hashMap.put("jsonRequest", jsonRequest);
         Call<WebServiceResponse> call = ws.updateOrderedGoods(hashMap);
+        Log.d(TAG, "Server called from updateOrderedGoodsOnServer");
 
         call.enqueue(new Callback<WebServiceResponse>() {
             @Override
@@ -196,7 +243,7 @@ public class OrderRepository {
 
             @Override
             public void onFailure(@NonNull Call<WebServiceResponse> call, @NonNull Throwable t) {
-                Log.d(TAG, " WS Failure : " + t.getMessage());
+                Log.d(TAG, " Failure updating ordered goods : " + t.getMessage());
             }
         });
     }

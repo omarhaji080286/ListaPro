@@ -7,8 +7,8 @@ android {
         applicationId "winservices.com.listapro"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 6
-        versionName "1.0.4"
+        versionCode 10
+        versionName "2.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -41,20 +41,26 @@ dependencies {
     //Room
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
+
     //FireBase - SMS
-    implementation 'com.google.firebase:firebase-core:17.0.0'
-    implementation 'com.google.firebase:firebase-auth:18.0.0'
-    //FireBAse - Cloud Messaging
+    implementation 'com.google.firebase:firebase-core:17.0.1'
+    implementation 'com.google.firebase:firebase-auth:18.1.0'
+
+    //FireBase - Cloud Messaging
     implementation 'com.google.firebase:firebase-messaging:19.0.1'
+
+    //FireBase - Remote Config
+    implementation 'com.google.firebase:firebase-config:18.0.0'
+
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+
     //Google Location
     implementation 'com.google.android.gms:play-services-location:17.0.0'
 
     implementation "com.android.support:support-core-utils:28.0.0"
-
-
+    implementation 'androidx.exifinterface:exifinterface:1.1.0-beta01'
 
 
 }

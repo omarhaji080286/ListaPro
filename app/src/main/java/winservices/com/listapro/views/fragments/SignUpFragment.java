@@ -2,6 +2,7 @@ package winservices.com.listapro.views.fragments;
 
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,14 +33,18 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import winservices.com.listapro.R;
+import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
 import winservices.com.listapro.utils.SharedPrefManager;
 import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
+import winservices.com.listapro.viewmodels.ShopVM;
+import winservices.com.listapro.views.activities.AddShopActivity;
 import winservices.com.listapro.views.activities.LauncherActivity;
 
 public class SignUpFragment extends Fragment {
@@ -53,11 +58,14 @@ public class SignUpFragment extends Fragment {
     private TextView txtDescription;
     private LinearLayout linlayPhoneCointaner;
     private ShopKeeperVM shopKeeperVM;
+    private ShopVM shopVM;
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
             Log.d(TAG, "onVerificationCompleted: " + phoneAuthCredential.getSignInMethod());
+            dialog = UtilsFunctions.getDialogBuilder(getLayoutInflater(), getContext(), getString(R.string.signing_up)).create();
+            dialog.show();
             signInWithPhoneAuthCredential(phoneAuthCredential);
         }
 
@@ -72,6 +80,7 @@ public class SignUpFragment extends Fragment {
             super.onCodeSent(s, forceResendingToken);
             editVerifCode.setEnabled(true);
             btnSignUp.setEnabled(true);
+            editVerifCode.requestFocus();
             codeSent = s;
         }
     };
@@ -101,6 +110,8 @@ public class SignUpFragment extends Fragment {
         btnSignUp = view.findViewById(R.id.btnNext);
         txtDescription = view.findViewById(R.id.txtDescription);
         linlayPhoneCointaner = view.findViewById(R.id.linLayPhoneContainer);
+
+        editPhone.requestFocus();
 
         editVerifCode.setEnabled(false);
         btnSignUp.setEnabled(false);
@@ -139,8 +150,8 @@ public class SignUpFragment extends Fragment {
                                     shopKeeper.setIsLoggedIn(ShopKeeper.LOGGED_IN);
                                     shopKeeper.setLastLogged(ShopKeeper.LAST_LOGGED);
                                     shopKeeperVM.logIn(shopKeeper);
-                                    LauncherActivity launcherActivity = (LauncherActivity) getActivity();
-                                    Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment(), WelcomeFragment.TAG);
+
+                                    routeUser(shopKeeper);
                                 }
                             }
                         });
@@ -154,6 +165,8 @@ public class SignUpFragment extends Fragment {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog = UtilsFunctions.getDialogBuilder(getLayoutInflater(), getContext(), getString(R.string.signing_up)).create();
+                dialog.show();
                 if (UtilsFunctions.checkNetworkConnection(Objects.requireNonNull(getContext()))) {
                     FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(Objects.requireNonNull(getActivity()), new OnSuccessListener<InstanceIdResult>() {
                         @Override
@@ -165,6 +178,7 @@ public class SignUpFragment extends Fragment {
                     });
                     verifySignUpCode();
                 } else {
+                    dialog.dismiss();
                     Toast.makeText(getContext(), getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                 }
 
@@ -182,6 +196,7 @@ public class SignUpFragment extends Fragment {
                 PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codeSent, codeEntered);
                 signInWithPhoneAuthCredential(credential);
             } else {
+                dialog.dismiss();
                 editVerifCode.setError(getString(R.string.not_valid_code));
                 editVerifCode.requestFocus();
             }
@@ -233,31 +248,29 @@ public class SignUpFragment extends Fragment {
 
     private void signInWithPhoneAuthCredential(final PhoneAuthCredential credential) {
         firebaseAuth.signInWithCredential(credential)
-            .addOnCompleteListener(Objects.requireNonNull(getActivity()), new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
+                .addOnCompleteListener(Objects.requireNonNull(getActivity()), new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
 
-                    dialog = UtilsFunctions.getDialogBuilder(getLayoutInflater(), getContext(), getString(R.string.signing_up)).create();
-                    dialog.show();
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = task.getResult().getUser();
+                                if (task.isSuccessful()) {
+                                    FirebaseUser user = Objects.requireNonNull(task.getResult()).getUser();
 
-                        Log.d(TAG, "signIn success - phone number : " + user.getPhoneNumber());
-                        Log.d(TAG, "signIn success - display name : " + user.getDisplayName());
+                                    Log.d(TAG, "signIn success - phone number : " + user.getPhoneNumber());
+                                    Log.d(TAG, "signIn success - display name : " + user.getDisplayName());
 
-                        registerShopKeeper();
+                                    registerShopKeeper();
 
-                    } else {
-                        Log.d(TAG, "signIn : failure");
-                        Toast.makeText(getContext(), R.string.sign_in_failed, Toast.LENGTH_SHORT).show();
-                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                                } else {
+                                    Log.d(TAG, "signIn : failure");
+                                    Toast.makeText(getContext(), R.string.sign_in_failed, Toast.LENGTH_SHORT).show();
+                                    if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                                    }
+                                    dialog.dismiss();
+                                }
+                            }
                         }
-                        dialog.dismiss();
-                    }
-                    }
-                }
-            );
+                );
     }
 
     private void registerShopKeeper() {
@@ -274,13 +287,31 @@ public class SignUpFragment extends Fragment {
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
             public void onChanged(ShopKeeper shopKeeper) {
-                dialog.dismiss();
                 if (shopKeeper == null) return;
-                Toast.makeText(getContext(), R.string.welcome_to_listapro, Toast.LENGTH_SHORT).show();
-                LauncherActivity launcherActivity = (LauncherActivity) getActivity();
-                Objects.requireNonNull(launcherActivity).displayFragment(new AddShopFragment(), AddShopFragment.TAG);
+                dialog.dismiss();
+                routeUser(shopKeeper);
             }
         });
     }
+
+    private void routeUser(ShopKeeper shopKeeper) {
+
+        ShopVM shopVM = ViewModelProviders.of(this).get(ShopVM.class);
+
+        shopVM.getShopsByShopKeeperId(shopKeeper.getServerShopKeeperId()).observe(this, new Observer<List<Shop>>() {
+            @Override
+            public void onChanged(final List<Shop> shops) {
+                if (shops == null || shops.size() == 0) {
+                    Objects.requireNonNull(getActivity()).finish();
+                    startActivity(new Intent(getActivity(), AddShopActivity.class));
+                } else {
+                    LauncherActivity launcherActivity = (LauncherActivity) getActivity();
+                    Objects.requireNonNull(launcherActivity).displayFragment(new WelcomeFragment(), WelcomeFragment.TAG);
+                }
+            }
+        });
+
+    }
+
 
 }

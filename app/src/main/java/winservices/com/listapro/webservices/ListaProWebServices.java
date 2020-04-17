@@ -26,6 +26,14 @@ public interface ListaProWebServices {
     Call<WebServiceResponse> getShopOrders(@FieldMap Map<String, String> body);
 
     @FormUrlEncoded
+    @POST("getShopOrdersPage.php")
+    Call<WebServiceResponse> getShopOrdersPage(@FieldMap Map<String, String> body);
+
+    @FormUrlEncoded
+    @POST("getShopIndicators.php")
+    Call<WebServiceResponse> getShopIndicators(@FieldMap Map<String, String> body);
+
+    @FormUrlEncoded
     @POST("updateOrder.php")
     Call<WebServiceResponse> updateOrder(@FieldMap Map<String, String> body);
 
@@ -40,4 +48,7 @@ public interface ListaProWebServices {
     @POST("uploadShopImage.php")
     Call<WebServiceResponse> uploadShopImage(@FieldMap Map<String,String> hashMap);
 
+    @FormUrlEncoded
+    @POST("getShop.php")
+    Call<WebServiceResponse> getShop(@FieldMap Map<String, String> body);
 }
