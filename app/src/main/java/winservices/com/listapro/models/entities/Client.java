@@ -1,9 +1,9 @@
 package winservices.com.listapro.models.entities;
 
-import com.google.gson.annotations.SerializedName;
-
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "clients")
 public class Client {
@@ -16,16 +16,16 @@ public class Client {
     @SerializedName("user_name")
     private String userName;
 
-    @SerializedName("email")
-    private String userEmail;
+    @SerializedName("user_phone")
+    private String userPhone;
 
     @SerializedName("user_image")
     private String userImage;
 
-    public Client(int serverUserId, String userName, String userEmail, String userImage) {
+    public Client(int serverUserId, String userName, String userPhone, String userImage) {
         this.serverUserId = serverUserId;
         this.userName = userName;
-        this.userEmail = userEmail;
+        this.userPhone = userPhone;
         this.userImage = userImage;
     }
 
@@ -45,12 +45,12 @@ public class Client {
         this.userName = userName;
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public String getUserPhone() {
+        return userPhone;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 
     public String getUserImage() {

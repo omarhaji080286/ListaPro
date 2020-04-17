@@ -1,8 +1,6 @@
 package winservices.com.listapro.views.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,20 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import winservices.com.listapro.R;
-import winservices.com.listapro.models.entities.Client;
 import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.OrderStatusValue;
-import winservices.com.listapro.utils.SharedPrefManager;
-import winservices.com.listapro.utils.UtilsFunctions;
 import winservices.com.listapro.viewmodels.OrderVM;
 import winservices.com.listapro.views.activities.MyOrdersActivity;
 import winservices.com.listapro.views.fragments.OrderDetailsFragment;
@@ -34,12 +27,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
     private List<Order> orders = new ArrayList<>();
     private OrderVM orderVM;
     private Context context;
-    private Fragment fragment;
 
-    public OrdersAdapter(Fragment fragment,Context context, OrderVM orderVM) {
+    public OrdersAdapter(Context context, OrderVM orderVM) {
         this.context = context;
         this.orderVM = orderVM;
-        this.fragment = fragment;
     }
 
     @NonNull
@@ -54,19 +45,25 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
     public void onBindViewHolder(@NonNull final OrderVH holder, int position) {
         final Order order = orders.get(position);
 
-        String imagePath = SharedPrefManager.getInstance(context).getImagePath(Client.PREFIX + order.getClient().getServerUserId());
-        if (imagePath != null) {
-            Bitmap imageBitmap = BitmapFactory.decodeFile(imagePath);
-            holder.imgClientPic.setImageBitmap(imageBitmap);
+        if (order.getIsToDeliver()==Order.IS_TO_COLLECT){
+            holder.txtToDeliver.setVisibility(View.GONE);
+            holder.imgDelivery.setVisibility(View.GONE);
         } else {
-            holder.imgClientPic.setImageResource(R.drawable.user_default_image);
+            holder.txtToDeliver.setVisibility(View.VISIBLE);
+            holder.imgDelivery.setVisibility(View.VISIBLE);
         }
 
         holder.txtClientName.setText(order.getClient().getUserName());
-        String stringDate = UtilsFunctions.dateToString(UtilsFunctions.stringToDate(order.getCreationDate()), "dd/MM/yyyy HH:mm:ss");
-        holder.txtDate.setText(stringDate);
+        holder.txtDate.setText(order.getDisplayedCollectTime(context, order.getCreationDate()));
         holder.txtReference.setText(String.valueOf(order.getServerOrderId()));
-        holder.txtCollectTime.setText(order.getDisplayedCollectTime(context));
+        holder.txtCollectTime.setText(order.getDisplayedCollectTime(context, order.getEndTime()));
+        holder.txtItemsNb.setText(String.valueOf(order.getOrderedGoodsNum()));
+
+        String orderPriceTemp = order.getOrderPriceTemp(context);
+        if (!orderPriceTemp.equals("")){
+            holder.llOrderPrice.setVisibility(View.VISIBLE);
+            holder.txtOrderPrice.setText(orderPriceTemp);
+        }
 
         switch (order.getStatus().getStatusId()){
             case Order.REGISTERED :
@@ -82,7 +79,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
                 holder.imgAvailable.setImageResource(R.drawable.checked_gray);
                 holder.imgClosedOrNotSuported.setVisibility(View.GONE);
                 holder.txtStatus.setText(context.getString(R.string.read));
-
                 break;
             case Order.AVAILABLE :
                 holder.imgRegistered.setImageResource(R.drawable.checked);
@@ -112,7 +108,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
         }
 
 
-        holder.consLayOrderContainer.setOnClickListener(new View.OnClickListener() {
+        holder.llOrderContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 OrderDetailsFragment fragment = new OrderDetailsFragment();
@@ -120,8 +116,15 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
                 bundle.putInt(Order.SERVER_ORDER_ID, order.getServerOrderId());
                 fragment.setArguments(bundle);
                 MyOrdersActivity myOrdersActivity = (MyOrdersActivity) view.getContext();
-                myOrdersActivity.displayFragment(fragment, OrderDetailsFragment.TAG, 0);
-                if (order.getStatus().getStatusId() == Order.REGISTERED) {
+
+                int orders_type = MyOrdersActivity.ONGOING_ORDERS;
+                int orderStatusId = order.getStatus().getStatusId();
+                if (orderStatusId == Order.COMPLETED || orderStatusId == Order.AVAILABLE){
+                    orders_type = MyOrdersActivity.CLOSED_ORDERS;
+                }
+
+                myOrdersActivity.displayFragment(fragment, OrderDetailsFragment.TAG, orders_type, order.getServerOrderId());
+                if (orderStatusId == Order.REGISTERED) {
                     OrderStatusValue status = new OrderStatusValue(Order.READ, "READ");
                     order.setStatus(status);
                     orderVM.updateOrderOnServer(order);
@@ -129,13 +132,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
             }
         });
 
-
-        orderVM.getOrderedGoodsNum(order.getClient().getServerUserId(), order.getServerOrderId()).observe(fragment, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer orderedGoodsNum) {
-                holder.txtItemsNb.setText(String.valueOf(orderedGoodsNum));
-            }
-        });
     }
 
 
@@ -149,30 +145,39 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderVH> {
         notifyDataSetChanged();
     }
 
-    class OrderVH extends RecyclerView.ViewHolder {
+    public void addOrders(List<Order> ordersToAdd){
+        orders.addAll(ordersToAdd);
+        notifyDataSetChanged();
+    }
 
-        private TextView txtClientName, txtReference, txtDate, txtStatus, txtItemsNb, txtCollectTime;
-        private ImageView imgClientPic, imgRegistered, imgRead, imgAvailable, imgClosedOrNotSuported ;
-        private ConstraintLayout consLayOrderContainer;
+    static class OrderVH extends RecyclerView.ViewHolder {
+
+        private TextView txtClientName, txtReference, txtDate, txtStatus, txtItemsNb, txtCollectTime, txtToDeliver, txtOrderPrice;
+        private ImageView imgRegistered, imgRead, imgAvailable, imgClosedOrNotSuported, imgDelivery ;
+        private LinearLayoutCompat llOrderContainer, llOrderPrice;
 
         OrderVH(@NonNull View itemView) {
             super(itemView);
 
-            consLayOrderContainer = itemView.findViewById(R.id.consLayOrderContainer);
+            llOrderContainer = itemView.findViewById(R.id.llOrderContainer);
             txtClientName = itemView.findViewById(R.id.txtClientName);
             txtReference = itemView.findViewById(R.id.txtReference);
             txtDate = itemView.findViewById(R.id.txtDate);
             txtStatus = itemView.findViewById(R.id.txtStatus);
             txtItemsNb = itemView.findViewById(R.id.txtItemsNb);
-            imgClientPic = itemView.findViewById(R.id.imgClientPic);
             txtCollectTime = itemView.findViewById(R.id.txtCollectTime);
             imgRegistered = itemView.findViewById(R.id.imgRegistered);
             imgRead = itemView.findViewById(R.id.imgRead);
             imgAvailable = itemView.findViewById(R.id.imgAvailable);
             imgClosedOrNotSuported = itemView.findViewById(R.id.imgClosedOrNotSuported);
-
+            txtToDeliver = itemView.findViewById(R.id.txtToDeliver);
+            imgDelivery = itemView.findViewById(R.id.imgDelivery);
+            llOrderPrice = itemView.findViewById(R.id.llOrderPrice);
+            txtOrderPrice = itemView.findViewById(R.id.txtOrderPrice);
 
         }
     }
+
+
 
 }

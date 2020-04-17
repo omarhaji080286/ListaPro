@@ -11,28 +11,30 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import java.util.Objects;
+
 import winservices.com.listapro.R;
 
 import static androidx.core.app.ActivityCompat.requestPermissions;
 
 public class PermissionUtil {
 
-    private Context context;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
-
-    private final static int REQUEST_ACCESS_FINE_LOCATION = 101;
-    private final static int REQUEST_ACCESS_COARSE_LOCATION = 102;
-    private final static int REQUEST_ACCESS_CAMERA = 103;
-
     public final static String TXT_FINE_LOCATION = "access_fine_location";
     public final static String TXT_COARSE_LOCATION = "access_coarse_location";
     public final static String TXT_CAMERA = "access_camera";
-
+    private final static int REQUEST_ACCESS_FINE_LOCATION = 101;
+    private final static int REQUEST_ACCESS_COARSE_LOCATION = 102;
+    private final static int REQUEST_ACCESS_CAMERA = 103;
     private final static String TAG = PermissionUtil.class.getSimpleName();
+    private Context context;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     public PermissionUtil(Context context) {
         this.context = context;
@@ -40,18 +42,53 @@ public class PermissionUtil {
         editor = sharedPreferences.edit();
     }
 
-    public void updatePermissionPreference(String permission){
+    public static void requestPermissionInFragment(Activity activity) {
 
-        switch (permission){
-            case TXT_FINE_LOCATION :
+        PermissionUtil permissionUtil = new PermissionUtil(Objects.requireNonNull(activity));
+
+        if (permissionUtil.checkPermission(TXT_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionUtil.requestPermission(TXT_FINE_LOCATION, activity);
+            Log.d(TAG, "permission requested");
+        }
+
+    }
+
+    public static void checkLocationPermission(Context context, Activity activity) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        ) {//Can add more as per requirement
+            Log.d(TAG, "permission not granted yet");
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                ActivityCompat.requestPermissions(activity,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                        123);
+            } else {
+
+                ActivityCompat.requestPermissions(activity,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                        123);
+
+            }
+        } else {
+            Log.d(TAG, "permission granted");
+        }
+    }
+
+    public void updatePermissionPreference(String permission) {
+
+        switch (permission) {
+            case TXT_FINE_LOCATION:
                 editor.putBoolean(context.getString(R.string.permission_access_fine_location), true);
                 editor.commit();
                 break;
-            case TXT_COARSE_LOCATION :
+            case TXT_COARSE_LOCATION:
                 editor.putBoolean(context.getString(R.string.permission_access_coarse_location), true);
                 editor.commit();
                 break;
-            case TXT_CAMERA :
+            case TXT_CAMERA:
                 editor.putBoolean(context.getString(R.string.permission_access_camera), true);
                 editor.commit();
                 break;
@@ -60,17 +97,17 @@ public class PermissionUtil {
 
     }
 
-    public boolean checkPermissionPreference(String permission){
+    public boolean checkPermissionPreference(String permission) {
 
         boolean isShown = false;
-        switch (permission){
-            case TXT_FINE_LOCATION :
+        switch (permission) {
+            case TXT_FINE_LOCATION:
                 isShown = sharedPreferences.getBoolean(context.getString(R.string.permission_access_fine_location), false);
                 break;
-            case TXT_COARSE_LOCATION :
+            case TXT_COARSE_LOCATION:
                 isShown = sharedPreferences.getBoolean(context.getString(R.string.permission_access_coarse_location), false);
                 break;
-            case TXT_CAMERA :
+            case TXT_CAMERA:
                 isShown = sharedPreferences.getBoolean(context.getString(R.string.permission_access_camera), false);
                 break;
         }
@@ -125,14 +162,13 @@ public class PermissionUtil {
 
     }
 
-
     public void requestPermission(String permission, Activity activity) {
         switch (permission) {
             case TXT_FINE_LOCATION:
-                requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ACCESS_FINE_LOCATION);
+                requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_ACCESS_FINE_LOCATION);
                 break;
             case TXT_COARSE_LOCATION:
-                requestPermissions(activity, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_ACCESS_COARSE_LOCATION);
+                requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_ACCESS_COARSE_LOCATION);
                 break;
             case TXT_CAMERA:
                 requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, REQUEST_ACCESS_CAMERA);
@@ -148,6 +184,5 @@ public class PermissionUtil {
         intent.setData(uri);
         context.startActivity(intent);
     }
-
 
 }

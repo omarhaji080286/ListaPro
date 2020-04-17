@@ -3,6 +3,13 @@ package winservices.com.listapro.models.entities;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.text.ParseException;
@@ -13,13 +20,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import androidx.room.Embedded;
-import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Ignore;
-import androidx.room.Index;
-import androidx.room.PrimaryKey;
 import winservices.com.listapro.R;
+import winservices.com.listapro.utils.SharedPrefManager;
 import winservices.com.listapro.utils.UtilsFunctions;
 
 import static androidx.room.ForeignKey.CASCADE;
@@ -30,7 +32,7 @@ import static androidx.room.ForeignKey.CASCADE;
                 onDelete = CASCADE),
         indices = @Index(value = "serverShopIdFk")
 )
-public class Order {
+public class Order implements Comparable<Order>{
 
     public final static String TAG = Order.class.getSimpleName();
 
@@ -41,6 +43,9 @@ public class Order {
     public final static int AVAILABLE = 4;
     public final static int COMPLETED = 5;
     public final static int NOT_SUPPORTED = 6;
+
+    public final static int IS_TO_DELIVER = 1;
+    public final static int IS_TO_COLLECT = 0;
 
     @PrimaryKey
     @SerializedName("server_order_id")
@@ -53,6 +58,16 @@ public class Order {
     private String startTime;
     @SerializedName("end_time")
     private String endTime;
+    @SerializedName("is_to_deliver")
+    private int isToDeliver;
+    @SerializedName("user_address")
+    private String userAddress;
+    @SerializedName("user_location")
+    private String userLocation;
+    @SerializedName("ordered_goods_number")
+    private int orderedGoodsNum;
+    @SerializedName("order_price")
+    private String orderPrice;
 
     @Embedded
     @SerializedName("client")
@@ -73,12 +88,52 @@ public class Order {
         this.status = status;
     }
 
+    public String getOrderPrice() {
+        return orderPrice;
+    }
+
+    public void setOrderPrice(String orderPrice) {
+        this.orderPrice = orderPrice;
+    }
+
+    public int getOrderedGoodsNum() {
+        return orderedGoodsNum;
+    }
+
+    public void setOrderedGoodsNum(int orderedGoodsNum) {
+        this.orderedGoodsNum = orderedGoodsNum;
+    }
+
     public List<OrderedGood> getOrderedGoods() {
         return orderedGoods;
     }
 
     public void setOrderedGoods(List<OrderedGood> orderedGoods) {
         this.orderedGoods = orderedGoods;
+    }
+
+    public int getIsToDeliver() {
+        return isToDeliver;
+    }
+
+    public void setIsToDeliver(int isToDeliver) {
+        this.isToDeliver = isToDeliver;
+    }
+
+    public String getUserAddress() {
+        return userAddress;
+    }
+
+    public void setUserAddress(String userAddress) {
+        this.userAddress = userAddress;
+    }
+
+    public String getUserLocation() {
+        return userLocation;
+    }
+
+    public void setUserLocation(String userLocation) {
+        this.userLocation = userLocation;
     }
 
     public String getStartTime() {
@@ -101,9 +156,9 @@ public class Order {
         return serverShopIdFk;
     }
 
-    public void setServerShopIdFk(int serverShopIdFk) {
+    /*public void setServerShopIdFk(int serverShopIdFk) {
         this.serverShopIdFk = serverShopIdFk;
-    }
+    }*/
 
     public int getServerOrderId() {
         return serverOrderId;
@@ -137,31 +192,35 @@ public class Order {
         this.status = status;
     }
 
-    public String getDisplayedCollectTime(Context context){
+    public String getDisplayedCollectTime(Context context, String dateTime){
+        String displayedDate = "empty";
         String day = "empty";
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
 
-        Date collectDay = null;
-        Date today = null;
+        Date collectDay;
+        Date today;
         try {
-            collectDay = sdf.parse(this.startTime);
+            collectDay = sdf.parse(dateTime);
             today = sdf.parse(UtilsFunctions.dateToString(Calendar.getInstance().getTime(),"yyyy-MM-dd"));
 
             long diffMilli = collectDay.getTime() - today.getTime();
             String diff = String.valueOf(TimeUnit.DAYS.convert(diffMilli, TimeUnit.MILLISECONDS)).substring(0,1);
-
+            Calendar cal = Calendar.getInstance();
             switch (diff){
                 case "0":
                     day = context.getResources().getString(R.string.today);
+                    displayedDate = day;
                     break;
                 case "1":
                     day = context.getResources().getString(R.string.tomorrow);
+                    displayedDate = day;
                     break;
                 default:
-                    Calendar cal = Calendar.getInstance();
                     cal.setTime(collectDay);
                     day = UtilsFunctions.getDayOfWeek(context,cal.get(Calendar.DAY_OF_WEEK)) + " " + UtilsFunctions.to2digits(cal.get(Calendar.DAY_OF_MONTH));
+                    String month = UtilsFunctions.dateToString(UtilsFunctions.stringToDate(dateTime),"MM");
+                    displayedDate = day + "/" + month;
                     break;
             }
 
@@ -173,7 +232,72 @@ public class Order {
 
         Log.d(TAG, "DisplayedCollectTime: " + day + " " + time);
 
-        return day + " " + time;
+        return displayedDate;// + " " + time*
+    }
+
+    private Date getDateStartTime(){
+        return UtilsFunctions.stringToDate(this.startTime);
+    }
+
+    @Override
+    public int compareTo(Order o) {
+        return  getDateStartTime().compareTo(o.getDateStartTime());
+    }
+
+    public String toPlainText(Context context){
+        try {
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
+            String painText;
+            String orderPriceTempField = "";
+            if (!this.getOrderPriceTemp(context).equals("")){
+                orderPriceTempField = "- Total (Dhs) : " + this.getOrderPriceTemp(context) + "\n";
+            }
+
+            if (this.isToDeliver==IS_TO_DELIVER){
+                painText = "- Réf commande : " + this.serverOrderId +
+                        "\n" +
+                        orderPriceTempField +
+                        "- préparer pour le : " +
+                        UtilsFunctions.dateToString(sdf.parse(this.getEndTime()), "dd/MM/yyyy") +
+                        "\n" +
+                        "- Client : " + this.client.getUserName() +
+                        "\n" +
+                        "- Téléphone : " + this.client.getUserPhone() +
+                        "\n" +
+                        "- Adresse : " + this.getUserAddress() +
+                        "\n" +
+                        "- GPS : " + this.getUserLocation();
+            } else {
+                painText = "- Réf commande : " + this.serverOrderId +
+                        "\n" +
+                        orderPriceTempField +
+                        "- préparer pour le : " +
+                        UtilsFunctions.dateToString(sdf.parse(this.getEndTime()), "dd/MM/yyyy") +
+                        "\n" +
+                        "- Client : " + this.client.getUserName() +
+                        "\n" +
+                        "- Téléphone : " + this.client.getUserPhone();
+            }
+
+            return painText;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public void storeOrderPriceTemp(Context context) {
+        SharedPrefManager spm = SharedPrefManager.getInstance(context);
+        spm.storeOrderPriceTemp(this.serverOrderId, this.orderPrice);
+    }
+
+
+    public String getOrderPriceTemp(Context context){
+        SharedPrefManager spm = SharedPrefManager.getInstance(context);
+        return spm.getOrderPriceTemp(this.serverOrderId);
+
     }
 
 }

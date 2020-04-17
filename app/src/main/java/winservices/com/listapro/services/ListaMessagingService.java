@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
@@ -68,7 +69,7 @@ public class ListaMessagingService extends FirebaseMessagingService {
         }
 
         // Check if message contains a data payload.
-        JSONObject jsonData = new JSONObject();
+        JSONObject jsonData;
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             jsonData = new JSONObject(remoteMessage.getData());
@@ -101,6 +102,8 @@ public class ListaMessagingService extends FirebaseMessagingService {
         //PendingIntent pendingIntent = PendingIntent.getActivity(this, requestID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, requestID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
         // Create a notification and set the notification channel.
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
@@ -109,6 +112,7 @@ public class ListaMessagingService extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent)
                 .setChannelId(CHANNEL_ID)
                 .setAutoCancel(true)
+                .setSound(alarmSound)
                 .build();
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

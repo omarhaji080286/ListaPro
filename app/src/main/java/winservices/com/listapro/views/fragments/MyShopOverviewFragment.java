@@ -15,17 +15,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+
 import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.DefaultCategory;
 import winservices.com.listapro.models.entities.Shop;
@@ -44,7 +45,7 @@ import static winservices.com.listapro.utils.PermissionUtil.TXT_CAMERA;
 
 public class MyShopOverviewFragment extends Fragment {
 
-    public static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
     private final static String TAG = MyShopOverviewFragment.class.getSimpleName();
 
     private ShopKeeperVM shopKeeperVM;
@@ -138,7 +139,7 @@ public class MyShopOverviewFragment extends Fragment {
     }
 
     private File getImageFile() throws IOException {
-        String imageName = Shop.PREFIX_SHOP + String.valueOf(serverShopId);
+        String imageName = Shop.PREFIX_SHOP + serverShopId;
         String file_path = Objects.requireNonNull(getContext()).getFilesDir().getPath() + "/jpg";
         File storageDir = new File(file_path);
         if (!storageDir.exists()) storageDir.mkdirs();
@@ -198,7 +199,7 @@ public class MyShopOverviewFragment extends Fragment {
         shopTypeVM.getShopType(serverShopTypeId).observe(this, new Observer<ShopType>() {
             @Override
             public void onChanged(ShopType shopType) {
-                Bitmap bitmap = UtilsFunctions.getOrientedBitmap(shopType.getShopTypeImagePath());
+                Bitmap bitmap = UtilsFunctions.getPNG(shopType.getShopTypeImagePath());
                 imgShopTypeImg.setImageBitmap(bitmap);
             }
         });

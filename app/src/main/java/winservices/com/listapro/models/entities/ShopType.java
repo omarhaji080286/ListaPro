@@ -1,12 +1,13 @@
 package winservices.com.listapro.models.entities;
 
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
 import winservices.com.listapro.R;
 
 @Entity(tableName = "shop_types")
@@ -42,7 +43,7 @@ public class ShopType {
         this.shopTypeName = shopTypeName;
         this.icon = getResourceId(serverShopTypeId);
     }
-    
+
     private int getResourceId(int serverShopTypeId) {
         switch (serverShopTypeId) {
             case GENERAL_SHOP:

@@ -3,11 +3,12 @@ package winservices.com.listapro.viewmodels;
 import android.app.Application;
 import android.content.Context;
 
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+
+import java.util.List;
+
 import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.OrderedGood;
 import winservices.com.listapro.repositories.OrderRepository;
@@ -23,6 +24,10 @@ public class OrderVM extends AndroidViewModel {
 
     public void insert(Order order) {
         repository.insert(order);
+    }
+
+    public void insertOGood(OrderedGood oGood){
+        repository.insertOGood(oGood);
     }
 
     public LiveData<List<Order>> getOrdersByServerShopId(int serverShopId, int orders_type) {
@@ -45,10 +50,6 @@ public class OrderVM extends AndroidViewModel {
         return repository.getSentOrdersNum(serverShopId);
     }
 
-    public LiveData<Integer>  getOrderedGoodsNum(int serverUserId, int serverOrderId){
-        return repository.getOrderedGoodsNum(serverUserId, serverOrderId);
-    }
-
     public void updateOrderOnServer(Order order){
         repository.updateOrderOnServer(order);
     }
@@ -60,6 +61,10 @@ public class OrderVM extends AndroidViewModel {
     public LiveData<Order> getOrderByServerOrderId(int serverOrderId) {
         return repository.getOrderByServerOrderId(serverOrderId);
     }
+
+/*    public void updateOrderPriceTemp(Order order){
+        repository.updateOrderTempPrice(order);
+    }*/
 
 
 }

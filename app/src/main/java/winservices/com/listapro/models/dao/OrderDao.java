@@ -1,7 +1,5 @@
 package winservices.com.listapro.models.dao;
 
-import java.util.List;
-
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -9,6 +7,9 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
+
+import java.util.List;
+
 import winservices.com.listapro.models.entities.Order;
 import winservices.com.listapro.models.entities.ShopKeeper;
 
@@ -26,13 +27,13 @@ public interface OrderDao {
 
     @Query("SELECT *  FROM `orders`" +
             " WHERE `serverShopIdFk`=:serverShopId" +
-            " AND `statusId` NOT IN (" + Order.COMPLETED + "," + Order.NOT_SUPPORTED + ")" +
-            " ORDER BY `serverOrderId` DESC")
+            " AND `statusId` NOT IN ("+ Order.AVAILABLE  + "," + Order.COMPLETED + "," + Order.NOT_SUPPORTED + ")" +
+            " ORDER BY `statusId` DESC")
     LiveData<List<Order>> getOrdersByServerShopId(int serverShopId);
 
     @Query("SELECT *  FROM `orders`" +
             " WHERE `serverShopIdFk`=:serverShopId" +
-            " AND `statusId` IN (" + Order.COMPLETED + "," + Order.NOT_SUPPORTED + ")" +
+            " AND `statusId` IN ("+ Order.AVAILABLE  + "," + Order.COMPLETED + "," + Order.NOT_SUPPORTED + ")" +
             " ORDER BY `serverOrderId` DESC")
     LiveData<List<Order>> getClosedOrdersByServerShopId(int serverShopId);
 
@@ -50,11 +51,6 @@ public interface OrderDao {
     @Query("SELECT * FROM orders WHERE serverOrderId = :serverOrderId")
     LiveData<Order> getOrderByServerOrderId(int serverOrderId);
 
-    @Query("SELECT count(*)" +
-           " FROM ordered_goods as og, orders as o" +
-           " WHERE o.`serverUserId` = :serverUserId" +
-           " AND o.serverOrderId = :serverOrderId"+
-           " AND o.serverOrderId = og.serverOrderIdFk")
-    LiveData<Integer> getOrderedGoodsNum(int serverUserId, int serverOrderId);
-
+/*    @Query("UPDATE orders SET orderPriceTemp = :orderPriceTemp WHERE serverOrderId = :serverOrderId")
+    void updateOrderPriceTemp(int serverOrderId, String orderPriceTemp);*/
 }

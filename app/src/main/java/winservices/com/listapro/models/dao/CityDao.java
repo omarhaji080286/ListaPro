@@ -1,7 +1,5 @@
 package winservices.com.listapro.models.dao;
 
-import java.util.List;
-
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -9,6 +7,9 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
+
+import java.util.List;
+
 import winservices.com.listapro.models.entities.City;
 
 @Dao
@@ -25,4 +26,8 @@ public interface CityDao {
 
     @Query("SELECT * FROM cities")
     LiveData<List<City>> getAllCities();
+
+    @Query("SELECT * FROM cities WHERE serverCityId = :serverCityId")
+    LiveData<City> getCity(int serverCityId);
+
 }

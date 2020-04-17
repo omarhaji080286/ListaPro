@@ -1,15 +1,15 @@
 package winservices.com.listapro.models.entities;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
-
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 import static androidx.room.ForeignKey.CASCADE;
 
@@ -46,6 +46,8 @@ public class Shop {
     private String openingTime;
     @SerializedName("closing_time")
     private String closingTime;
+    @SerializedName("is_delivering")
+    private int isDelivering;
 
     //secondary key
     @SerializedName("server_shopkeeper_id")
@@ -73,6 +75,17 @@ public class Shop {
         this.longitude = longitude;
         this.latitude = latitude;
         this.serverShopKeeperIdFk = serverShopKeeperIdFk;
+    }
+
+    public Shop() {
+    }
+
+    public int getIsDelivering() {
+        return isDelivering;
+    }
+
+    public void setIsDelivering(int isDelivering) {
+        this.isDelivering = isDelivering;
     }
 
     public String getOpeningTime() {

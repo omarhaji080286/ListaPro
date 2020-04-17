@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -17,10 +18,11 @@ import winservices.com.listapro.R;
 import winservices.com.listapro.models.entities.Shop;
 import winservices.com.listapro.models.entities.ShopKeeper;
 import winservices.com.listapro.services.ListaMessagingService;
+import winservices.com.listapro.services.RemoteConfigService;
 import winservices.com.listapro.viewmodels.OrderVM;
 import winservices.com.listapro.viewmodels.ShopKeeperVM;
+import winservices.com.listapro.viewmodels.ShopTypeVM;
 import winservices.com.listapro.viewmodels.ShopVM;
-import winservices.com.listapro.views.fragments.AddShopFragment;
 import winservices.com.listapro.views.fragments.SignUpFragment;
 import winservices.com.listapro.views.fragments.WelcomeFragment;
 
@@ -31,11 +33,14 @@ public class LauncherActivity extends AppCompatActivity {
     private ShopVM shopVM;
     private OrderVM orderVM;
     private String currentFragTag = "none";
+    private ShopTypeVM shopTypeVM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_launcher);
+        setTitle(R.string.welcome_to_listapro);
 
         Bundle extras = getIntent().getExtras();
 
@@ -55,12 +60,20 @@ public class LauncherActivity extends AppCompatActivity {
 
     private void launchApp(){
 
-        setContentView(R.layout.activity_launcher);
-        setTitle(R.string.welcome_to_listapro);
-
         shopKeeperVM = ViewModelProviders.of(this).get(ShopKeeperVM.class);
         shopVM = ViewModelProviders.of(this).get(ShopVM.class);
         orderVM = ViewModelProviders.of(this).get(OrderVM.class);
+        shopTypeVM = ViewModelProviders.of(this).get(ShopTypeVM.class);
+
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                loadParametersFromServer();
+                RemoteConfigService remoteConfigService = new RemoteConfigService(getApplicationContext());
+                remoteConfigService.loadGooglePlayVersion();
+            }
+        });
 
         shopKeeperVM.getLastLoggedShopKeeper().observe(this, new Observer<ShopKeeper>() {
             @Override
@@ -70,6 +83,7 @@ public class LauncherActivity extends AppCompatActivity {
                     return;
                 }
                 loadShops(shopKeeper);
+
             }
         });
 
@@ -99,7 +113,8 @@ public class LauncherActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Shop> shops) {
                 if (shops == null || shops.size()==0){
-                    displayFragment(new AddShopFragment(), AddShopFragment.TAG);
+                    startActivity(new Intent(LauncherActivity.this, AddShopActivity.class));
+                    LauncherActivity.this.finish();
                     return;
                 }
                 shopKeeper.setShops(shops);
@@ -110,15 +125,15 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
     private void routeUser(ShopKeeper shopKeeper) {
-        Fragment fragment;
-        String tag;
+        Fragment fragment = new SignUpFragment();
+        String tag = SignUpFragment.TAG;
         if (shopKeeper.getIsLoggedIn() == ShopKeeper.LOGGED_IN) {
             if (shopKeeper.getShops().size() > 0) {
                 fragment = new WelcomeFragment();
                 tag = WelcomeFragment.TAG;
             } else {
-                fragment = new AddShopFragment();
-                tag = AddShopFragment.TAG;
+                startActivity(new Intent(this, AddShopActivity.class));
+                this.finish();
             }
         } else {
             fragment = new SignUpFragment();
@@ -127,9 +142,6 @@ public class LauncherActivity extends AppCompatActivity {
         displayFragment(fragment, tag);
     }
 
-
-
-
     public void displayFragment(Fragment fragment, String tag) {
         if (currentFragTag.equals(tag)) return;
         currentFragTag = tag;
@@ -137,6 +149,13 @@ public class LauncherActivity extends AppCompatActivity {
         manager.beginTransaction()
                 .replace(R.id.frameLauncherActivity, fragment, tag)
                 .commit();
+    }
+
+    private void loadParametersFromServer() {
+
+        shopTypeVM.loadCitiesFromServer();
+        shopTypeVM.loadShopTypes(this);
+
     }
 
 
