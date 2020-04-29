@@ -58,7 +58,7 @@ public class SignUpFragment extends Fragment {
     private TextView txtDescription;
     private LinearLayout linlayPhoneCointaner;
     private ShopKeeperVM shopKeeperVM;
-    private ShopVM shopVM;
+    //private ShopVM shopVM;
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
@@ -275,10 +275,10 @@ public class SignUpFragment extends Fragment {
 
     private void registerShopKeeper() {
         //TODO - for test
-        String phone = "+16" + editPhone.getText().toString();
+        //String phone = "+16" + editPhone.getText().toString();
 
         //TODO - For release
-        //String phone = "+212" + editPhone.getText().toString();
+        String phone = "+212" + editPhone.getText().toString();
 
         String uuid = UtilsFunctions.getUuid(getContext());
         String fcmToken = SharedPrefManager.getInstance(getContext()).getToken();
